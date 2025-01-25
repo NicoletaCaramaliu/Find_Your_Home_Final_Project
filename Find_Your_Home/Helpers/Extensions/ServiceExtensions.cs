@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Find_Your_Home.Services.UserService;
+using Proiect_final.Services.UserService;
 
 namespace Find_Your_Home.Helpers.Extensions
 {
@@ -13,6 +14,7 @@ namespace Find_Your_Home.Helpers.Extensions
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             //services.AddTransient<IService,Service>();
+            services.AddTransient<IUserService, UserService>();
             return services;
         }
     }
