@@ -1,5 +1,6 @@
-﻿using Find_Your_Home.Services.UserService;
-using Proiect_final.Services.UserService;
+﻿using Find_Your_Home.Repositories.UserRepository;
+using Find_Your_Home.Services.UserService;
+using Find_Your_Home.Services.UserService;
 
 namespace Find_Your_Home.Helpers.Extensions
 {
@@ -8,6 +9,7 @@ namespace Find_Your_Home.Helpers.Extensions
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             //services.AddTransient<IRepository, Repository>();
+            services.AddTransient<IUserRepository, UserRepository>();
             return services;
         }
 
