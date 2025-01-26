@@ -14,5 +14,6 @@ namespace Find_Your_Home.Repositories.UserRepository
         {
             return await FindSingleOrDefaultAsync(user => user.Email == email);
         }
+
     }
 }

@@ -1,51 +1,72 @@
 ﻿using Find_Your_Home.Models;
 using Find_Your_Home.Models.User;
-using Microsoft.Extensions.Configuration;
-using BCrypt.Net;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using AutoMapper;
+using Find_Your_Home.Models.User.DTO;
+using Find_Your_Home.Services.UserService;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Find_Your_Home.Services.UserService
+namespace Find_Your_Home.Services.AuthService
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
-        private static User _user = new User(); // Acesta ar trebui să fie înlocuit cu un repository real de utilizatori
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public AuthService(IConfiguration configuration)
+        public AuthService(IConfiguration configuration, IUserService userService, IMapper mapper)
         {
             _configuration = configuration;
+            _userService = userService;
+            _mapper = mapper;
         }
 
-        public User Register(UserRegisterDto request)
+        public async Task<User> Register(UserRegisterDto request)
         {
+            var user = _mapper.Map<User>(request);
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            _user.Email = request.Email;
-            _user.Username = request.Username;
-            _user.Password = passwordHash;
-            _user.Role = request.Role;
+            user.Email = request.Email;
+            user.Username = request.Username;
+            user.Password = passwordHash;
+            user.Role = request.Role;
 
-            return _user;
+            if (await _userService.GetUserByEmail(request.Email) != null)
+            {
+                throw new UnauthorizedAccessException("User already exists.");
+            }
+            _userService.CreateUser(user);
+            return user;
         }
 
-        public string Login(UserLoginDto request)
+        public async Task<string> Login(UserLoginDto request)
         {
-            if (_user.Email != request.Email)
+            var inputUser = _mapper.Map<User>(request);
+            var user = await _userService.GetUserByEmail(inputUser.Email);
+            
+            
+            if (user == null)
             {
                 throw new UnauthorizedAccessException("User not found. Invalid email.");
             }
-
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, _user.Password))
+            
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 throw new UnauthorizedAccessException("Wrong password.");
             }
 
-            string token = CreateToken(_user);
+            string token = CreateToken(inputUser);
+            
+            var newRefreshToken = GenerateRefreshToken();
+            
+            user.RefreshToken = newRefreshToken.Token;
+            user.TokenCreated = DateTime.Now;
+            user.TokenExpires = newRefreshToken.Expires;
+            
+            await _userService.UpdateUser(user);
+            
             return token;
         }
 
@@ -73,7 +94,7 @@ namespace Find_Your_Home.Services.UserService
             return jwt;
         }
 
-        public RefreshToken GenerateRefreshToken()
+         public RefreshToken GenerateRefreshToken()
         {
             return new RefreshToken
             {

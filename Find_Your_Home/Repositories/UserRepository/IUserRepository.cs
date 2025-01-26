@@ -1,0 +1,10 @@
+﻿using Find_Your_Home.Models.User;
+using Find_Your_Home.Repositories.GenericRepository;
+
+namespace Find_Your_Home.Repositories.UserRepository
+{
+    public interface IUserRepository : IGenericRepository<User>
+    {
+        Task<User> GetByEmail(string email);
+    }
+}
