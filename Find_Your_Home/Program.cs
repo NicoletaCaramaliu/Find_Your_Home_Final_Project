@@ -8,7 +8,7 @@ using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using Find_Your_Home.Helpers;
 using Find_Your_Home.Services.UserService;
-using Proiect_final.Services.UserService;
+using Find_Your_Home.Services.UserService;
 
 
 var builder = WebApplication.CreateBuilder(args);
