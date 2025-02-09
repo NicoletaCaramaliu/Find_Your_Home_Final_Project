@@ -32,7 +32,6 @@ namespace Find_Your_Home.Services.UserService
         
         public async Task CreateUser(User user)
         {
-            //TODO: use auto mapper to map userRequest to user in Controller
             await _userRepository.CreateAsync(user);
             await _userRepository.SaveAsync();
         }

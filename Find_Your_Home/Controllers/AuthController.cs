@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Find_Your_Home.Models.User;
 using Find_Your_Home.Models.User.DTO;
-using Find_Your_Home.Services.AuthService;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -67,6 +66,21 @@ namespace Find_Your_Home.Controllers
                 return Ok(new { Token = token });
             }
             catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
+            }
+        }
+        
+        [HttpPost("logout")]
+        public async Task<ActionResult> Logout()
+        {
+            try
+            {
+                var email = User.Identity.Name;
+                await _authService.Logout(email);
+                return Ok(new { Message = "Logged out successfully." });
+            }
+            catch (Exception ex)
             {
                 return Unauthorized(new { Message = ex.Message });
             }

@@ -7,4 +7,6 @@ public interface IAuthService
     Task<User> Register(UserRegisterDto request);
     Task<string> Login(UserLoginDto request);
     public RefreshToken GenerateRefreshToken();
+
+    public Task<string> Logout(string email);
 }

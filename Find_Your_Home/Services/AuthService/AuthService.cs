@@ -75,6 +75,7 @@ namespace Find_Your_Home.Services.AuthService
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
             };
 
@@ -101,6 +102,24 @@ namespace Find_Your_Home.Services.AuthService
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
                 Expires = DateTime.Now.AddDays(7)
             };
+        }
+         
+        public async Task<string> Logout(string email)
+        {
+            var user = await _userService.GetUserByEmail(email);
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("User not found.");
+            }
+            user.RefreshToken = null;
+            user.TokenCreated = DateTime.MinValue;
+            user.TokenExpires = DateTime.MinValue;
+            
+            await _userService.UpdateUser(user);
+
+            return "User logged out successfully.";
+            
         }
     }
 }
