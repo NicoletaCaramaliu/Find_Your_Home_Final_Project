@@ -25,6 +25,19 @@ namespace Find_Your_Home.Services.UserService
             return result;
         }
         
+        public string GetMyEmail()
+        {
+            var result = string.Empty;
+            if (_httpContextAccessor.HttpContext is not null)
+            {
+                result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            }
+            else 
+                throw new Exception("HttpContext is null in Logout.");
+            return result;
+        }
+
+        
         public async Task<User> GetUserByEmail(string email)
         {
             return await _userRepository.GetByEmail(email);

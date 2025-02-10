@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Find_Your_Home.Models.User;
 using Find_Your_Home.Models.User.DTO;
 using Find_Your_Home.Services.UserService;
@@ -14,6 +15,7 @@ namespace Find_Your_Home.Controllers
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AuthController(IAuthService authService, IUserService userService, IMapper mapper)
         {
@@ -22,11 +24,18 @@ namespace Find_Your_Home.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("me"), Authorize]
+        [HttpGet("me"), Authorize(Roles = "Admin")]
         public ActionResult<string> GetMyName()
         {
             var myName = _userService.GetMyName();
             return Ok(new { Username = myName });
+        }
+        
+        [HttpGet("email"), Authorize(Roles = "Admin")]
+        public ActionResult<string> GetMyEmail()
+        {
+            var myEmail = _userService.GetMyEmail();
+            return Ok(new { Username = myEmail });
         }
 
         [HttpPost("register")]
@@ -71,13 +80,13 @@ namespace Find_Your_Home.Controllers
             }
         }
         
-        [HttpPost("logout")]
+        [HttpPost("logout"), Authorize]
         public async Task<ActionResult> Logout()
         {
+            
             try
             {
-                var email = User.Identity.Name;
-                await _authService.Logout(email);
+                await _authService.Logout();
                 return Ok(new { Message = "Logged out successfully." });
             }
             catch (Exception ex)

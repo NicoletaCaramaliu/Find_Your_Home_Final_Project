@@ -8,5 +8,6 @@ public interface IAuthService
     Task<string> Login(UserLoginDto request);
     public RefreshToken GenerateRefreshToken();
 
-    public Task<string> Logout(string email);
+    //public Task<string> Logout(string email);
+    public Task<string> Logout();
 }

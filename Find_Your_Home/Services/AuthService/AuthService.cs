@@ -16,9 +16,11 @@ namespace Find_Your_Home.Services.AuthService
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(IConfiguration configuration, IUserService userService, IMapper mapper)
+        public AuthService(IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IUserService userService, IMapper mapper)
         {
+            _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
             _userService = userService;
             _mapper = mapper;
@@ -32,19 +34,18 @@ namespace Find_Your_Home.Services.AuthService
             user.Username = request.Username;
             user.Password = passwordHash;
             user.Role = request.Role;
-
+            Console.WriteLine($"User Role at Registration: {request.Role}");
             if (await _userService.GetUserByEmail(request.Email) != null)
             {
                 throw new UnauthorizedAccessException("User already exists.");
             }
-            _userService.CreateUser(user);
+            await _userService.CreateUser(user);
             return user;
         }
 
         public async Task<string> Login(UserLoginDto request)
         {
-            var inputUser = _mapper.Map<User>(request);
-            var user = await _userService.GetUserByEmail(inputUser.Email);
+            var user = await _userService.GetUserByEmail(request.Email);
             
             
             if (user == null)
@@ -57,7 +58,7 @@ namespace Find_Your_Home.Services.AuthService
                 throw new UnauthorizedAccessException("Wrong password.");
             }
 
-            string token = CreateToken(inputUser);
+            string token = CreateToken(user);
             
             var newRefreshToken = GenerateRefreshToken();
             
@@ -91,6 +92,8 @@ namespace Find_Your_Home.Services.AuthService
             );
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            Console.WriteLine($"Creating token for user: {user.Username}, email: {user.Email}, Role: {user.Role}");
+
 
             return jwt;
         }
@@ -104,15 +107,18 @@ namespace Find_Your_Home.Services.AuthService
             };
         }
          
-        public async Task<string> Logout(string email)
+        public async Task<string> Logout()
         {
+            var email = _userService.GetMyEmail();
+            Console.WriteLine($"User email: {email}");
             var user = await _userService.GetUserByEmail(email);
+            Console.WriteLine($"User found: {user.Username}");
 
             if (user == null)
             {
                 throw new UnauthorizedAccessException("User not found.");
             }
-            user.RefreshToken = null;
+            user.RefreshToken = "";
             user.TokenCreated = DateTime.MinValue;
             user.TokenExpires = DateTime.MinValue;
             

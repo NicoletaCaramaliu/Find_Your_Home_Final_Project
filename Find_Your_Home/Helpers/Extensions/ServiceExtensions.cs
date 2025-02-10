@@ -12,7 +12,6 @@ namespace Find_Your_Home.Helpers.Extensions
         {
             //services.AddTransient<IRepository, Repository>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IAuthService, AuthService>();
             return services;
         }
 
@@ -20,7 +19,7 @@ namespace Find_Your_Home.Helpers.Extensions
         {
             //services.AddTransient<IService,Service>();
             services.AddTransient<IUserService, UserService>();
-            
+            services.AddTransient<IAuthService, AuthService>();
             return services;
         }
     }
