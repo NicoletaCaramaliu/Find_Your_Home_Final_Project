@@ -109,6 +109,10 @@ namespace Find_Your_Home.Services.AuthService
          
         public async Task<string> Logout()
         {
+            if (_httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated != true)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
             var email = _userService.GetMyEmail();
             Console.WriteLine($"User email: {email}");
             var user = await _userService.GetUserByEmail(email);

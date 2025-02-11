@@ -83,7 +83,6 @@ namespace Find_Your_Home.Controllers
         [HttpPost("logout"), Authorize]
         public async Task<ActionResult> Logout()
         {
-            
             try
             {
                 await _authService.Logout();
