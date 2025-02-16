@@ -103,18 +103,27 @@ builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
+    /*options.AddPolicy("AllowAll",
         policy =>
         {
             policy.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
+        });*/
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") 
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
         });
 });
 
 var app = builder.Build();
 
-app.UseCors("AllowAll");
+//app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

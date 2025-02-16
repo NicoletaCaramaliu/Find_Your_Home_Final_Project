@@ -40,6 +40,7 @@ namespace Find_Your_Home.Services.AuthService
                 throw new UnauthorizedAccessException("User already exists.");
             }
             await _userService.CreateUser(user);
+            Console.WriteLine($"User created: {user.Username}, Role: {user.Role}");
             return user;
         }
 
