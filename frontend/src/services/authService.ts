@@ -12,15 +12,24 @@ axios.interceptors.request.use((config) => {
     return Promise.reject(error);
   });
 
-export const login = async (email: string, password: string) => {
-  try {
-    const response = await axios.post(`${API_URL}/login`, { email, password });
-    localStorage.setItem("token", response.data.Token);
-    return response.data;
-  } catch (error:any) {
-    throw new Error(error.response?.data?.Message || "Autentificare eșuată");
-  }
-};
+
+  export const login = async (email: string, password: string) => {
+    try {
+      const response = await axios.post(`${API_URL}/login`, { email, password });
+  
+      localStorage.setItem("token", response.data.Token);
+      return response.data;
+    } catch (error: any) {
+      console.error("Eroare la login:", error);
+  
+      if (!error.response) {
+        throw new Error("Parolă greșită.");
+      }
+
+      throw new Error(error.response?.data?.Message || "Nu sunteți înregistrat. Creați-vă un cont pentru a vă putea bucura de beneficiile apliacției.");
+    }
+  };
+  
 
 export const register = async (email: string, username: string, password: string, role: number) => {
   try {

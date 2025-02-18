@@ -1,19 +1,15 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "./context/ThemeContext";
+import { Routes, Route } from "react-router-dom"; // Corect: folosește Routes și Route
 import LoginPage from "./pages/LoginPage"; 
 import Dashboard from "./pages/Dashboard"; 
-import "./App.css";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
-    <ThemeProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/register" element={<RegisterPage />} /> 
+    </Routes>
   );
 }
 

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import RegisterForm from "../components/RegisterForm";
 import { Card, CardContent } from "../components/ui/Card";
-import { register } from "../services/authService"; // Import funcția care face request la backend
+import { register } from "../services/authService"; // functia care face request la backend
 
 export default function RegisterPage() {
   const navigate = useNavigate();
