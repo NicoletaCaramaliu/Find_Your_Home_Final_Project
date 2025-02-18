@@ -3,6 +3,8 @@ import { Moon, Sun } from "lucide-react";
 
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
+  
+  console.log("Tema curentă în ThemeToggle:", theme);
 
   return (
     <button

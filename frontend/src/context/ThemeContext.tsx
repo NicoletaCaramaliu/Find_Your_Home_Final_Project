@@ -11,15 +11,23 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 // provider pentru gestionarea temei
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<string>(() => {
-    return localStorage.getItem("theme") || "light";
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme || "dark"; 
   });
-
+  
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
+    console.log("Tema setată în ThemeProvider:", theme);
+    const root = document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
     localStorage.setItem("theme", theme);
   }, [theme]);
-
+  
   const toggleTheme = () => {
+    console.log("Schimbare temă de la:", theme);
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
