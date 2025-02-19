@@ -7,8 +7,9 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$
 
 const roles = [
   { label: "Admin", value: 0 },
-  { label: "User", value: 1 },
-  { label: "Agent", value: 2 },
+  { label: "User", value: 3 },
+  { label: "Agent", value: 1 },
+  { label: "PropertyOwner", value: 2 },
 ];
 
 
@@ -21,7 +22,7 @@ export default function RegisterForm({ onRegister }: RegisterFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setName] = useState("");
-  const [role, setRole] = useState(1); // Default: User
+  const [role, setRole] = useState(3); // Default: User
   const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {

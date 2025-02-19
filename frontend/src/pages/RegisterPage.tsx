@@ -3,6 +3,7 @@ import RegisterForm from "../components/RegisterForm";
 import { Card, CardContent } from "../components/ui/Card";
 import { register } from "../services/authService"; // functia care face request la backend
 import ThemeToggle from "../components/ThemeToggle";
+import Navbar from "../components/NavBar";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -17,7 +18,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div> <Navbar />
+    <div className="flex items-center justify-center min-h-screen bg-blue-300 dark:bg-gray-900 transition-colors duration-500">
       <Card className="w-96 p-6 shadow-lg rounded-lg">
       <ThemeToggle />
         <CardContent>
@@ -25,6 +27,6 @@ export default function RegisterPage() {
           <RegisterForm onRegister={handleRegister} />
         </CardContent>
       </Card>
-    </div>
+    </div></div>
   );
 }
