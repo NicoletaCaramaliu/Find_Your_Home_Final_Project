@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 
@@ -19,35 +20,29 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="shadow-xl p-1 bg-gray-100 dark:bg-gray-800/80">
-      <div className="container mx-auto flex justify-end items-center">
+    <nav className="fixed top-0 right-0 shadow-xl p-1 bg-gray-100 dark:bg-gray-800/80 z-50">
+      <div className="flex justify-end items-center">
 
-        {/* Dropdown Menu */}
         <div ref={dropdownRef} className="relative inline-block text-left">
-          {/* Butonul dropdown */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="px-4 py-2 text-gray-800 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition"
           >
-            {/* Schimbarea iconiței în funcție de starea dropdown-ului */}
             {isOpen ? (
-              // dropdown DESCHIS
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
               </svg>
             ) : (
-              //  dropdown INCHIS
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
               </svg>
             )}
           </button>
 
-          {/* Meniul dropdown */}
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden z-50">
               <Link
-                to="/about"
+                to="/aboutUs"
                 className="block px-4 py-2 text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 Despre Noi
