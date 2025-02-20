@@ -16,8 +16,8 @@ axios.interceptors.request.use((config) => {
   export const login = async (email: string, password: string) => {
     try {
       const response = await axios.post(`${API_URL}/login`, { email, password });
-  
-      localStorage.setItem("token", response.data.Token);
+
+      localStorage.setItem("token", response.data.token);
       return response.data;
     } catch (error: any) {
       console.error("Eroare la login:", error);
@@ -40,6 +40,15 @@ export const register = async (email: string, username: string, password: string
   }
 };
 
-export const logout = () => {
-  localStorage.removeItem("token");
+
+
+export const logout = async () => {
+  try {
+    await axios.post(`${API_URL}/logout`);
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+  } catch (error: any) {
+    console.error("Eroare la delogare:", error);
+    throw new Error("Delogare eșuată");
+  }
 };
