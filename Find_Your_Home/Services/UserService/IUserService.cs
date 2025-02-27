@@ -1,4 +1,4 @@
-﻿using Find_Your_Home.Models.User;
+﻿using Find_Your_Home.Models.Users;
 
 namespace Find_Your_Home.Services.UserService
 {

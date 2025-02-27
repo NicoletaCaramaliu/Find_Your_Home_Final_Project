@@ -1,11 +1,11 @@
 ﻿using Find_Your_Home.Models;
-using Find_Your_Home.Models.User;
+using Find_Your_Home.Models.Users;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
-using Find_Your_Home.Models.User.DTO;
+using Find_Your_Home.Models.Users.DTO;
 using Find_Your_Home.Services.UserService;
 using Microsoft.IdentityModel.Tokens;
 

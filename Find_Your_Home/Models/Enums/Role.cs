@@ -11,6 +11,7 @@ namespace Find_Your_Home.Models.Models
         Admin,
         Moderator,
         PropertyOwner,
+        Agent,
         User
     }
 }

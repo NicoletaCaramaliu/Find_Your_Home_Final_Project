@@ -1,6 +1,6 @@
 ﻿using Find_Your_Home.Models;
-using Find_Your_Home.Models.User;
-using Find_Your_Home.Models.User.DTO;
+using Find_Your_Home.Models.Users;
+using Find_Your_Home.Models.Users.DTO;
 
 public interface IAuthService
 {

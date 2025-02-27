@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
-using Find_Your_Home.Models.User;
-using Find_Your_Home.Models.User.DTO;
+using Find_Your_Home.Models.Users;
+using Find_Your_Home.Models.Users.DTO;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

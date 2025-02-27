@@ -1,6 +1,6 @@
 ﻿using Find_Your_Home.Models.Models;
 
-namespace Find_Your_Home.Models.User.DTO
+namespace Find_Your_Home.Models.Users.DTO
 {
     public class UserLoginDto
     {
