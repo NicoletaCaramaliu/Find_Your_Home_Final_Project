@@ -7,9 +7,10 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$
 
 const roles = [
   { label: "Admin", value: 0 },
-  { label: "User", value: 3 },
-  { label: "Agent", value: 1 },
+  { label: "User", value: 4 },
+  { label: "Agent", value: 3 },
   { label: "PropertyOwner", value: 2 },
+  { label: "Moderator", value: 1}
 ];
 
 
