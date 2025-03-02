@@ -1,0 +1,29 @@
+﻿using Find_Your_Home.Models.Properties;
+using Find_Your_Home.Repositories.PropertyImgRepository;
+using Find_Your_Home.Repositories.UnitOfWork;
+
+namespace Find_Your_Home.Services.PropertyImagesService
+{
+    public class PropertyImgService : IPropertyImgService
+    {
+        private readonly IPropertyImgRepository _propertyImgRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        
+        public PropertyImgService(IPropertyImgRepository propertyImgRepository, IUnitOfWork unitOfWork)
+        {
+            _propertyImgRepository = propertyImgRepository;
+            _unitOfWork = unitOfWork;
+        }
+        
+        public async Task<List<PropertyImage>> GetPropertyImages(Guid propertyId)
+        {
+            return await _propertyImgRepository.GetImages(propertyId);
+        }
+        
+        public async Task AddImageToProperty(PropertyImage propertyImage)
+        {
+            await _propertyImgRepository.CreateAsync(propertyImage);
+            await _unitOfWork.SaveAsync();
+        }
+    }
+}
