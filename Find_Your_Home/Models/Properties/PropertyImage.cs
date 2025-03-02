@@ -7,6 +7,7 @@ namespace Find_Your_Home.Models.Properties
         public string ImageUrl { get; set; }
         
         public Guid PropertyId { get; set; }
+        public int Order { get; set; } //ordinea imaginii in sortare
         public Property Property { get; set; }
     }
 }

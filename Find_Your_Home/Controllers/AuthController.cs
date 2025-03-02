@@ -15,7 +15,6 @@ namespace Find_Your_Home.Controllers
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AuthController(IAuthService authService, IUserService userService, IMapper mapper)
         {

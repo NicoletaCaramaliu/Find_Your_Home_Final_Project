@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Find_Your_Home.Models.Properties;
 
@@ -18,7 +19,8 @@ namespace Find_Your_Home.Models.Users
         public string Password { get; set; } = string.Empty;
         public Role Role { get; set; } = Role.User;
         
-        public ICollection<Property> Properties { get; set; } = new List<Property>();
+        //[JsonIgnore] - dto 
+        public ICollection<Property>? Properties { get; set; } = new List<Property>();
 
 
         public string RefreshToken { get; set; } = string.Empty;

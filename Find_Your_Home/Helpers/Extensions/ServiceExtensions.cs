@@ -1,7 +1,12 @@
 ﻿
 
+using Find_Your_Home.Repositories.PropertyImgRepository;
+using Find_Your_Home.Repositories.PropertyRepository;
+using Find_Your_Home.Repositories.UnitOfWork;
 using Find_Your_Home.Repositories.UserRepository;
 using Find_Your_Home.Services.AuthService;
+using Find_Your_Home.Services.PropertyImagesService;
+using Find_Your_Home.Services.PropertyService;
 using Find_Your_Home.Services.UserService;
 
 namespace Find_Your_Home.Helpers.Extensions
@@ -12,6 +17,9 @@ namespace Find_Your_Home.Helpers.Extensions
         {
             //services.AddTransient<IRepository, Repository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IPropertyRepository, PropertyRepository>();
+            services.AddTransient<IPropertyImgRepository, PropertyImgRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             return services;
         }
 
@@ -20,6 +28,8 @@ namespace Find_Your_Home.Helpers.Extensions
             //services.AddTransient<IService,Service>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IPropertyImgService, PropertyImgService>();
+            services.AddTransient<IPropertyService, PropertyService>();
             return services;
         }
     }
