@@ -9,10 +9,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using Find_Your_Home.Helpers;
+using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
 using Find_Your_Home.Repositories.UnitOfWork;
 using Find_Your_Home.Repositories.UserRepository;
 using Find_Your_Home.Services.AuthService;
+using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
 using Find_Your_Home.Services.UserService;
 using Find_Your_Home.Services.UserService;
@@ -44,8 +46,14 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
+builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+builder.Services.AddScoped<IPropertyImgService, PropertyImgService>();
+builder.Services.AddScoped<IPropertyImgRepository, PropertyImgRepository>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSingleton<ImageService>();
+
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme

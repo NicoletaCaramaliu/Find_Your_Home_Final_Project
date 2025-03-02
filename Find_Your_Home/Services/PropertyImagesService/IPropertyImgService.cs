@@ -5,5 +5,6 @@ namespace Find_Your_Home.Services.PropertyImagesService
     public interface IPropertyImgService
     {
         Task<List<PropertyImage>> GetPropertyImages(Guid propertyId);
+        Task AddImageToProperty(PropertyImage propertyImage);
     }
 }

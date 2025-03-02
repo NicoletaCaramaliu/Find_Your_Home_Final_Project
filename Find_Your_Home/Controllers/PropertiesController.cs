@@ -29,7 +29,10 @@ namespace Find_Your_Home.Controllers
         }   
         
         [HttpPost("createProperty"), Authorize]
-        public async Task<ActionResult<Property>> CreateProperty(PropertyRequest propertyRequest)
+        public async Task<ActionResult<PropertyResponse>> CreateProperty(
+            [FromForm] PropertyRequest propertyRequest,
+            [FromForm] List<IFormFile> images,
+            [FromServices] ImageService imageService)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
             
@@ -47,8 +50,25 @@ namespace Find_Your_Home.Controllers
             
             var newProperty = _mapper.Map<Property>(propertyRequest);
             newProperty.OwnerId = user.Id;
-            
             var createdProperty = await _propertyService.CreateProperty(newProperty);
+            
+            //salvare imagini Azure
+            if (images != null && images.Count > 0)
+            {
+                int order = 1;
+                foreach (var image in images)
+                {
+                    var imageUrl = await imageService.SaveImageAsync(image);
+                    var propertyImage = new PropertyImage
+                    {
+                        ImageUrl = imageUrl,
+                        PropertyId = createdProperty.Id,
+                        Order = order++
+                        
+                    };
+                    await _propertyImagesService.AddImageToProperty(propertyImage);
+                }
+            }
             
             var propertyDto = _mapper.Map<PropertyResponse>(createdProperty);
             return Ok(propertyDto);
