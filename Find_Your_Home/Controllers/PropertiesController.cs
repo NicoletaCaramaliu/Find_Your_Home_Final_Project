@@ -74,12 +74,34 @@ namespace Find_Your_Home.Controllers
             return Ok(propertyDto);
         }
         
-        [HttpGet] 
+        [HttpGet("getAllPropertyImages")] 
          public async Task<ActionResult<string>> GetPropertyImages(Guid propertyId)
         {
             var propertyImages = await _propertyImagesService.GetPropertyImages(propertyId);
             var imagesUrl = propertyImages.Select(img => img.ImageUrl).ToList();
             return Ok(imagesUrl);
         }
+         
+         [HttpGet("getAllProperties")]
+         public async Task<ActionResult<IEnumerable<PropertyResponse>>> GetAllProperties()
+         {
+             var properties = await _propertyService.GetAllProperties();
+             var propertiesDto = _mapper.Map<IEnumerable<PropertyResponse>>(properties);
+             return Ok(propertiesDto);
+         }
+         
+         //Filter properties
+        [HttpGet("filterProperties")]
+        public async Task<ActionResult<List<PropertyResponse>>> FilterProperties([FromQuery] FilterCriteria filterRequest)
+        {
+            var properties = await _propertyService.FilterProperties(filterRequest);
+            var propertiesDto = _mapper.Map<List<PropertyResponse>>(properties);
+            if (propertiesDto.Count == 0)
+            {
+                return NotFound("No properties found");
+            }
+            return Ok(propertiesDto);
+        }
+        
     }
 }

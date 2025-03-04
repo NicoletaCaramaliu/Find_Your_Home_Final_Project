@@ -5,6 +5,7 @@ namespace Find_Your_Home.Models.Properties
 {
     public class Property : BaseEntity
     {
+        public string Category { get; set; } //ap/casa/garsoniera
         public string Name { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }

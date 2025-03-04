@@ -15,7 +15,7 @@ namespace Find_Your_Home.Services.PropertyImagesService
             _unitOfWork = unitOfWork;
         }
         
-        public async Task<List<PropertyImage>> GetPropertyImages(Guid propertyId)
+        public async Task<IEnumerable<PropertyImage>> GetPropertyImages(Guid propertyId)
         {
             return await _propertyImgRepository.GetImages(propertyId);
         }
