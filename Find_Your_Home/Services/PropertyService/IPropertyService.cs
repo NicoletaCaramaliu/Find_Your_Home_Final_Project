@@ -8,5 +8,7 @@ namespace Find_Your_Home.Services.PropertyService
         Task<Property> CreateProperty(Property property);
         Task<IEnumerable<Property>> GetAllProperties();
         Task<IEnumerable<Property>> FilterProperties(FilterCriteria filterCriteria);
+
+        Task<Property> GetPropertyByID(Guid id);
     }
 }

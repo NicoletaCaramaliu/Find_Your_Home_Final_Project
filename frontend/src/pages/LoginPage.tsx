@@ -16,7 +16,7 @@ export default function LoginPage() {
     try {
       setIsLoading(true);
       await login(email, password);
-      navigate("/dashboard");
+      navigate("/properties");
     } catch (error: any) {
       setErrorMessage(error.message);
     } finally {
@@ -26,7 +26,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-blue-100 to-blue-50 dark:from-gray-600 dark:to-black transition-colors duration-500">
-
+      
       {/*imaginea*/}
       <motion.div
         initial={{ opacity: 0, x: -50 }}

@@ -103,5 +103,14 @@ namespace Find_Your_Home.Controllers
             return Ok(propertiesDto);
         }
         
+        //get property by id
+        [HttpGet("{id}")]
+
+        public async Task<ActionResult<PropertyResponse>> GetPropertyById(Guid id)
+        {
+            var property = await _propertyService.GetPropertyByID(id);
+            var propertyResponse = _mapper.Map<PropertyResponse>(property);
+            return Ok(propertyResponse);
+        }
     }
 }

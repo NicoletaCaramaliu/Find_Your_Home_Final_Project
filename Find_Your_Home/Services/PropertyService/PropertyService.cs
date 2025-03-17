@@ -35,5 +35,10 @@ namespace Find_Your_Home.Services.PropertyService
             var filteredProperties = await _propertyRepository.FilterPropertiesAsync(properties, filterCriteria);
             return filteredProperties;
         }
+
+        public async Task<Property> GetPropertyByID(Guid id)
+        {
+            return await _propertyRepository.FindByIdAsync(id);
+        }
     }
 }
