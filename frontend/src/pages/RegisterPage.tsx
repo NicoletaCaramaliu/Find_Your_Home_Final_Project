@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import RegisterForm from "../components/RegisterForm";
+import RegisterForm from "../components/login/RegisterForm";
 import { Card, CardContent } from "../components/ui/Card";
 import { register } from "../services/authService"; // functia care face request la backend
 import ThemeToggle from "../components/ThemeToggle";

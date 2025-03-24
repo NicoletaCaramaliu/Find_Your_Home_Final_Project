@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/login/LoginForm";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../components/ThemeToggle";
 import { login } from "../services/authService";
