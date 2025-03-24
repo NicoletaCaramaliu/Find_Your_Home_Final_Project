@@ -138,6 +138,8 @@ var app = builder.Build();
 
 //app.UseCors("AllowAll");
 app.UseCors("AllowFrontend");
+app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
