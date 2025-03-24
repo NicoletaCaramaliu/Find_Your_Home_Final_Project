@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 export default function LoginPage() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [, setIsLoading] = useState<boolean>(false);
 
   const handleLogin = async (email: string, password: string) => {
     try {

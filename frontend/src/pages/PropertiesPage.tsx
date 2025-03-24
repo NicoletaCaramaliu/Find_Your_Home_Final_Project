@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import MainNavBar from '../components/MainNavBar';
 import FiltersForm from '../components/properties/FiltersForm';
 import PropertiesList from '../components/properties/PropertiesList';
@@ -20,7 +21,7 @@ interface Property {
     squareFeet: number;
     level: number;
     isAvailable: boolean;
-    imageUrls: string[];
+    imageUrls: string[]; // Updated to include the first image URL
 }
 
 interface Filters {
@@ -48,32 +49,60 @@ const PropertiesPage: React.FC = () => {
         squareFeet: "",
     });
 
-    useEffect(() => {
-        fetchProperties();
-    }, []);
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    const fetchProperties = (queryParams: string = "") => {
-        fetch(`${API_URL}/filterProperties?${queryParams}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch properties");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.length === 0) {
-                    setNoResults(true);
-                    setProperties([]);
-                } else {
-                    setNoResults(false);
-                    setProperties(data);
-                }
-            })
-            .catch(error => {
-                console.error("Error fetching properties:", error);
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const parsedFilters: Filters = {
+            city: searchParams.get("city") || "",
+            state: searchParams.get("state") || "",
+            minPrice: searchParams.get("minPrice") || "",
+            maxPrice: searchParams.get("maxPrice") || "",
+            rooms: searchParams.get("rooms") || "",
+            bathrooms: searchParams.get("bathrooms") || "",
+            garage: searchParams.get("garage") || "",
+            squareFeet: searchParams.get("squareFeet") || "",
+        };
+        setFilters(parsedFilters);
+        fetchProperties(searchParams.toString());
+    }, [location.search]);
+
+    const fetchProperties = async (queryParams: string = "") => {
+        try {
+            const response = await fetch(`${API_URL}/filterProperties?${queryParams}`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch properties");
+            }
+            const data: Property[] = await response.json();
+
+            if (data.length === 0) {
                 setNoResults(true);
                 setProperties([]);
-            });
+            } else {
+                setNoResults(false);
+
+                // Fetch the first image for each property
+                const propertiesWithImages = await Promise.all(
+                    data.map(async (property) => {
+                        const imagesResponse = await fetch(`${API_URL}/getAllPropertyImages?propertyId=${property.id}`);
+                        if (imagesResponse.ok) {
+                            const images: string[] = await imagesResponse.json();
+                            property.imageUrls = images.length > 0 ? [images[0]] : []; //the first image or an empty array
+                        } else {
+                            property.imageUrls = []; // nothing if no images are found
+                        }
+                        return property;
+                    })
+                );
+
+                setProperties(propertiesWithImages);
+            }
+        } catch (error) {
+            console.error("Error fetching properties:", error);
+            setNoResults(true);
+            setProperties([]);
+        }
     };
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -92,7 +121,9 @@ const PropertiesPage: React.FC = () => {
                 queryParams.append(key, value);
             }
         });
-        fetchProperties(queryParams.toString());
+
+        // update the URL with the current filters
+        navigate(`?${queryParams.toString()}`);
     };
 
     return (
