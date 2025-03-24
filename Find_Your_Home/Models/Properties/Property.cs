@@ -13,6 +13,7 @@ namespace Find_Your_Home.Models.Properties
         public string State { get; set; }
         public string Zip { get; set; }
         public decimal Price { get; set; }
+        
         public int Rooms { get; set; }
         public int Bathrooms { get; set; }
         public bool Garage { get; set; }

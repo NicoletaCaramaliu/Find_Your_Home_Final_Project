@@ -5,6 +5,9 @@ namespace Find_Your_Home.Models.Properties.DTO
     public class PropertyRequest
     {
         [Required]
+        public string Category { get; set; }
+        
+        [Required]
         public string Name { get; set; }
 
         [Required]

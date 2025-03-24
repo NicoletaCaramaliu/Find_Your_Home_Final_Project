@@ -18,6 +18,7 @@ interface Property {
     bathrooms: number;
     garage: boolean;
     squareFeet: number;
+    level: number;
     isAvailable: boolean;
     imageUrls: string[];
 }
@@ -41,6 +42,7 @@ const PropertiesPage: React.FC = () => {
                     bathrooms: property.bathrooms,
                     garage: property.garage,
                     squareFeet: property.squareFeet,
+                    level: property.level,
                     isAvailable: property.isAvailable,
                     imageUrls: Array.isArray(property.imageUrls) && property.imageUrls.length > 0 
                         ? property.imageUrls 

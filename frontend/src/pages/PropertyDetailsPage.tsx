@@ -17,6 +17,7 @@ interface Property {
     bathrooms: number;
     garage: boolean;
     squareFeet: number;
+    level: number;
     isAvailable: boolean;
     ownerId: number;
     imageUrls: string[];
@@ -27,7 +28,8 @@ const PropertyDetailsPage: React.FC = () => {
     const [property, setProperty] = useState<Property | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [images, setImages] = useState<string[]>([]); // State pentru imagini
+    const [images, setImages] = useState<string[]>([]);
+    const [currentIndex, setCurrentIndex] = useState<number | null>(null);
 
     // Fetch property details
     useEffect(() => {
@@ -37,7 +39,7 @@ const PropertyDetailsPage: React.FC = () => {
             return;
         }
 
-        fetch(`${API_URL}/id?id=${id}`)
+        fetch(`${API_URL}/${id}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -62,12 +64,12 @@ const PropertyDetailsPage: React.FC = () => {
                     bathrooms: data.bathrooms,
                     garage: data.garage,
                     squareFeet: data.squareFeet,
+                    level: data.level,
                     isAvailable: data.isAvailable,
                     ownerId: data.ownerId,
-                    imageUrls: [] 
+                    imageUrls: []
                 });
 
-                // images of the property
                 return fetch(`${API_URL}/getAllPropertyImages?propertyId=${data.id}`);
             })
             .then(response => {
@@ -85,6 +87,35 @@ const PropertyDetailsPage: React.FC = () => {
             })
             .finally(() => setLoading(false));
     }, [id]);
+
+    const handlePrevImage = () => {
+        setCurrentIndex((prevIndex) => (prevIndex !== null ? (prevIndex === 0 ? images.length - 1 : prevIndex - 1) : 0));
+    };
+    
+    const handleNextImage = () => {
+        setCurrentIndex((prevIndex) => (prevIndex !== null ? (prevIndex === images.length - 1 ? 0 : prevIndex + 1) : 0));
+    };
+    
+
+    //  taste <- ->
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (currentIndex !== null) {
+                if (event.key === "ArrowLeft") {
+                    handlePrevImage();
+                } else if (event.key === "ArrowRight") {
+                    handleNextImage();
+                } else if (event.key === "Escape") {
+                    setCurrentIndex(null); // Închide lightbox-ul cu Esc
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [currentIndex, images]);
 
     if (loading) {
         return <div className="text-center text-gray-700 dark:text-white">Loading...</div>;
@@ -109,16 +140,23 @@ const PropertyDetailsPage: React.FC = () => {
                             ${property.price.toLocaleString()}
                         </p>
                         <div className="grid grid-cols-2 gap-4 mt-4">
-                            <p className="text-gray-700 dark:text-gray-300">Rooms: {property.rooms}</p>
-                            <p className="text-gray-700 dark:text-gray-300">Bathrooms: {property.bathrooms}</p>
-                            <p className="text-gray-700 dark:text-gray-300">Garage: {property.garage ? "Yes" : "No"}</p>
-                            <p className="text-gray-700 dark:text-gray-300">Size: {property.squareFeet} sqft</p>
+                            <p className="text-gray-700 dark:text-gray-300">Număr camere: {property.rooms}</p>
+                            <p className="text-gray-700 dark:text-gray-300">Număr băi: {property.bathrooms}</p>
+                            <p className="text-gray-700 dark:text-gray-300">Garaj: {property.garage ? "Yes" : "No"}</p>
+                            <p className="text-gray-700 dark:text-gray-300">Suprafață: {property.squareFeet} sqft</p>
+                            <p className="text-gray-700 dark:text-gray-300">Etaj: {property.level} </p>
                         </div>
-                        {/* Afișează imaginile proprietății */}
+                        {/* Property images */}
                         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {images.length > 0 ? (
                                 images.map((url, index) => (
-                                    <img key={index} src={url} alt={`Property ${index + 1}`} className="w-full h-64 object-cover rounded-lg mb-4" />
+                                    <img
+                                        key={index}
+                                        src={url}
+                                        alt={`Property ${index + 1}`}
+                                        className="w-full h-64 object-cover rounded-lg mb-4 cursor-pointer transition-transform transform hover:scale-105"
+                                        onClick={() => setCurrentIndex(index)}
+                                    />
                                 ))
                             ) : (
                                 <p className="text-gray-500 dark:text-gray-400">No images available</p>
@@ -127,6 +165,56 @@ const PropertyDetailsPage: React.FC = () => {
                     </div>
                 )}
             </div>
+
+            {/* Lightbox for image navigation */}
+            {currentIndex !== null && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50"
+                    onClick={() => setCurrentIndex(null)}
+                >
+                    <div className="relative">
+                        {/* Close button */}
+                        <button
+                            className="absolute top-5 right-5 text-white text-3xl bg-black bg-opacity-50 rounded-full p-3 hover:bg-opacity-70 transition"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setCurrentIndex(null);
+                            }}
+                        >
+                            ✕
+                        </button>
+
+                        {/* Previous button */}
+                        <button
+                            className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white text-3xl p-3 rounded-full hover:bg-opacity-70 transition"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handlePrevImage();
+                            }}
+                        >
+                            ❮
+                        </button>
+
+                        {/* Image */}
+                        <img
+                            src={images[currentIndex]}
+                            alt="Selected"
+                            className="w-screen h-screen max-w-full max-h-full object-contain"
+                        />
+
+                        {/* Next button */}
+                        <button
+                            className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white text-3xl p-3 rounded-full hover:bg-opacity-70 transition"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleNextImage();
+                            }}
+                        >
+                            ❯
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
