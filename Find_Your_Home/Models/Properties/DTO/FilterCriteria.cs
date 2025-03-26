@@ -12,5 +12,13 @@
         public int? Bathrooms { get; set; }
         public bool? Garage { get; set; }
         public int? SquareFeet { get; set; }
+        
+        public int? NumberOfKitchen { get; set; }
+        public int? NumberOfBalconies { get; set; }
+        public bool? HasGarden { get; set; }
+        public bool? ForRent { get; set; }
+        public int? Views { get; set; }
+        public int? YearOfConstruction { get; set; }
+        public bool? Furnished { get; set; }
     }
 }

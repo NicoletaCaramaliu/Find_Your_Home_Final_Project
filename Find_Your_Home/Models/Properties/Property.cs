@@ -20,6 +20,14 @@ namespace Find_Your_Home.Models.Properties
         public int Level { get; set; }
         public int SquareFeet { get; set; }
         public bool IsAvailable { get; set; }
+        
+        public int NumberOfKitchen { get; set; }
+        public int NumberOfBalconies { get; set; }
+        public bool HasGarden { get; set; }
+        public bool ForRent { get; set; }
+        public int Views { get; set; }
+        public int YearOfConstruction { get; set; }
+        public bool Furnished { get; set; }
 
         public Guid OwnerId { get; set;  }
         public User Owner { get; set; }

@@ -16,6 +16,15 @@
         public bool Garage { get; set; }
         public int SquareFeet { get; set; }
         public int Level { get; set; }
+        
+        public int numberOfKitchen { get; set; }
+        public int numberOfBalconies { get; set; }
+        public bool hasGarden { get; set; }
+        public bool forRent { get; set; }
+        public int views { get; set; }
+        public int yearOfConstruction { get; set; }
+        public bool furnished { get; set; }
+        
         public bool IsAvailable { get; set; } = true;
         public Guid OwnerId { get; set; }
     }

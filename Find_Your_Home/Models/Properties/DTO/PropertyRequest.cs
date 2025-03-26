@@ -48,8 +48,24 @@ namespace Find_Your_Home.Models.Properties.DTO
         [Required]
         [Range(10, 10000)]
         public int SquareFeet { get; set; }
-
+        
+        [Required]
         public bool IsAvailable { get; set; } = true;
+        
+        [Required]
+        public int numberOfKitchen { get; set; }
+        [Required]
+        public int numberOfBalconies { get; set; }
+        [Required]
+        public bool hasGarden { get; set; }
+        [Required]
+        public bool forRent { get; set; }
+        [Required]
+        public int views { get; set; }
+        [Required]
+        public int yearOfConstruction { get; set; }
+        [Required]
+        public bool furnished { get; set; }
         
         // ????? eliminat
         public List<string> ImageUrls { get; set; } = new List<string>();
