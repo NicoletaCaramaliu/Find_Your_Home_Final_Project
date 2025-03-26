@@ -24,7 +24,7 @@ interface Property {
     views: number;
     yearOfConstruction: number;
     furnished: boolean;
-    imageUrls: string[];
+    firstImageUrl: string;
 }
 
 interface PropertiesListProps {

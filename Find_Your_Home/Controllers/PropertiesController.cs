@@ -95,11 +95,18 @@ namespace Find_Your_Home.Controllers
         public async Task<ActionResult<List<PropertyResponse>>> FilterProperties([FromQuery] FilterCriteria filterRequest)
         {
             var properties = await _propertyService.FilterProperties(filterRequest);
-            var propertiesDto = _mapper.Map<List<PropertyResponse>>(properties);
-            if (propertiesDto.Count == 0)
+            var propertiesDto = new List<PropertyResponse>();
+            foreach (var property in properties)
             {
-                return NotFound("No properties found");
+                var propertyResponse = _mapper.Map<PropertyResponse>(property);
+
+                var propertyImages = await _propertyImagesService.GetPropertyImages(property.Id);
+        
+                propertyResponse.FirstImageUrl = propertyImages.FirstOrDefault()?.ImageUrl;
+
+                propertiesDto.Add(propertyResponse);
             }
+
             return Ok(propertiesDto);
         }
         
@@ -113,10 +120,41 @@ namespace Find_Your_Home.Controllers
             return Ok(propertyResponse);
         }
 
+        [HttpGet("sortProperties")]
         public async Task<ActionResult<List<PropertyResponse>>> SortProperties([FromQuery] SortCriteria sortCriteria)
         {
             var properties = await _propertyService.SortProperties(sortCriteria);
-            var propertiesDto = _mapper.Map<List<PropertyResponse>>(properties);
+            var propertiesDto = new List<PropertyResponse>();
+            foreach (var property in properties)
+            {
+                var propertyResponse = _mapper.Map<PropertyResponse>(property);
+
+                var propertyImages = await _propertyImagesService.GetPropertyImages(property.Id);
+        
+                propertyResponse.FirstImageUrl = propertyImages.FirstOrDefault()?.ImageUrl;
+
+                propertiesDto.Add(propertyResponse);
+            }
+
+            return Ok(propertiesDto);
+        }
+        
+        [HttpGet("searchProperties")]
+        public async Task<ActionResult<List<PropertyResponse>>> SearchProperties([FromQuery] string searchText)
+        {
+            var properties = await _propertyService.SearchProperties(searchText);
+            var propertiesDto = new List<PropertyResponse>();
+            foreach (var property in properties)
+            {
+                var propertyResponse = _mapper.Map<PropertyResponse>(property);
+
+                var propertyImages = await _propertyImagesService.GetPropertyImages(property.Id);
+        
+                propertyResponse.FirstImageUrl = propertyImages.FirstOrDefault()?.ImageUrl;
+
+                propertiesDto.Add(propertyResponse);
+            }
+
             return Ok(propertiesDto);
         }
     }

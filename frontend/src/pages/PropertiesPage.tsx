@@ -28,7 +28,8 @@ interface Property {
     views: number;
     yearOfConstruction: number;
     furnished: boolean;
-    imageUrls: string[];
+    firstImageUrl: string; 
+    createdAt: string;
 }
 
 interface Filters {
@@ -70,6 +71,11 @@ const PropertiesPage: React.FC = () => {
         furnished: "",
     });
 
+    const [sortCriteria, setSortCriteria] = useState({
+        sortBy: "", // Default to no selection
+        sortOrder: "", // Default to no selection
+    });
+
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -103,27 +109,19 @@ const PropertiesPage: React.FC = () => {
                 throw new Error("Failed to fetch properties");
             }
             const data: Property[] = await response.json();
-
+    
             if (data.length === 0) {
                 setNoResults(true);
                 setProperties([]);
             } else {
                 setNoResults(false);
-
-                const propertiesWithImages = await Promise.all(
-                    data.map(async (property) => {
-                        const imagesResponse = await fetch(`${API_URL}/getAllPropertyImages?propertyId=${property.id}`);
-                        if (imagesResponse.ok) {
-                            const images: string[] = await imagesResponse.json();
-                            property.imageUrls = images.length > 0 ? [images[0]] : [];
-                        } else {
-                            property.imageUrls = [];
-                        }
-                        return property;
-                    })
-                );
-
-                setProperties(propertiesWithImages);
+                // Map firstImageUrl to imageUrls
+                const mappedProperties = data.map(property => ({
+                    ...property,
+                    imageUrls: property.firstImageUrl ? [property.firstImageUrl] : [], 
+                }));
+                setProperties(mappedProperties);
+                console.log("Fetched properties:", mappedProperties);
             }
         } catch (error) {
             console.error("Error fetching properties:", error);
@@ -131,6 +129,40 @@ const PropertiesPage: React.FC = () => {
             setProperties([]);
         }
     };
+    
+    const fetchSortedProperties = async () => {
+        if (!sortCriteria.sortBy || !sortCriteria.sortOrder) {
+            console.warn("Sort criteria are incomplete. Skipping API call.");
+            return;
+        }
+    
+        try {
+            const response = await fetch(
+                `${API_URL}/sortProperties?sortBy=${sortCriteria.sortBy}&sortOrder=${sortCriteria.sortOrder}`
+            );
+            if (!response.ok) {
+                throw new Error("Failed to fetch sorted properties");
+            }
+            const data: Property[] = await response.json();
+    
+            // Map firstImageUrl to imageUrls
+            const mappedProperties = data.map(property => ({
+                ...property,
+                imageUrls: property.firstImageUrl ? [property.firstImageUrl] : [], // Corrected case
+            }));
+            setProperties(mappedProperties);
+        } catch (error) {
+            console.error("Error fetching sorted properties:", error);
+        }
+    };
+
+    const handleSortChange = (sortBy: string, sortOrder: string) => {
+        setSortCriteria({ sortBy, sortOrder });
+    };
+
+    useEffect(() => {
+        fetchSortedProperties();
+    }, [sortCriteria]);
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
@@ -178,13 +210,17 @@ const PropertiesPage: React.FC = () => {
             <div className="w-full bg-blue-500 dark:bg-gray-800/90">
                 <MainNavBar />
             </div>
+
             <div className="min-h-screen flex">
                 <PropertiesList properties={properties} noResults={noResults} />
                 <FiltersForm
                     filters={filters}
                     onFilterChange={handleFilterChange}
                     onApplyFilters={applyFilters}
-                    onClearFilters={handleClearFilters} // Pass the clear filters function
+                    onClearFilters={handleClearFilters}
+                    sortBy={sortCriteria.sortBy}
+                    sortOrder={sortCriteria.sortOrder}
+                    onSortChange={handleSortChange}
                 />
             </div>
         </div>

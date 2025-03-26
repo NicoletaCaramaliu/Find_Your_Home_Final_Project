@@ -21,11 +21,22 @@ interface FiltersFormProps {
     filters: Filters;
     onFilterChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     onApplyFilters: (e: React.FormEvent) => void;
-    onClearFilters: () => void; // New prop for clearing filters
+    onClearFilters: () => void;
+    sortBy: string; // Added sortBy
+    sortOrder: string; // Added sortOrder
+    onSortChange: (sortBy: string, sortOrder: string) => void; // Added onSortChange
 }
 
-const FiltersForm: React.FC<FiltersFormProps> = ({ filters, onFilterChange, onApplyFilters, onClearFilters }) => {
-    const [isOpen, setIsOpen] = useState(false); // State to control visibility of the form
+const FiltersForm: React.FC<FiltersFormProps> = ({
+    filters,
+    onFilterChange,
+    onApplyFilters,
+    onClearFilters,
+    sortBy,
+    sortOrder,
+    onSortChange,
+}) => {
+    const [isOpen, setIsOpen] = useState(false);
 
     const inputFields = [
         { name: 'city', type: 'text', placeholder: 'Oraș' },
@@ -47,8 +58,35 @@ const FiltersForm: React.FC<FiltersFormProps> = ({ filters, onFilterChange, onAp
         { name: 'garage', label: 'Garaj' },
     ];
 
+    const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const [newSortBy, newSortOrder] = e.target.value.split("-");
+        onSortChange(newSortBy, newSortOrder);
+    };
+
     return (
         <div className="lg:w-1/4 p-6 bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md">
+            {/* Sorting Dropdown */}
+            <div className="mb-4">
+                <label htmlFor="sort" className="block text-gray-700 dark:text-white mb-2">
+                    Sortează Proprietățile:
+                </label>
+                <select
+                    id="sort"
+                    value={sortBy ? `${sortBy}-${sortOrder}` : ""}
+                    onChange={handleSortChange}
+                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white"
+                >
+                    <option value="" disabled>
+                        -Selectează criteriul-
+                    </option>
+                    <option value="price-asc">Preț (Crescător)</option>
+                    <option value="price-desc">Preț (Descrescător)</option>
+                    <option value="date-asc">Data Publicării (Crescător)</option>
+                    <option value="date-desc">Data Publicării (Descrescător)</option>
+                </select>
+
+            </div>
+
             {/* Toggle Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}

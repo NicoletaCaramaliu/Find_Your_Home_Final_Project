@@ -25,6 +25,9 @@
         public int yearOfConstruction { get; set; }
         public bool furnished { get; set; }
         
+        public string FirstImageUrl { get; set; }
+        
+        public DateTime CreatedAt { get; set; }
         public bool IsAvailable { get; set; } = true;
         public Guid OwnerId { get; set; }
     }
