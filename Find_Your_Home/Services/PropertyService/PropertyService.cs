@@ -40,5 +40,12 @@ namespace Find_Your_Home.Services.PropertyService
         {
             return await _propertyRepository.FindByIdAsync(id);
         }
+
+        public async Task<IEnumerable<Property>> SortProperties(SortCriteria sortCriteria)
+        {
+            var properties = await _propertyRepository.GetAllQueryableAsync();
+            var sortedProperties = await _propertyRepository.SortPropertiesAsync(properties, sortCriteria);
+            return sortedProperties;
+        }
     }
 }

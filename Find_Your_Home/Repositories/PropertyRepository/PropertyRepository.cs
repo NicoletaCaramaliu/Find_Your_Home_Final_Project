@@ -56,6 +56,62 @@ namespace Find_Your_Home.Repositories.PropertyRepository
             {
                 properties = properties.Where(p => p.SquareFeet >= filterCriteria.SquareFeet.Value);
             }
+            if (filterCriteria.NumberOfKitchen.HasValue)
+            {
+                properties = properties.Where(p => p.NumberOfKitchen == filterCriteria.NumberOfKitchen.Value);
+            }
+            if (filterCriteria.NumberOfBalconies.HasValue)
+            {
+                properties = properties.Where(p => p.NumberOfBalconies == filterCriteria.NumberOfBalconies.Value);
+            }
+            if (filterCriteria.HasGarden.HasValue)
+            {
+                properties = properties.Where(p => p.HasGarden == filterCriteria.HasGarden.Value);
+            }
+            if (filterCriteria.ForRent.HasValue)
+            {
+                properties = properties.Where(p => p.ForRent == filterCriteria.ForRent.Value);
+            }
+            if (filterCriteria.Views.HasValue)
+            {
+                properties = properties.Where(p => p.Views <= filterCriteria.Views.Value);
+            }
+            if (filterCriteria.YearOfConstruction.HasValue)
+            {
+                properties = properties.Where(p => p.YearOfConstruction >= filterCriteria.YearOfConstruction.Value);
+            }
+            if (filterCriteria.Furnished.HasValue)
+            {
+                properties = properties.Where(p => p.Furnished == filterCriteria.Furnished.Value);
+            }
+            
+
+            return await properties.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Property>> SortPropertiesAsync(IQueryable<Property> properties, SortCriteria sortCriteria)
+        {
+            if (string.IsNullOrEmpty(sortCriteria.SortBy))
+            {
+                return await properties.ToListAsync();
+            }
+
+            switch (sortCriteria.SortBy.ToLower())
+            {
+                //ulterior cele mai populare in functie de views
+                case "price":
+                    properties = sortCriteria.SortOrder.ToLower() == "desc" 
+                        ? properties.OrderByDescending(p => p.Price) 
+                        : properties.OrderBy(p => p.Price);
+                    break;
+                case "date":
+                    properties = sortCriteria.SortOrder.ToLower() == "desc" 
+                        ? properties.OrderByDescending(p => p.CreatedAt) 
+                        : properties.OrderBy(p => p.CreatedAt);
+                    break;
+                default:
+                    return await properties.ToListAsync();
+            }
 
             return await properties.ToListAsync();
         }

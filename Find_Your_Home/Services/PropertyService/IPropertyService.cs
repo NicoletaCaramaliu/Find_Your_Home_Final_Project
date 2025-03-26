@@ -10,5 +10,7 @@ namespace Find_Your_Home.Services.PropertyService
         Task<IEnumerable<Property>> FilterProperties(FilterCriteria filterCriteria);
 
         Task<Property> GetPropertyByID(Guid id);
+        
+        Task<IEnumerable<Property>> SortProperties(SortCriteria sortCriteria);
     }
 }

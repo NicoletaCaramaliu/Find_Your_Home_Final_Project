@@ -28,8 +28,7 @@ namespace Find_Your_Home.Controllers
             _mapper = mapper;
         }   
         
-        //[HttpPost("createProperty"), Authorize]
-        [HttpPost("createProperty")]
+        [HttpPost("createProperty"), Authorize]
         public async Task<ActionResult<PropertyResponse>> CreateProperty(
             [FromForm] PropertyRequest propertyRequest,
             [FromForm] List<IFormFile> images,
@@ -112,6 +111,13 @@ namespace Find_Your_Home.Controllers
             var property = await _propertyService.GetPropertyByID(id);
             var propertyResponse = _mapper.Map<PropertyResponse>(property);
             return Ok(propertyResponse);
+        }
+
+        public async Task<ActionResult<List<PropertyResponse>>> SortProperties([FromQuery] SortCriteria sortCriteria)
+        {
+            var properties = await _propertyService.SortProperties(sortCriteria);
+            var propertiesDto = _mapper.Map<List<PropertyResponse>>(properties);
+            return Ok(propertiesDto);
         }
     }
 }
