@@ -11,11 +11,10 @@ function App() {
   return (
     <ThemeProvider>
     <Routes>
-      {/* <Route path="/" element={<LoginPage />} />
+      <Route path="/" element={<LoginPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/register" element={<RegisterPage />} /> 
-      <Route path="/aboutUs" element={<AboutUsPage />} />  */}
+      <Route path="/aboutUs" element={<AboutUsPage />} />  
       <Route path="/properties" element={<PropertiesPage />} />
       <Route path="/properties/:id" element={<PropertyDetailsPage />} />
     </Routes>

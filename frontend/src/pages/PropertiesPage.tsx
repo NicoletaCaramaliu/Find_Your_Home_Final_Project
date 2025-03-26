@@ -21,7 +21,14 @@ interface Property {
     squareFeet: number;
     level: number;
     isAvailable: boolean;
-    imageUrls: string[]; // Updated to include the first image URL
+    numberOfKitchen: number;
+    numberOfBalconies: number;
+    hasGarden: boolean;
+    forRent: boolean;
+    views: number;
+    yearOfConstruction: number;
+    furnished: boolean;
+    imageUrls: string[];
 }
 
 interface Filters {
@@ -33,6 +40,13 @@ interface Filters {
     bathrooms: string;
     garage: string;
     squareFeet: string;
+    level: string;
+    numberOfKitchen: string;
+    numberOfBalconies: string;
+    hasGarden: string;
+    forRent: string;
+    yearOfConstruction: string;
+    furnished: string;
 }
 
 const PropertiesPage: React.FC = () => {
@@ -47,6 +61,13 @@ const PropertiesPage: React.FC = () => {
         bathrooms: "",
         garage: "",
         squareFeet: "",
+        level: "",
+        numberOfKitchen: "",
+        numberOfBalconies: "",
+        hasGarden: "",
+        forRent: "",
+        yearOfConstruction: "",
+        furnished: "",
     });
 
     const location = useLocation();
@@ -63,6 +84,13 @@ const PropertiesPage: React.FC = () => {
             bathrooms: searchParams.get("bathrooms") || "",
             garage: searchParams.get("garage") || "",
             squareFeet: searchParams.get("squareFeet") || "",
+            level: searchParams.get("level") || "",
+            numberOfKitchen: searchParams.get("numberOfKitchen") || "",
+            numberOfBalconies: searchParams.get("numberOfBalconies") || "",
+            hasGarden: searchParams.get("hasGarden") || "",
+            forRent: searchParams.get("forRent") || "",
+            yearOfConstruction: searchParams.get("yearOfConstruction") || "",
+            furnished: searchParams.get("furnished") || "",
         };
         setFilters(parsedFilters);
         fetchProperties(searchParams.toString());
@@ -82,15 +110,14 @@ const PropertiesPage: React.FC = () => {
             } else {
                 setNoResults(false);
 
-                // Fetch the first image for each property
                 const propertiesWithImages = await Promise.all(
                     data.map(async (property) => {
                         const imagesResponse = await fetch(`${API_URL}/getAllPropertyImages?propertyId=${property.id}`);
                         if (imagesResponse.ok) {
                             const images: string[] = await imagesResponse.json();
-                            property.imageUrls = images.length > 0 ? [images[0]] : []; //the first image or an empty array
+                            property.imageUrls = images.length > 0 ? [images[0]] : [];
                         } else {
-                            property.imageUrls = []; // nothing if no images are found
+                            property.imageUrls = [];
                         }
                         return property;
                     })
@@ -122,8 +149,28 @@ const PropertiesPage: React.FC = () => {
             }
         });
 
-        // update the URL with the current filters
         navigate(`?${queryParams.toString()}`);
+    };
+
+    const handleClearFilters = () => {
+        setFilters({
+            city: "",
+            state: "",
+            minPrice: "",
+            maxPrice: "",
+            rooms: "",
+            bathrooms: "",
+            garage: "",
+            squareFeet: "",
+            level: "",
+            numberOfKitchen: "",
+            numberOfBalconies: "",
+            hasGarden: "",
+            forRent: "",
+            yearOfConstruction: "",
+            furnished: "",
+        });
+        navigate("?"); // Reset the URL query parameters
     };
 
     return (
@@ -137,6 +184,7 @@ const PropertiesPage: React.FC = () => {
                     filters={filters}
                     onFilterChange={handleFilterChange}
                     onApplyFilters={applyFilters}
+                    onClearFilters={handleClearFilters} // Pass the clear filters function
                 />
             </div>
         </div>

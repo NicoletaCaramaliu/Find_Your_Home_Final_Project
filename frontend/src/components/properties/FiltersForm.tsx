@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface Filters {
     city: string;
@@ -9,92 +9,100 @@ interface Filters {
     bathrooms: string;
     garage: string;
     squareFeet: string;
+    numberOfKitchen: string;
+    numberOfBalconies: string;
+    hasGarden: string;
+    forRent: string;
+    yearOfConstruction: string;
+    furnished: string;
 }
 
 interface FiltersFormProps {
     filters: Filters;
     onFilterChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     onApplyFilters: (e: React.FormEvent) => void;
+    onClearFilters: () => void; // New prop for clearing filters
 }
 
-const FiltersForm: React.FC<FiltersFormProps> = ({ filters, onFilterChange, onApplyFilters }) => {
+const FiltersForm: React.FC<FiltersFormProps> = ({ filters, onFilterChange, onApplyFilters, onClearFilters }) => {
+    const [isOpen, setIsOpen] = useState(false); // State to control visibility of the form
+
+    const inputFields = [
+        { name: 'city', type: 'text', placeholder: 'Oraș' },
+        { name: 'state', type: 'text', placeholder: 'Județ' },
+        { name: 'minPrice', type: 'number', placeholder: 'Preț Minim' },
+        { name: 'maxPrice', type: 'number', placeholder: 'Preț Maxim' },
+        { name: 'rooms', type: 'number', placeholder: 'Număr de camere' },
+        { name: 'bathrooms', type: 'number', placeholder: 'Număr de băi' },
+        { name: 'squareFeet', type: 'number', placeholder: 'Suprafață minimă (mp)' },
+        { name: 'numberOfKitchen', type: 'number', placeholder: 'Număr de bucătării' },
+        { name: 'numberOfBalconies', type: 'number', placeholder: 'Număr de balcoane' },
+        { name: 'yearOfConstruction', type: 'number', placeholder: 'Anul construcției' },
+    ];
+
+    const checkboxFields = [
+        { name: 'hasGarden', label: 'Grădină' },
+        { name: 'forRent', label: 'De închiriat' },
+        { name: 'furnished', label: 'Mobilat' },
+        { name: 'garage', label: 'Garaj' },
+    ];
+
     return (
-        <div className="hidden lg:block lg:w-1/4 p-6 bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Filtrează Proprietăți</h2>
-            <form onSubmit={onApplyFilters}>
-                <input
-                    type="text"
-                    name="city"
-                    value={filters.city}
-                    onChange={onFilterChange}
-                    placeholder="Oraș"
-                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white mb-4"
-                />
-                <input
-                    type="text"
-                    name="state"
-                    value={filters.state}
-                    onChange={onFilterChange}
-                    placeholder="Județ"
-                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white mb-4"
-                />
-                <input
-                    type="number"
-                    name="minPrice"
-                    value={filters.minPrice}
-                    onChange={onFilterChange}
-                    placeholder="Preț Minim"
-                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white mb-4"
-                />
-                <input
-                    type="number"
-                    name="maxPrice"
-                    value={filters.maxPrice}
-                    onChange={onFilterChange}
-                    placeholder="Preț Maxim"
-                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white mb-4"
-                />
-                <input
-                    type="number"
-                    name="rooms"
-                    value={filters.rooms}
-                    onChange={onFilterChange}
-                    placeholder="Număr de camere"
-                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white mb-4"
-                />
-                <input
-                    type="number"
-                    name="bathrooms"
-                    value={filters.bathrooms}
-                    onChange={onFilterChange}
-                    placeholder="Număr de băi"
-                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white mb-4"
-                />
-                <input
-                    type="number"
-                    name="squareFeet"
-                    value={filters.squareFeet}
-                    onChange={onFilterChange}
-                    placeholder="Suprafață minimă (mp)"
-                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white mb-4"
-                />
-                <label className="flex items-center text-gray-700 dark:text-gray-200">
-                    <input
-                        type="checkbox"
-                        name="garage"
-                        checked={filters.garage === "true"}
-                        onChange={onFilterChange}
-                        className="mr-2"
-                    />
-                    Garaj
-                </label>
-                <button
-                    type="submit"
-                    className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 mt-4"
-                >
-                    Aplică Filtre
-                </button>
-            </form>
+        <div className="lg:w-1/4 p-6 bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md">
+            {/* Toggle Button */}
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            >
+                {isOpen ? 'Ascunde Filtre' : 'Filtrează proprietățile'}
+            </button>
+
+            {/* Collapsible Form */}
+            {isOpen && (
+                <div className="mt-4">
+                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Filtrează Proprietăți</h2>
+                    <form onSubmit={onApplyFilters}>
+                        {inputFields.map((field) => (
+                            <input
+                                key={field.name}
+                                type={field.type}
+                                name={field.name}
+                                value={filters[field.name as keyof Filters]}
+                                onChange={onFilterChange}
+                                placeholder={field.placeholder}
+                                className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white mb-4"
+                            />
+                        ))}
+                        {checkboxFields.map((field) => (
+                            <label key={field.name} className="flex items-center text-gray-700 dark:text-gray-200 mb-4">
+                                <input
+                                    type="checkbox"
+                                    name={field.name}
+                                    checked={filters[field.name as keyof Filters] === 'true'}
+                                    onChange={onFilterChange}
+                                    className="mr-2"
+                                />
+                                {field.label}
+                            </label>
+                        ))}
+                        <div className="flex justify-between mt-4">
+                            <button
+                                type="submit"
+                                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                            >
+                                Aplică Filtre
+                            </button>
+                            <button
+                                type="button"
+                                onClick={onClearFilters}
+                                className="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600"
+                            >
+                                Resetează Filtre
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
         </div>
     );
 };

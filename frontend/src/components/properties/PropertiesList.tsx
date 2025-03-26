@@ -17,6 +17,13 @@ interface Property {
     squareFeet: number;
     level: number;
     isAvailable: boolean;
+    numberOfKitchen: number;
+    numberOfBalconies: number;
+    hasGarden: boolean;
+    forRent: boolean;
+    views: number;
+    yearOfConstruction: number;
+    furnished: boolean;
     imageUrls: string[];
 }
 
