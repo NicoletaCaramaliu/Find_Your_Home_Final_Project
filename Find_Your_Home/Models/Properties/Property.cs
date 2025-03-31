@@ -5,6 +5,7 @@ namespace Find_Your_Home.Models.Properties
 {
     public class Property : BaseEntity
     {
+        public string Category { get; set; } //ap/casa/garsoniera
         public string Name { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }
@@ -12,12 +13,21 @@ namespace Find_Your_Home.Models.Properties
         public string State { get; set; }
         public string Zip { get; set; }
         public decimal Price { get; set; }
+        
         public int Rooms { get; set; }
         public int Bathrooms { get; set; }
         public bool Garage { get; set; }
         public int Level { get; set; }
         public int SquareFeet { get; set; }
         public bool IsAvailable { get; set; }
+        
+        public int NumberOfKitchen { get; set; }
+        public int NumberOfBalconies { get; set; }
+        public bool HasGarden { get; set; }
+        public bool ForRent { get; set; }
+        public int Views { get; set; }
+        public int YearOfConstruction { get; set; }
+        public bool Furnished { get; set; }
 
         public Guid OwnerId { get; set;  }
         public User Owner { get; set; }

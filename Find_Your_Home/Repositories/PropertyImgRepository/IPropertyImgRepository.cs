@@ -5,6 +5,6 @@ namespace Find_Your_Home.Repositories.PropertyImgRepository
 {
     public interface IPropertyImgRepository : IGenericRepository<PropertyImage>
     {
-        Task<List<PropertyImage>> GetImages(Guid propertyId);
+        Task<IEnumerable<PropertyImage>> GetImages(Guid propertyId);
     }
 }

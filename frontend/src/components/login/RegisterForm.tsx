@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Input } from "./ui/Input";
-import { Button } from "./ui/Button";
+import { Input } from "../ui/Input";
+import { Button } from "../ui/Button";
 
 const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

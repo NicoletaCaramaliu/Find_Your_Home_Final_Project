@@ -13,7 +13,7 @@ namespace Find_Your_Home.Repositories.PropertyImgRepository
             _context = context;
         }
 
-        public async Task<List<PropertyImage>> GetImages(Guid propertyId)
+        public async Task<IEnumerable<PropertyImage>> GetImages(Guid propertyId)
         {
             return await _context.PropertyImages
                 .Where(img => img.PropertyId == propertyId)

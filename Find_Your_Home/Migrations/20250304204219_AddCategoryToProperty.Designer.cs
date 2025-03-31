@@ -4,6 +4,7 @@ using Find_Your_Home.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Find_Your_Home.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250304204219_AddCategoryToProperty")]
+    partial class AddCategoryToProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,16 +53,7 @@ namespace Find_Your_Home.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("ForRent")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Furnished")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("Garage")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HasGarden")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsAvailable")
@@ -71,12 +65,6 @@ namespace Find_Your_Home.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfBalconies")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumberOfKitchen")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
@@ -96,12 +84,6 @@ namespace Find_Your_Home.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Views")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearOfConstruction")
-                        .HasColumnType("int");
 
                     b.Property<string>("Zip")
                         .IsRequired()

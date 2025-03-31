@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/login/LoginForm";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../components/ThemeToggle";
 import { login } from "../services/authService";
@@ -10,13 +10,13 @@ import { motion } from "framer-motion";
 export default function LoginPage() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [, setIsLoading] = useState<boolean>(false);
 
   const handleLogin = async (email: string, password: string) => {
     try {
       setIsLoading(true);
       await login(email, password);
-      navigate("/dashboard");
+      navigate("/properties");
     } catch (error: any) {
       setErrorMessage(error.message);
     } finally {
@@ -26,7 +26,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-blue-100 to-blue-50 dark:from-gray-600 dark:to-black transition-colors duration-500">
-
+      
       {/*imaginea*/}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
