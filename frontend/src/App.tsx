@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom"; // Corect: folosește Routes și Route
 import LoginPage from "./pages/LoginPage"; 
-import Dashboard from "./pages/Dashboard"; 
 import RegisterPage from "./pages/RegisterPage";
 import AboutUsPage from "./pages/AboutUsPage";
 import PropertiesPage from "./pages/PropertiesPage";
