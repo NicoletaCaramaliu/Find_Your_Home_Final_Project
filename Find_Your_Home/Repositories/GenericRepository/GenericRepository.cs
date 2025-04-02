@@ -26,6 +26,11 @@ namespace Find_Your_Home.Repositories.GenericRepository
         {
             return await _table.AsNoTracking().ToListAsync();
         }
+        
+        public async Task<IQueryable<TEntity>> GetAllQueryableAsync()
+        {
+            return _table.AsNoTracking();
+        }
 
         // Create
         public void Create(TEntity entity)
