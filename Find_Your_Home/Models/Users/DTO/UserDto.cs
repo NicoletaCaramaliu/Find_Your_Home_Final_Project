@@ -7,6 +7,7 @@ namespace Find_Your_Home.Models.Users.DTO
         public Guid Id { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
+        public string ProfilePicture { get; set; }
         public Role Role { get; set; }
     }
 }

@@ -28,6 +28,7 @@
         public string FirstImageUrl { get; set; }
         
         public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
         public bool IsAvailable { get; set; } = true;
         public Guid OwnerId { get; set; }
     }

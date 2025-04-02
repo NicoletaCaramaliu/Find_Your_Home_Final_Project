@@ -22,9 +22,9 @@ interface FiltersFormProps {
     onFilterChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     onApplyFilters: (e: React.FormEvent) => void;
     onClearFilters: () => void;
-    sortBy: string; // Added sortBy
-    sortOrder: string; // Added sortOrder
-    onSortChange: (sortBy: string, sortOrder: string) => void; // Added onSortChange
+    sortBy: string; 
+    sortOrder: string; 
+    onSortChange: (sortBy: string, sortOrder: string) => void; 
 }
 
 const FiltersForm: React.FC<FiltersFormProps> = ({
@@ -64,7 +64,7 @@ const FiltersForm: React.FC<FiltersFormProps> = ({
     };
 
     return (
-        <div className="lg:w-1/4 p-6 bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md">
+        <div className="lg:w-1/4 p-6 bg-gray-300 dark:bg-gray-700 rounded-lg shadow-md">
             {/* Sorting Dropdown */}
             <div className="mb-4">
                 <label htmlFor="sort" className="block text-gray-700 dark:text-white mb-2">

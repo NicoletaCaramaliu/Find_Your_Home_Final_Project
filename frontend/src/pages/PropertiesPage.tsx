@@ -76,6 +76,14 @@ const PropertiesPage: React.FC = () => {
         sortOrder: "", // Default to no selection
     });
 
+    const [pagination, setPagination] = useState({
+        pageNumber: 1,
+        pageSize: 4, // Default page size
+    });
+
+    const [, setTotalProperties] = useState(0); 
+    const [isLastPage, setIsLastPage] = useState(false); 
+
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -100,59 +108,37 @@ const PropertiesPage: React.FC = () => {
         };
         setFilters(parsedFilters);
         fetchProperties(searchParams.toString());
-    }, [location.search]);
+    }, [location.search, pagination.pageNumber, pagination.pageSize]);
 
     const fetchProperties = async (queryParams: string = "") => {
         try {
-            const response = await fetch(`${API_URL}/filterProperties?${queryParams}`);
+            const response = await fetch(
+                `${API_URL}/filterProperties?${queryParams}&pageNumber=${pagination.pageNumber}&pageSize=${pagination.pageSize}`
+            );
             if (!response.ok) {
                 throw new Error("Failed to fetch properties");
             }
-            const data: Property[] = await response.json();
-    
-            if (data.length === 0) {
+            const data = await response.json();
+
+            
+            setTotalProperties(data.totalCount);
+            setIsLastPage(pagination.pageNumber * pagination.pageSize >= data.totalCount);
+
+            if (data.items.length === 0) {
                 setNoResults(true);
                 setProperties([]);
             } else {
                 setNoResults(false);
-                // Map firstImageUrl to imageUrls
-                const mappedProperties = data.map(property => ({
+                const mappedProperties = data.items.map((property: Property) => ({
                     ...property,
-                    imageUrls: property.firstImageUrl ? [property.firstImageUrl] : [], 
+                    imageUrls: property.firstImageUrl ? [property.firstImageUrl] : [],
                 }));
                 setProperties(mappedProperties);
-                console.log("Fetched properties:", mappedProperties);
             }
         } catch (error) {
             console.error("Error fetching properties:", error);
             setNoResults(true);
             setProperties([]);
-        }
-    };
-    
-    const fetchSortedProperties = async () => {
-        if (!sortCriteria.sortBy || !sortCriteria.sortOrder) {
-            console.warn("Sort criteria are incomplete. Skipping API call.");
-            return;
-        }
-    
-        try {
-            const response = await fetch(
-                `${API_URL}/sortProperties?sortBy=${sortCriteria.sortBy}&sortOrder=${sortCriteria.sortOrder}`
-            );
-            if (!response.ok) {
-                throw new Error("Failed to fetch sorted properties");
-            }
-            const data: Property[] = await response.json();
-    
-            // Map firstImageUrl to imageUrls
-            const mappedProperties = data.map(property => ({
-                ...property,
-                imageUrls: property.firstImageUrl ? [property.firstImageUrl] : [], // Corrected case
-            }));
-            setProperties(mappedProperties);
-        } catch (error) {
-            console.error("Error fetching sorted properties:", error);
         }
     };
 
@@ -161,7 +147,7 @@ const PropertiesPage: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchSortedProperties();
+        fetchProperties();
     }, [sortCriteria]);
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -205,8 +191,22 @@ const PropertiesPage: React.FC = () => {
         navigate("?"); // Reset the URL query parameters
     };
 
+    const handlePageChange = (newPageNumber: number) => {
+        setPagination(prev => ({
+            ...prev,
+            pageNumber: newPageNumber,
+        }));
+    };
+
+    const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setPagination({
+            pageNumber: 1, // Reset to the first page
+            pageSize: parseInt(e.target.value, 10),
+        });
+    };
+
     return (
-        <div>
+        <div className="w-full bg-gray-400 dark:bg-gray-400/90">
             <div className="w-full bg-blue-500 dark:bg-gray-800/90">
                 <MainNavBar />
             </div>
@@ -222,6 +222,41 @@ const PropertiesPage: React.FC = () => {
                     sortOrder={sortCriteria.sortOrder}
                     onSortChange={handleSortChange}
                 />
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="flex justify-center mt-4">
+                <button
+                    disabled={pagination.pageNumber === 1}
+                    onClick={() => handlePageChange(pagination.pageNumber - 1)}
+                    className="px-4 py-2 bg-gray-500 dark:bg-gray-900/90 rounded disabled:opacity-50"
+                >
+                    Înapoi
+                </button>
+                <span className="mx-4">Pagina {pagination.pageNumber}</span>
+                <button
+                    disabled={isLastPage}
+                    onClick={() => handlePageChange(pagination.pageNumber + 1)}
+                    className="px-4 py-2 bg-gray-500 dark:bg-gray-900/90 rounded disabled:opacity-50"
+                >
+                    Înainte
+                </button>
+            </div>
+
+            {/* Page Size Selector */}
+            <div className="flex justify-center mt-4">
+                <label htmlFor="pageSize" className="mr-2">Rezultate pe pagină:</label>
+                <select
+                    id="pageSize"
+                    value={pagination.pageSize}
+                    onChange={handlePageSizeChange}
+                    className="border rounded px-2 py-1"
+                >
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={30}>30</option>
+                    <option value={50}>50</option>
+                </select>
             </div>
         </div>
     );

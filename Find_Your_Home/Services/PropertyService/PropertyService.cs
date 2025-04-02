@@ -1,7 +1,9 @@
-﻿using Find_Your_Home.Models.Properties;
+﻿using Find_Your_Home.Helpers;
+using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
 using Find_Your_Home.Repositories.PropertyRepository;
 using Find_Your_Home.Repositories.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 
 namespace Find_Your_Home.Services.PropertyService
 {
@@ -29,12 +31,30 @@ namespace Find_Your_Home.Services.PropertyService
             return properties;
         }
         
-        public async Task<IEnumerable<Property>> FilterProperties(FilterCriteria filterCriteria)
+        /*
+        public async Task<IEnumerable<Property>> FilterProperties(FilterCriteria filterCriteria, int pageNumber, int pageSize)
         {
             var properties = await _propertyRepository.GetAllQueryableAsync();
             var filteredProperties = await _propertyRepository.FilterPropertiesAsync(properties, filterCriteria);
             return filteredProperties;
         }
+        */
+        
+        public async Task<(List<Property>, int)> FilterPropertiesWithCount(FilterCriteria filterCriteria, int pageNumber, int pageSize)
+        {
+            var properties = await _propertyRepository.GetAllQueryableAsync();
+    
+            
+            var filteredProperties = await _propertyRepository.FilterPropertiesAsync(properties, filterCriteria);
+    
+            int totalCount = await filteredProperties.CountAsync(); 
+    
+            
+            var paginatedProperties = PaginationHelper.ApplyPagination(filteredProperties, pageNumber, pageSize);
+    
+            return (await paginatedProperties.ToListAsync(), totalCount);
+        }
+
 
         public async Task<Property> GetPropertyByID(Guid id)
         {

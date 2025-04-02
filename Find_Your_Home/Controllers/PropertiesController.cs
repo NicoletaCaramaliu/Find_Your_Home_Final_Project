@@ -2,7 +2,6 @@
 using AutoMapper;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
-using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
 using Find_Your_Home.Services.UserService;
@@ -43,17 +42,13 @@ namespace Find_Your_Home.Controllers
             
             var user = await _userService.GetUserByEmail(userEmail);
             
-            if (user == null)
-            {
-                return Unauthorized("User not found");
-            }
             
             var newProperty = _mapper.Map<Property>(propertyRequest);
             newProperty.OwnerId = user.Id;
             var createdProperty = await _propertyService.CreateProperty(newProperty);
             
             //salvare imagini Azure
-            if (images != null && images.Count > 0)
+            if ( images.Count > 0)
             {
                 int order = 1;
                 foreach (var image in images)
@@ -91,24 +86,33 @@ namespace Find_Your_Home.Controllers
          }
          
          //Filter properties
-        [HttpGet("filterProperties")]
-        public async Task<ActionResult<List<PropertyResponse>>> FilterProperties([FromQuery] FilterCriteria filterRequest)
-        {
-            var properties = await _propertyService.FilterProperties(filterRequest);
-            var propertiesDto = new List<PropertyResponse>();
-            foreach (var property in properties)
-            {
-                var propertyResponse = _mapper.Map<PropertyResponse>(property);
+         [HttpGet("filterProperties")]
+         public async Task<ActionResult<PaginatedResponse<PropertyResponse>>> FilterProperties(
+             [FromQuery] FilterCriteria filterRequest, int pageNumber = 1, int pageSize = 30)
+         {
+             if (pageNumber <= 0) pageNumber = 1;
+             if (pageSize <= 0 || pageSize > 50) pageSize = 10;
 
-                var propertyImages = await _propertyImagesService.GetPropertyImages(property.Id);
-        
-                propertyResponse.FirstImageUrl = propertyImages.FirstOrDefault()?.ImageUrl;
+             
+             var (properties, totalCount) = await _propertyService.FilterPropertiesWithCount(filterRequest, pageNumber, pageSize);
+    
+             var propertiesDto = new List<PropertyResponse>();
+             foreach (var property in properties)
+             {
+                 var propertyResponse = _mapper.Map<PropertyResponse>(property);
+                 var propertyImages = await _propertyImagesService.GetPropertyImages(property.Id);
+                 propertyResponse.FirstImageUrl = propertyImages.FirstOrDefault()?.ImageUrl;
+                 propertiesDto.Add(propertyResponse);
+             }
 
-                propertiesDto.Add(propertyResponse);
-            }
+             
+             return Ok(new PaginatedResponse<PropertyResponse>
+             {
+                 Items = propertiesDto,
+                 TotalCount = totalCount
+             });
+         }
 
-            return Ok(propertiesDto);
-        }
         
         //get property by id
         [HttpGet("{id}")]

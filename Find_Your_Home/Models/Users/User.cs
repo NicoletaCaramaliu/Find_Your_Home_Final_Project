@@ -17,6 +17,7 @@ namespace Find_Your_Home.Models.Users
         public string Email { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public string ProfilePicture { get; set; } = string.Empty;
         public Role Role { get; set; } = Role.User;
         
         //[JsonIgnore] - dto 

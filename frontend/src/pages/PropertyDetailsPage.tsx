@@ -6,6 +6,7 @@ const API_URL = "http://localhost:5266/api/Properties";
 
 interface Property {
     id: string;
+    category: string;
     name: string;
     description: string;
     address: string;
@@ -18,8 +19,17 @@ interface Property {
     garage: boolean;
     squareFeet: number;
     level: number;
+    numberOfKitchen: number;
+    numberOfBalconies: number;
+    hasGarden: boolean;
+    forRent: boolean;
+    views: number;
+    yearOfConstruction: number;
+    furnished: boolean;
+    createdAt: string;
+    updatedAt: string;
     isAvailable: boolean;
-    ownerId: number;
+    ownerId: string;
     imageUrls: string[];
 }
 
@@ -53,6 +63,7 @@ const PropertyDetailsPage: React.FC = () => {
 
                 setProperty({
                     id: data.id,
+                    category: data.category,
                     name: data.name,
                     description: data.description,
                     address: `${data.address}, ${data.city}, ${data.state} ${data.zip}`,
@@ -67,7 +78,16 @@ const PropertyDetailsPage: React.FC = () => {
                     level: data.level,
                     isAvailable: data.isAvailable,
                     ownerId: data.ownerId,
-                    imageUrls: []
+                    imageUrls: [],
+                    numberOfKitchen: data.numberOfKitchen,
+                    numberOfBalconies: data.numberOfBalconies,
+                    hasGarden: data.hasGarden,
+                    forRent: data.forRent,
+                    views: data.views,
+                    yearOfConstruction: data.yearOfConstruction,
+                    furnished: data.furnished,
+                    createdAt: data.createdAt,
+                    updatedAt: data.updatedAt,
                 });
 
                 return fetch(`${API_URL}/getAllPropertyImages?propertyId=${data.id}`);
@@ -140,11 +160,19 @@ const PropertyDetailsPage: React.FC = () => {
                             ${property.price.toLocaleString()}
                         </p>
                         <div className="grid grid-cols-2 gap-4 mt-4">
-                            <p className="text-gray-700 dark:text-gray-300">Număr camere: {property.rooms}</p>
+                        <p className="text-gray-700 dark:text-gray-300">Camere: {property.rooms}</p>
+                        <p className="text-gray-700 dark:text-gray-300">Număr camere: {property.rooms}</p>
                             <p className="text-gray-700 dark:text-gray-300">Număr băi: {property.bathrooms}</p>
-                            <p className="text-gray-700 dark:text-gray-300">Garaj: {property.garage ? "Yes" : "No"}</p>
-                            <p className="text-gray-700 dark:text-gray-300">Suprafață: {property.squareFeet} sqft</p>
-                            <p className="text-gray-700 dark:text-gray-300">Etaj: {property.level} </p>
+                            <p className="text-gray-700 dark:text-gray-300">Garaj: {property.garage ? "Da" : "Nu"}</p>
+                            <p className="text-gray-700 dark:text-gray-300">Suprafață: {property.squareFeet} mp</p>
+                            <p className="text-gray-700 dark:text-gray-300">Etaj: {property.level}</p>
+                            <p className="text-gray-700 dark:text-gray-300">Bucătării: {property.numberOfKitchen}</p>
+                            <p className="text-gray-700 dark:text-gray-300">Balcoane: {property.numberOfBalconies}</p>
+                            <p className="text-gray-700 dark:text-gray-300">Grădină: {property.hasGarden ? "Da" : "Nu"}</p>
+                            <p className="text-gray-700 dark:text-gray-300">De închiriat: {property.forRent ? "Da" : "Nu"}</p>
+                            <p className="text-gray-700 dark:text-gray-300">Vizualizări: {property.views}</p>
+                            <p className="text-gray-700 dark:text-gray-300">An construcție: {property.yearOfConstruction}</p>
+                            <p className="text-gray-700 dark:text-gray-300">Mobilat: {property.furnished ? "Da" : "Nu"}</p>
                         </div>
                         {/* Property images */}
                         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -162,7 +190,12 @@ const PropertyDetailsPage: React.FC = () => {
                                 <p className="text-gray-500 dark:text-gray-400">No images available</p>
                             )}
                         </div>
+                        <p className="text-gray-700 dark:text-gray-300">Data publicării: {new Date(property.createdAt).toLocaleDateString()}</p>
+                        <p className="text-gray-700 dark:text-gray-300">Data actualizării: {new Date(property.updatedAt).toLocaleDateString()}</p>    
+                        
+                        
                     </div>
+                    
                 )}
             </div>
 
