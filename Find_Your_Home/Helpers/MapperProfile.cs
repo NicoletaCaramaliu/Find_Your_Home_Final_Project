@@ -20,6 +20,8 @@ namespace Find_Your_Home.Helpers
             CreateMap<PropertyRequest, Property>();
             CreateMap<Property, PropertyResponse>();
             CreateMap<PropertyResponse, Property>();
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
         }
     }
 }

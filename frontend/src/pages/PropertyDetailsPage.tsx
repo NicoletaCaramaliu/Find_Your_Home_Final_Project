@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import MainNavBar from '../components/MainNavBar';
+import OwnerProfileCard from '../components/properties/OwnerProfileCard';
 
 const API_URL = "http://localhost:5266/api/Properties";
+const USER_API_URL = "http://localhost:5266/api/User";
 
 interface Property {
     id: string;
@@ -33,9 +35,17 @@ interface Property {
     imageUrls: string[];
 }
 
+interface Owner {
+    id: string;
+    email: string;
+    username: string;
+    profilePicture: string;
+}
+
 const PropertyDetailsPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [property, setProperty] = useState<Property | null>(null);
+    const [owner, setOwner] = useState<Owner | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [images, setImages] = useState<string[]>([]);
@@ -107,6 +117,22 @@ const PropertyDetailsPage: React.FC = () => {
             })
             .finally(() => setLoading(false));
     }, [id]);
+
+    useEffect(() => {
+        if (property?.ownerId) {
+            console.log("Fetching owner:", property.ownerId);
+            fetch(`${USER_API_URL}/getUser?id=${property.ownerId}`)
+                .then(response => {
+                    console.log("Owner response status:", response.status);
+                    return response.json();
+                })
+                .then(ownerData => {
+                    console.log("Owner data:", ownerData);
+                    setOwner(ownerData);
+                })
+                .catch(err => console.error("Error fetching owner details:", err));
+        }
+    }, [property?.ownerId]);
 
     const handlePrevImage = () => {
         setCurrentIndex((prevIndex) => (prevIndex !== null ? (prevIndex === 0 ? images.length - 1 : prevIndex - 1) : 0));
@@ -192,11 +218,17 @@ const PropertyDetailsPage: React.FC = () => {
                         </div>
                         <p className="text-gray-700 dark:text-gray-300">Data publicării: {new Date(property.createdAt).toLocaleDateString()}</p>
                         <p className="text-gray-700 dark:text-gray-300">Data actualizării: {new Date(property.updatedAt).toLocaleDateString()}</p>    
-                        
-                        
                     </div>
                     
                 )}
+                <div className="mt-6">
+                            {owner && (
+                                <OwnerProfileCard
+                                    name={owner.username}
+                                    profileImageUrl={owner.profilePicture}
+                                />
+                            )}
+                        </div>
             </div>
 
             {/* Lightbox for image navigation */}

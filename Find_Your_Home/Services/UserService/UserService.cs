@@ -36,6 +36,11 @@ namespace Find_Your_Home.Services.UserService
                 throw new Exception("HttpContext is null in Logout.");
             return result;
         }
+        
+        public async Task<User> GetUserById(Guid id)
+        {
+            return await _userRepository.FindByIdAsync(id);
+        }
 
         
         public async Task<User> GetUserByEmail(string email)

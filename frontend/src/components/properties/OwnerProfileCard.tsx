@@ -6,12 +6,14 @@ interface OwnerProfileCardProps {
 }
 
 const OwnerProfileCard: React.FC<OwnerProfileCardProps> = ({ name, profileImageUrl }) => {
+    const defaultProfileImage = "/images/defaultProfPicture.avif"; 
+
     return (
         <div className="flex items-center bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
             {/* Profile Image */}
             <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-blue-500">
                 <img
-                    src={profileImageUrl}
+                    src={profileImageUrl || defaultProfileImage}
                     alt={`${name}'s profile`}
                     className="w-full h-full object-cover"
                 />

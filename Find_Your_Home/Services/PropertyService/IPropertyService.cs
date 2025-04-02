@@ -17,6 +17,8 @@ namespace Find_Your_Home.Services.PropertyService
         
         Task<IEnumerable<Property>> SortProperties(SortCriteria sortCriteria);
         
+        
+        
         Task<IEnumerable<Property>> SearchProperties(string searchText);
     }
 }
