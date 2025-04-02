@@ -9,6 +9,9 @@ namespace Find_Your_Home.Models.Models
     public enum Role
     {
         Admin,
+        Moderator,
+        PropertyOwner,
+        Agent,
         User
     }
 }

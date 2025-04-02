@@ -1,0 +1,136 @@
+﻿using Find_Your_Home.Models;
+using Find_Your_Home.Models.Users;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using AutoMapper;
+using Find_Your_Home.Models.Users.DTO;
+using Find_Your_Home.Services.UserService;
+using Microsoft.IdentityModel.Tokens;
+
+namespace Find_Your_Home.Services.AuthService
+{
+    public class AuthService : IAuthService
+    {
+        private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AuthService(IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IUserService userService, IMapper mapper)
+        {
+            _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
+            _userService = userService;
+            _mapper = mapper;
+        }
+
+        public async Task<User> Register(UserRegisterDto request)
+        {
+            var user = _mapper.Map<User>(request);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            user.Email = request.Email;
+            user.Username = request.Username;
+            user.Password = passwordHash;
+            user.Role = request.Role;
+            Console.WriteLine($"User Role at Registration: {request.Role}");
+            if (await _userService.GetUserByEmail(request.Email) != null)
+            {
+                throw new UnauthorizedAccessException("User already exists.");
+            }
+            await _userService.CreateUser(user);
+            Console.WriteLine($"User created: {user.Username}, Role: {user.Role}");
+            return user;
+        }
+
+        public async Task<string> Login(UserLoginDto request)
+        {
+            var user = await _userService.GetUserByEmail(request.Email);
+            
+            
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("User not found. Invalid email.");
+            }
+            
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            {
+                throw new UnauthorizedAccessException("Wrong password.");
+            }
+
+            string token = CreateToken(user);
+            
+            var newRefreshToken = GenerateRefreshToken();
+            
+            user.RefreshToken = newRefreshToken.Token;
+            user.TokenCreated = DateTime.Now;
+            user.TokenExpires = newRefreshToken.Expires;
+            
+            await _userService.UpdateUser(user);
+            
+            return token;
+        }
+
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                _configuration.GetSection("AppSettings:Token").Value!));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: creds
+            );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            Console.WriteLine($"Creating token for user: {user.Username}, email: {user.Email}, Role: {user.Role}");
+
+
+            return jwt;
+        }
+
+         public RefreshToken GenerateRefreshToken()
+        {
+            return new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                Expires = DateTime.Now.AddDays(7)
+            };
+        }
+         
+        public async Task<string> Logout()
+        {
+            if (_httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated != true)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+            var email = _userService.GetMyEmail();
+            Console.WriteLine($"User email: {email}");
+            var user = await _userService.GetUserByEmail(email);
+            Console.WriteLine($"User found: {user.Username}");
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("User not found.");
+            }
+            user.RefreshToken = "";
+            user.TokenCreated = DateTime.MinValue;
+            user.TokenExpires = DateTime.MinValue;
+            
+            await _userService.UpdateUser(user);
+
+            return "User logged out successfully.";
+            
+        }
+    }
+}
