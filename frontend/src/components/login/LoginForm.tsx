@@ -4,7 +4,7 @@ import { Button } from "../ui/Button";
 
 interface LoginFormProps {
   onLogin: (email: string, password: string) => void;
-  errorMessage?: string; 
+  errorMessage?: string; // Eroare din partea serverului
 }
 
 export default function LoginForm({ onLogin, errorMessage }: LoginFormProps) {
@@ -15,23 +15,26 @@ export default function LoginForm({ onLogin, errorMessage }: LoginFormProps) {
   useEffect(() => {
     if (errorMessage) {
       setError(errorMessage);
+    } else {
+      setError(""); 
     }
   }, [errorMessage]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!email || !password) {
       setError("Toate câmpurile sunt obligatorii");
       return;
     }
 
     setError(""); 
-    onLogin(email, password); 
+    onLogin(email, password);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>} 
       <Input
         type="email"
         placeholder="Email"

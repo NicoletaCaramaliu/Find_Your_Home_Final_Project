@@ -51,12 +51,12 @@ namespace Find_Your_Home.Services.AuthService
             
             if (user == null)
             {
-                throw new UnauthorizedAccessException("User not found. Invalid email.");
+                throw new UnauthorizedAccessException("Utilizatorul nu există. Email greșit.");
             }
             
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
-                throw new UnauthorizedAccessException("Wrong password.");
+                throw new UnauthorizedAccessException("Parolă greșită.");
             }
 
             string token = CreateToken(user);

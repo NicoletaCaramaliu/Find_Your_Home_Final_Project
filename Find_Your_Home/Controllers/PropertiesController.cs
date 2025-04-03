@@ -7,6 +7,7 @@ using Find_Your_Home.Services.PropertyService;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Find_Your_Home.Controllers
 {
@@ -85,7 +86,7 @@ namespace Find_Your_Home.Controllers
              return Ok(propertiesDto);
          }
          
-         //Filter properties
+         /*//Filter properties
          [HttpGet("filterProperties")]
          public async Task<ActionResult<PaginatedResponse<PropertyResponse>>> FilterProperties(
              [FromQuery] FilterCriteria filterRequest, int pageNumber = 1, int pageSize = 30)
@@ -111,7 +112,7 @@ namespace Find_Your_Home.Controllers
                  Items = propertiesDto,
                  TotalCount = totalCount
              });
-         }
+         }*/
 
         
         //get property by id
@@ -144,7 +145,7 @@ namespace Find_Your_Home.Controllers
         }
         
         [HttpGet("searchProperties")]
-        public async Task<ActionResult<List<PropertyResponse>>> SearchProperties([FromQuery] string searchText)
+        /*public async Task<ActionResult<List<PropertyResponse>>> SearchProperties([FromQuery] string searchText)
         {
             var properties = await _propertyService.SearchProperties(searchText);
             var propertiesDto = new List<PropertyResponse>();
@@ -160,6 +161,64 @@ namespace Find_Your_Home.Controllers
             }
 
             return Ok(propertiesDto);
+        }*/
+        
+        [HttpGet("filterAndSortProperties")]
+        public async Task<ActionResult<PaginatedResponse<PropertyResponse>>> FilterAndSortProperties(
+            [FromQuery] FilterCriteria filterRequest, 
+            [FromQuery] SortCriteria sortCriteria, 
+            [FromQuery] string searchText = null,
+            int pageNumber = 1, 
+            int pageSize = 30)
+        {
+            if (pageNumber <= 0) pageNumber = 1;
+            if (pageSize <= 0 || pageSize > 50) pageSize = 10;
+
+            var propertiesQuery = await _propertyService.GetAllProperties();
+            
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                propertiesQuery = await _propertyService.SearchProperties(propertiesQuery, searchText);
+            }
+
+            if (filterRequest != null )
+            {
+                propertiesQuery = await _propertyService.FilterProperties(propertiesQuery, filterRequest);
+            }
+
+            if (sortCriteria != null)
+            {
+                propertiesQuery = await _propertyService.SortFilteredProperties(propertiesQuery, sortCriteria);
+            }
+
+            var totalCount = await propertiesQuery.CountAsync();
+
+            var propertiesFiltered = await propertiesQuery
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var propertyIds = propertiesFiltered.Select(p => p.Id).ToList();
+            var propertyImages = await _propertyImagesService.GetFirstPropertyImages(propertyIds);
+
+            var propertiesDto = new List<PropertyResponse>();
+            
+            foreach (var property in propertiesFiltered)
+            {
+                var propertyResponse = _mapper.Map<PropertyResponse>(property);
+                var propertyImage = propertyImages.FirstOrDefault(pi => pi.PropertyId == property.Id);
+                propertyResponse.FirstImageUrl = propertyImage?.ImageUrl;
+                propertiesDto.Add(propertyResponse);
+            }
+
+            return Ok(new PaginatedResponse<PropertyResponse>
+            {
+                Items = propertiesDto,
+                TotalCount = totalCount
+            });
         }
+
+
+        
     }
 }

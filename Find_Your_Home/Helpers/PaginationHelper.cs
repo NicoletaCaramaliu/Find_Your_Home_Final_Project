@@ -2,7 +2,7 @@
 {  
     public static class PaginationHelper
     {
-        public static IQueryable<T> ApplyPagination<T>(IQueryable<T> query, int pageNumber, int pageSize)
+        public static IQueryable<T> ApplyPagination<T>(IQueryable<T> query, int pageNumber=1, int pageSize=10)
         {
             pageNumber = pageNumber <= 0 ? 1 : pageNumber;
             pageSize = pageSize <= 0 || pageSize > 50 ? 10 : pageSize;

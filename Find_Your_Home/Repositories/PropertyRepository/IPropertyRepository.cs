@@ -8,8 +8,8 @@ namespace Find_Your_Home.Repositories.PropertyRepository
     {
         Task<IQueryable<Property>> FilterPropertiesAsync(IQueryable<Property> properties, FilterCriteria filterCriteria);
 
-        Task<IEnumerable<Property>> SortPropertiesAsync(IQueryable<Property> properties, SortCriteria sortCriteria);
+        Task<IQueryable<Property>> SortPropertiesAsync(IQueryable<Property> properties, SortCriteria sortCriteria);
         
-        Task<IEnumerable<Property>> SearchPropertiesAsync(IQueryable<Property> properties, string searchText);
+        Task<IQueryable<Property>> SearchPropertiesAsync(IQueryable<Property> properties, string searchText);
     }
 }

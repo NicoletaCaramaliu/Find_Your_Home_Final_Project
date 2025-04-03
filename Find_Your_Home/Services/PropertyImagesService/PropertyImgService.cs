@@ -25,5 +25,10 @@ namespace Find_Your_Home.Services.PropertyImagesService
             await _propertyImgRepository.CreateAsync(propertyImage);
             await _unitOfWork.SaveAsync();
         }
+
+        public async Task<List<PropertyImage>> GetFirstPropertyImages(List<Guid> propertyId)
+        {
+            return await _propertyImgRepository.GetFirstImages(propertyId);
+        }
     }
 }

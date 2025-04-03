@@ -13,10 +13,12 @@ export default function LoginPage() {
   const [, setIsLoading] = useState<boolean>(false);
 
   const handleLogin = async (email: string, password: string) => {
+    setErrorMessage("");
+    
     try {
       setIsLoading(true);
       await login(email, password);
-      navigate("/properties");
+      navigate("/properties?pageNumber=1&pageSize=10");
     } catch (error: any) {
       setErrorMessage(error.message);
     } finally {

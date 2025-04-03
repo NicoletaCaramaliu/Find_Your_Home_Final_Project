@@ -19,5 +19,14 @@ namespace Find_Your_Home.Repositories.PropertyImgRepository
                 .Where(img => img.PropertyId == propertyId)
                 .ToListAsync();
         }
+        
+        public async Task<List<PropertyImage>> GetFirstImages(List<Guid> propertyIds)
+        {
+            return await _context.PropertyImages
+                .Where(img => propertyIds.Contains(img.PropertyId))
+                .GroupBy(img => img.PropertyId)
+                .Select(group => group.OrderBy(img => img.Order).First())
+                .ToListAsync();
+        }
     }
 }

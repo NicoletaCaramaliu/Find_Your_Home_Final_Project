@@ -25,6 +25,8 @@ interface FiltersFormProps {
     sortBy: string; 
     sortOrder: string; 
     onSortChange: (sortBy: string, sortOrder: string) => void; 
+    searchText: string; // Adăugat pentru căutare
+    onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Adăugat pentru căutare
 }
 
 const FiltersForm: React.FC<FiltersFormProps> = ({
@@ -35,6 +37,8 @@ const FiltersForm: React.FC<FiltersFormProps> = ({
     sortBy,
     sortOrder,
     onSortChange,
+    searchText, // Adăugat
+    onSearchChange, // Adăugat
 }) => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -65,6 +69,30 @@ const FiltersForm: React.FC<FiltersFormProps> = ({
 
     return (
         <div className="lg:w-1/4 p-6 bg-gray-300 dark:bg-gray-700 rounded-lg shadow-md">
+                    {/* Search Input */}
+                    <div className="mb-4">
+            <label htmlFor="search" className="block text-gray-700 dark:text-white mb-2">
+                Caută Proprietăți:
+            </label>
+            <div className="flex">
+                <input
+                    id="search"
+                    type="text"
+                    value={searchText}
+                    onChange={onSearchChange}
+                    placeholder="Introdu textul de căutare..."
+                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white"
+                />
+                <button
+                    type="button"
+                    onClick={onApplyFilters}
+                    className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                    Caută
+                </button>
+            </div>
+        </div>
+
             {/* Sorting Dropdown */}
             <div className="mb-4">
                 <label htmlFor="sort" className="block text-gray-700 dark:text-white mb-2">
@@ -84,7 +112,6 @@ const FiltersForm: React.FC<FiltersFormProps> = ({
                     <option value="date-asc">Data Publicării (Crescător)</option>
                     <option value="date-desc">Data Publicării (Descrescător)</option>
                 </select>
-
             </div>
 
             {/* Toggle Button */}

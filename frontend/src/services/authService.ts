@@ -16,19 +16,28 @@ axios.interceptors.request.use((config) => {
   export const login = async (email: string, password: string) => {
     try {
       const response = await axios.post(`${API_URL}/login`, { email, password });
-
+  
       localStorage.setItem("token", response.data.token);
       return response.data;
     } catch (error: any) {
       console.error("Eroare la login:", error);
   
-      if (!error.response) {
-        throw new Error("Parolă greșită.");
+      if (error.response) {
+        if (error.response.status === 401) {
+          if (error.response.data?.message.includes("parolă greșită")) {
+            throw new Error("Parolă greșită.");
+          } else if (error.response.data?.message.includes("utilizator inexistent")) {
+            throw new Error("Utilizatorul nu există. Te rugăm să te înregistrezi.");
+          }
+        }
+  
+        throw new Error(error.response.data?.message || "Nu sunteți înregistrat. Creați-vă un cont.");
       }
-
-      throw new Error(error.response?.data?.Message || "Nu sunteți înregistrat. Creați-vă un cont pentru a vă putea bucura de beneficiile apliacției.");
+  
+      throw new Error("Eroare de rețea. Verificați conexiunea la internet.");
     }
   };
+  
   
 
 export const register = async (email: string, username: string, password: string, role: number) => {

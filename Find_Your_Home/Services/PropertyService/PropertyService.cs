@@ -25,33 +25,40 @@ namespace Find_Your_Home.Services.PropertyService
             return property;
         }
         
-        public async Task<IEnumerable<Property>> GetAllProperties()
+        public async Task<IQueryable<Property>> GetAllProperties()
         {
-            var properties = await _propertyRepository.GetAllAsync();
+            var properties = await _propertyRepository.GetAllQueryableAsync();
             return properties;
         }
         
-        /*
-        public async Task<IEnumerable<Property>> FilterProperties(FilterCriteria filterCriteria, int pageNumber, int pageSize)
+        public async Task<IQueryable<Property>> FilterProperties(IQueryable<Property> properties, FilterCriteria filterCriteria)
+        {
+            var filteredProperties = await _propertyRepository.FilterPropertiesAsync(properties, filterCriteria);
+            return filteredProperties;
+        }
+        
+        /*public async Task<IEnumerable<Property>> FilterProperties(FilterCriteria filterCriteria, int pageNumber, int pageSize)
         {
             var properties = await _propertyRepository.GetAllQueryableAsync();
             var filteredProperties = await _propertyRepository.FilterPropertiesAsync(properties, filterCriteria);
             return filteredProperties;
-        }
-        */
+        }*/
         
-        public async Task<(List<Property>, int)> FilterPropertiesWithCount(FilterCriteria filterCriteria, int pageNumber, int pageSize)
+        public async Task<(List<Property>, int)> FilterPropertiesWithCount(IQueryable<Property> propertiesSorted, FilterCriteria filterCriteria, int pageNumber, int pageSize)
         {
-            var properties = await _propertyRepository.GetAllQueryableAsync();
+            var filteredProperties = await _propertyRepository.FilterPropertiesAsync(propertiesSorted, filterCriteria);
     
-            
-            var filteredProperties = await _propertyRepository.FilterPropertiesAsync(properties, filterCriteria);
-    
-            int totalCount = await filteredProperties.CountAsync(); 
+            var totalCount = await filteredProperties.CountAsync(); 
     
             
             var paginatedProperties = PaginationHelper.ApplyPagination(filteredProperties, pageNumber, pageSize);
     
+            /*var paginatedProperties = filteredProperties
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
+            return (await paginatedProperties.ToListAsync(), totalCount);*/
+            
+            
             return (await paginatedProperties.ToListAsync(), totalCount);
         }
 
@@ -61,18 +68,24 @@ namespace Find_Your_Home.Services.PropertyService
             return await _propertyRepository.FindByIdAsync(id);
         }
 
-        public async Task<IEnumerable<Property>> SortProperties(SortCriteria sortCriteria)
+        public async Task<IQueryable<Property>> SortProperties(SortCriteria sortCriteria)
         {
             var properties = await _propertyRepository.GetAllQueryableAsync();
             var sortedProperties = await _propertyRepository.SortPropertiesAsync(properties, sortCriteria);
             return sortedProperties;
         }
         
-        public async Task<IEnumerable<Property>> SearchProperties(string searchText)
+        public async Task<IQueryable<Property>> SortFilteredProperties(IQueryable<Property> filteredProperties, SortCriteria sortCriteria)
         {
-            var properties = await _propertyRepository.GetAllQueryableAsync();
+            var sortedProperties = await _propertyRepository.SortPropertiesAsync(filteredProperties, sortCriteria);
+            return sortedProperties;
+        }
+        
+        public async Task<IQueryable<Property>> SearchProperties(IQueryable<Property> properties, string searchText)
+        {
             var searchedProperties = _propertyRepository.SearchPropertiesAsync(properties, searchText);
             return await searchedProperties;
         }
+
     }
 }

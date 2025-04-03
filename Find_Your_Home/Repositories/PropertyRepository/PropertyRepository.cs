@@ -108,12 +108,12 @@ namespace Find_Your_Home.Repositories.PropertyRepository
 }
 
 
-        public async Task<IEnumerable<Property>> SortPropertiesAsync(IQueryable<Property> properties,
+        public async Task<IQueryable<Property>> SortPropertiesAsync(IQueryable<Property> properties,
             SortCriteria sortCriteria)
         {
             if (string.IsNullOrWhiteSpace(sortCriteria.SortBy))
             {
-                return await properties.ToListAsync();
+                return properties;
             }
 
             var sortBy = sortCriteria.SortBy.Trim().ToLower();
@@ -128,10 +128,10 @@ namespace Find_Your_Home.Repositories.PropertyRepository
                 _ => properties
             };
 
-            return await properties.ToListAsync();
+            return properties;
         }
         
-        public async Task<IEnumerable<Property>> SearchPropertiesAsync(IQueryable<Property> properties, string searchText)
+        public async Task<IQueryable<Property>> SearchPropertiesAsync(IQueryable<Property> properties, string searchText)
         {
             searchText = searchText.ToLower();
 
@@ -141,9 +141,9 @@ namespace Find_Your_Home.Repositories.PropertyRepository
                 (p.Address != null && p.Address.ToLower().Contains(searchText)) ||
                 (p.City != null && p.City.ToLower().Contains(searchText)) ||
                 (p.State != null && p.State.ToLower().Contains(searchText)) 
-            ).ToListAsync();
+            );
             
-            return await filteredProperties;
+            return filteredProperties;
         }
     }
 }

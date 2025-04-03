@@ -72,21 +72,23 @@ const PropertiesPage: React.FC = () => {
     });
 
     const [sortCriteria, setSortCriteria] = useState({
-        sortBy: "", // Default to no selection
-        sortOrder: "", // Default to no selection
+        sortBy: "",
+        sortOrder: "",
     });
 
     const [pagination, setPagination] = useState({
         pageNumber: 1,
-        pageSize: 4, // Default page size
+        pageSize: 10, // Default page size
     });
 
+    const [searchText, setSearchText] = useState(""); // Adăugat pentru căutare
     const [, setTotalProperties] = useState(0); 
     const [isLastPage, setIsLastPage] = useState(false); 
 
     const location = useLocation();
     const navigate = useNavigate();
 
+    // Fetch properties when filters, pagination, sort, or search changes
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const parsedFilters: Filters = {
@@ -107,20 +109,20 @@ const PropertiesPage: React.FC = () => {
             furnished: searchParams.get("furnished") || "",
         };
         setFilters(parsedFilters);
+        setSearchText(searchParams.get("searchText") || ""); // Sincronizează textul de căutare
         fetchProperties(searchParams.toString());
-    }, [location.search, pagination.pageNumber, pagination.pageSize]);
+    }, [location.search, pagination.pageNumber, pagination.pageSize, sortCriteria]);
 
     const fetchProperties = async (queryParams: string = "") => {
+        const url = `${API_URL}/filterAndSortProperties?${queryParams}&searchText=${searchText}&sortBy=${sortCriteria.sortBy}&sortOrder=${sortCriteria.sortOrder}&pageNumber=${pagination.pageNumber}&pageSize=${pagination.pageSize}`;
+
         try {
-            const response = await fetch(
-                `${API_URL}/filterProperties?${queryParams}&pageNumber=${pagination.pageNumber}&pageSize=${pagination.pageSize}`
-            );
+            const response = await fetch(url);
             if (!response.ok) {
                 throw new Error("Failed to fetch properties");
             }
             const data = await response.json();
 
-            
             setTotalProperties(data.totalCount);
             setIsLastPage(pagination.pageNumber * pagination.pageSize >= data.totalCount);
 
@@ -129,11 +131,7 @@ const PropertiesPage: React.FC = () => {
                 setProperties([]);
             } else {
                 setNoResults(false);
-                const mappedProperties = data.items.map((property: Property) => ({
-                    ...property,
-                    imageUrls: property.firstImageUrl ? [property.firstImageUrl] : [],
-                }));
-                setProperties(mappedProperties);
+                setProperties(data.items);
             }
         } catch (error) {
             console.error("Error fetching properties:", error);
@@ -144,11 +142,22 @@ const PropertiesPage: React.FC = () => {
 
     const handleSortChange = (sortBy: string, sortOrder: string) => {
         setSortCriteria({ sortBy, sortOrder });
-    };
 
-    useEffect(() => {
-        fetchProperties();
-    }, [sortCriteria]);
+        const queryParams = new URLSearchParams();
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value !== "") {
+                queryParams.append(key, value);
+            }
+        });
+
+        queryParams.set("sortBy", sortBy);
+        queryParams.set("sortOrder", sortOrder);
+        queryParams.set("pageNumber", pagination.pageNumber.toString());
+        queryParams.set("pageSize", pagination.pageSize.toString());
+        queryParams.set("searchText", searchText);
+
+        navigate(`?${queryParams.toString()}`);
+    };
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
@@ -166,7 +175,9 @@ const PropertiesPage: React.FC = () => {
                 queryParams.append(key, value);
             }
         });
-
+        queryParams.set("pageNumber", "1"); // Always start from page 1 when applying filters
+        queryParams.set("pageSize", pagination.pageSize.toString());
+        queryParams.set("searchText", searchText);
         navigate(`?${queryParams.toString()}`);
     };
 
@@ -188,6 +199,7 @@ const PropertiesPage: React.FC = () => {
             yearOfConstruction: "",
             furnished: "",
         });
+        setSearchText(""); // Resetează textul de căutare
         navigate("?"); // Reset the URL query parameters
     };
 
@@ -196,13 +208,35 @@ const PropertiesPage: React.FC = () => {
             ...prev,
             pageNumber: newPageNumber,
         }));
+
+        const queryParams = new URLSearchParams(location.search);
+        queryParams.set("pageNumber", newPageNumber.toString());
+        navigate(`?${queryParams.toString()}`);
     };
 
     const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newSize = parseInt(e.target.value, 10);
+
         setPagination({
-            pageNumber: 1, // Reset to the first page
-            pageSize: parseInt(e.target.value, 10),
+            pageNumber: 1, // Reset to page 1 when page size changes
+            pageSize: newSize,
         });
+
+        const queryParams = new URLSearchParams(location.search);
+        queryParams.set("pageSize", newSize.toString());
+        queryParams.set("pageNumber", "1");
+        navigate(`?${queryParams.toString()}`);
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(e.target.value);
+    };
+
+    const handleSearchSubmit = () => {
+        const queryParams = new URLSearchParams(location.search);
+        queryParams.set("searchText", searchText);
+        queryParams.set("pageNumber", "1"); // Resetăm la prima pagină după căutare
+        navigate(`?${queryParams.toString()}`);
     };
 
     return (
@@ -221,6 +255,8 @@ const PropertiesPage: React.FC = () => {
                     sortBy={sortCriteria.sortBy}
                     sortOrder={sortCriteria.sortOrder}
                     onSortChange={handleSortChange}
+                    searchText={searchText} // Adăugat
+                    onSearchChange={handleSearchChange} // Adăugat
                 />
             </div>
 

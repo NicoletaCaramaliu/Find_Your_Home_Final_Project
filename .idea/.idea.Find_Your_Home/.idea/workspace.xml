@@ -9,7 +9,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="" />
+    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/PropertiesController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/PropertiesController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Helpers/PaginationHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Helpers/PaginationHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Models/Properties/DTO/SortCriteria.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Properties/DTO/SortCriteria.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyImgRepository/IPropertyImgRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyImgRepository/IPropertyImgRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyImgRepository/PropertyImgRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyImgRepository/PropertyImgRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyRepository/IPropertyRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyRepository/IPropertyRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyRepository/PropertyRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyRepository/PropertyRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/AuthService/AuthService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/AuthService/AuthService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyImagesService/IPropertyImgService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyImagesService/IPropertyImgService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyImagesService/PropertyImgService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyImagesService/PropertyImgService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/IPropertyService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/IPropertyService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/PropertyService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/PropertyService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/login/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/login/LoginForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/properties/FiltersForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/properties/FiltersForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/LoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/LoginPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/PropertiesPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/PropertiesPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/services/authService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/authService.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,7 +78,7 @@
     &quot;.NET Launch Settings Profile.Find_Your_Home: IIS Express.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/manage-properties&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/UserProfile&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -199,7 +218,8 @@
       <workItem from="1743450195132" duration="745000" />
       <workItem from="1743450982115" duration="603000" />
       <workItem from="1743452358613" duration="10597000" />
-      <workItem from="1743543033070" duration="8049000" />
+      <workItem from="1743543033070" duration="14387000" />
+      <workItem from="1743622148379" duration="13955000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />

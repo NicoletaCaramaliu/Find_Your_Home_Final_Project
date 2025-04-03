@@ -2,8 +2,8 @@
 {
     public class SortCriteria
     {
-        public string SortBy { get; set; }
-        public string SortOrder { get; set; }
+        public string? SortBy { get; set; }
+        public string? SortOrder { get; set; }
     }
 
 }
