@@ -4,6 +4,7 @@ using Find_Your_Home.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Find_Your_Home.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250405221000_AddUserFriendly")]
+    partial class AddUserFriendly
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,34 +24,6 @@ namespace Find_Your_Home.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Find_Your_Home.Models.Favorites.Favorite", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("PropertyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PropertyId");
-
-                    b.HasIndex("UserId", "PropertyId")
-                        .IsUnique();
-
-                    b.ToTable("Favorites");
-                });
 
             modelBuilder.Entity("Find_Your_Home.Models.Properties.Property", b =>
                 {
@@ -223,31 +198,12 @@ namespace Find_Your_Home.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("Find_Your_Home.Models.Favorites.Favorite", b =>
-                {
-                    b.HasOne("Find_Your_Home.Models.Properties.Property", "Property")
-                        .WithMany("FavoritedBy")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Find_Your_Home.Models.Users.User", "User")
-                        .WithMany("Favorites")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Property");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Find_Your_Home.Models.Properties.Property", b =>
                 {
                     b.HasOne("Find_Your_Home.Models.Users.User", "Owner")
                         .WithMany("Properties")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -266,15 +222,11 @@ namespace Find_Your_Home.Migrations
 
             modelBuilder.Entity("Find_Your_Home.Models.Properties.Property", b =>
                 {
-                    b.Navigation("FavoritedBy");
-
                     b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Users.User", b =>
                 {
-                    b.Navigation("Favorites");
-
                     b.Navigation("Properties");
                 });
 #pragma warning restore 612, 618

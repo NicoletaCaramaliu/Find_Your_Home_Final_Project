@@ -66,6 +66,8 @@ namespace Find_Your_Home.Models.Properties.DTO
         public int yearOfConstruction { get; set; }
         [Required]
         public bool furnished { get; set; }
+        [Required]
+        public bool petFriendly { get; set; }
         
         // ????? eliminat
         public List<string> ImageUrls { get; set; } = new List<string>();

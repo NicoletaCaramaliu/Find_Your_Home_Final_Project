@@ -28,7 +28,7 @@ namespace Find_Your_Home.Controllers
             _mapper = mapper;
         }   
         
-        [HttpPost("createProperty"), Authorize]
+        [HttpPost("createProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner")]
         public async Task<ActionResult<PropertyResponse>> CreateProperty(
             [FromForm] PropertyRequest propertyRequest,
             [FromForm] List<IFormFile> images,

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Properties;
 
 namespace Find_Your_Home.Models.Users
@@ -27,5 +28,7 @@ namespace Find_Your_Home.Models.Users
         public string RefreshToken { get; set; } = string.Empty;
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
+        
+        public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
     }
 }
