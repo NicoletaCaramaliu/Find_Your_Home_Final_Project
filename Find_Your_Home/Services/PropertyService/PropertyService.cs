@@ -86,6 +86,13 @@ namespace Find_Your_Home.Services.PropertyService
             var searchedProperties = _propertyRepository.SearchPropertiesAsync(properties, searchText);
             return await searchedProperties;
         }
+        
+        public async Task<IQueryable<Property>> GetAllPropertiesByUserId(Guid userId)
+        {
+            var properties = await _propertyRepository.GetAllQueryableAsync();
+            var filteredProperties = properties.Where(p => p.OwnerId == userId);
+            return filteredProperties;
+        }
 
     }
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import MainNavBar from '../components/MainNavBar';
 import OwnerProfileCard from '../components/properties/OwnerProfileCard';
+import api from "../api";
 
 const API_URL = "http://localhost:5266/api/Properties";
 const USER_API_URL = "http://localhost:5266/api/User";
@@ -224,9 +225,10 @@ const PropertyDetailsPage: React.FC = () => {
                 <div className="mt-6">
                             {owner && (
                                 <OwnerProfileCard
-                                    name={owner.username}
-                                    profileImageUrl={owner.profilePicture}
-                                />
+                                name={owner.username}
+                                profileImageUrl={owner.profilePicture}
+                                ownerId={owner.id}
+                            />
                             )}
                         </div>
             </div>

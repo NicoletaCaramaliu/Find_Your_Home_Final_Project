@@ -6,6 +6,7 @@ namespace Find_Your_Home.Services.UserService
     {
         string GetMyName();
         string GetMyEmail();
+        Guid GetMyId();
         Task<User> GetUserById(Guid id);
         Task<User> GetUserByEmail(string email);
         Task CreateUser(User user);

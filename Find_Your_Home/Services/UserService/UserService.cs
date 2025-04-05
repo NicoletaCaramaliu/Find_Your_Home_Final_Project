@@ -24,6 +24,20 @@ namespace Find_Your_Home.Services.UserService
             }
             return result;
         }
+
+        public Guid GetMyId()
+        {
+            var result = Guid.Empty;
+            if (_httpContextAccessor.HttpContext is not null)
+            {
+                var idString = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (idString != null)
+                {
+                    result = Guid.Parse(idString);
+                }
+            }
+            return result;
+        }
         
         public string GetMyEmail()
         {
@@ -36,6 +50,7 @@ namespace Find_Your_Home.Services.UserService
                 throw new Exception("HttpContext is null in Logout.");
             return result;
         }
+        
         
         public async Task<User> GetUserById(Guid id)
         {

@@ -3,52 +3,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import MainNavBar from '../components/MainNavBar';
 import FiltersForm from '../components/properties/FiltersForm';
 import PropertiesList from '../components/properties/PropertiesList';
+import { Property } from '../types/Property';
+import {Filters} from '../types/Filters';
 
 const API_URL = "http://localhost:5266/api/Properties";
 
-interface Property {
-    id: string;
-    name: string;
-    description: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    price: number;
-    rooms: number;
-    bathrooms: number;
-    garage: boolean;
-    squareFeet: number;
-    level: number;
-    isAvailable: boolean;
-    numberOfKitchen: number;
-    numberOfBalconies: number;
-    hasGarden: boolean;
-    forRent: boolean;
-    views: number;
-    yearOfConstruction: number;
-    furnished: boolean;
-    firstImageUrl: string; 
-    createdAt: string;
-}
 
-interface Filters {
-    city: string;
-    state: string;
-    minPrice: string;
-    maxPrice: string;
-    rooms: string;
-    bathrooms: string;
-    garage: string;
-    squareFeet: string;
-    level: string;
-    numberOfKitchen: string;
-    numberOfBalconies: string;
-    hasGarden: string;
-    forRent: string;
-    yearOfConstruction: string;
-    furnished: string;
-}
 
 const PropertiesPage: React.FC = () => {
     const [properties, setProperties] = useState<Property[]>([]);
@@ -114,18 +74,26 @@ const PropertiesPage: React.FC = () => {
     }, [location.search, pagination.pageNumber, pagination.pageSize, sortCriteria]);
 
     const fetchProperties = async (queryParams: string = "") => {
+        const token = localStorage.getItem("token");
         const url = `${API_URL}/filterAndSortProperties?${queryParams}&searchText=${searchText}&sortBy=${sortCriteria.sortBy}&sortOrder=${sortCriteria.sortOrder}&pageNumber=${pagination.pageNumber}&pageSize=${pagination.pageSize}`;
-
+    
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: 'include' 
+            });
+    
             if (!response.ok) {
                 throw new Error("Failed to fetch properties");
             }
+    
             const data = await response.json();
-
+    
             setTotalProperties(data.totalCount);
             setIsLastPage(pagination.pageNumber * pagination.pageSize >= data.totalCount);
-
+    
             if (data.items.length === 0) {
                 setNoResults(true);
                 setProperties([]);
@@ -139,6 +107,7 @@ const PropertiesPage: React.FC = () => {
             setProperties([]);
         }
     };
+    
 
     const handleSortChange = (sortBy: string, sortOrder: string) => {
         setSortCriteria({ sortBy, sortOrder });

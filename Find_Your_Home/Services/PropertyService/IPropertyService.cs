@@ -19,5 +19,7 @@ namespace Find_Your_Home.Services.PropertyService
         Task<IQueryable<Property>> SortFilteredProperties(IQueryable<Property> properties, SortCriteria sortCriteria);
 
         Task<IQueryable<Property>> SearchProperties(IQueryable<Property> properties, string searchText);
+        
+        Task<IQueryable<Property>> GetAllPropertiesByUserId(Guid userId);
     }
 }
