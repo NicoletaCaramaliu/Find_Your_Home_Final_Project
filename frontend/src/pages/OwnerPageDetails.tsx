@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import MainNavBar from '../components/MainNavBar';
 import PropertiesList from '../components/properties/PropertiesList';
 import { Property } from '../types/Property';
+import { rolesMap } from "../constants/roles";
 
 interface UserProfile {
   email: string;
@@ -12,13 +13,6 @@ interface UserProfile {
   role: string;
 }
 
-const rolesMap: Record<number, string> = {
-    0: "Admin",
-    1: "Moderator",
-    2: "PropertyOwner",
-    3: "Agent",
-    4: "User",
-  };
 
 const OwnerDetailsPage: React.FC = () => {
   const { ownerId } = useParams<{ ownerId: string }>(); // <-- FIXED
