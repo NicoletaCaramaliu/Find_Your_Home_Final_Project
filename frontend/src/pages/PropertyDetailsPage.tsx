@@ -4,6 +4,7 @@ import MainNavBar from '../components/MainNavBar';
 import OwnerProfileCard from '../components/properties/OwnerProfileCard';
 import api from "../api";
 
+
 const API_URL = "http://localhost:5266/api/Properties";
 const USER_API_URL = "http://localhost:5266/api/User";
 
@@ -59,19 +60,15 @@ const PropertyDetailsPage: React.FC = () => {
             setLoading(false);
             return;
         }
-
-        fetch(`${API_URL}/${id}`)
+    
+        api.get(`${API_URL}/${id}`)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data: any) => {
+                const data = response.data;
+    
                 if (!data) {
                     throw new Error("Property not found.");
                 }
-
+    
                 setProperty({
                     id: data.id,
                     category: data.category,
@@ -100,17 +97,11 @@ const PropertyDetailsPage: React.FC = () => {
                     createdAt: data.createdAt,
                     updatedAt: data.updatedAt,
                 });
-
-                return fetch(`${API_URL}/getAllPropertyImages?propertyId=${data.id}`);
+    
+                return api.get(`${API_URL}/getAllPropertyImages?propertyId=${data.id}`);
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to load images.");
-                }
-                return response.json();
-            })
-            .then((imageUrls: string[]) => {
-                setImages(imageUrls);
+                setImages(response.data);
             })
             .catch(err => {
                 console.error("Error fetching property details:", err);
@@ -119,21 +110,22 @@ const PropertyDetailsPage: React.FC = () => {
             .finally(() => setLoading(false));
     }, [id]);
 
+    
     useEffect(() => {
         if (property?.ownerId) {
             console.log("Fetching owner:", property.ownerId);
-            fetch(`${USER_API_URL}/getUser?id=${property.ownerId}`)
+            api.get(`${USER_API_URL}/getUser`, {
+                params: { id: property.ownerId },
+            })
                 .then(response => {
-                    console.log("Owner response status:", response.status);
-                    return response.json();
+                    setOwner(response.data);
                 })
-                .then(ownerData => {
-                    console.log("Owner data:", ownerData);
-                    setOwner(ownerData);
-                })
-                .catch(err => console.error("Error fetching owner details:", err));
+                .catch(err => {
+                    console.error("Error fetching owner details:", err);
+                });
         }
     }, [property?.ownerId]);
+    
 
     const handlePrevImage = () => {
         setCurrentIndex((prevIndex) => (prevIndex !== null ? (prevIndex === 0 ? images.length - 1 : prevIndex - 1) : 0));

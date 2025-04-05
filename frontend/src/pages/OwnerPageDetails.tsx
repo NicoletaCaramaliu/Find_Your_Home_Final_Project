@@ -12,6 +12,14 @@ interface UserProfile {
   role: string;
 }
 
+const rolesMap: Record<number, string> = {
+    0: "Admin",
+    1: "Moderator",
+    2: "PropertyOwner",
+    3: "Agent",
+    4: "User",
+  };
+
 const OwnerDetailsPage: React.FC = () => {
   const { ownerId } = useParams<{ ownerId: string }>(); // <-- FIXED
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -86,9 +94,10 @@ const OwnerDetailsPage: React.FC = () => {
                     <div>
                         <h2 className="text-2xl font-bold">{user?.username}</h2>
                         <p className="text-gray-600 dark:text-gray-300">{user?.email}</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
-                            Rol: {user?.role}
+                        <p className="text-sm mt-2 text-blue-600 dark:text-blue-400 font-medium">
+                            {rolesMap[+user?.role!] ?? "Necunoscut"}
                         </p>
+
                     </div>
                 </div>
 

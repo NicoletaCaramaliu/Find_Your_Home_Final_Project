@@ -2,6 +2,7 @@
 using AutoMapper;
 using Find_Your_Home.Models.Users;
 using Find_Your_Home.Models.Users.DTO;
+using Find_Your_Home.Services.AuthService;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,12 +30,19 @@ namespace Find_Your_Home.Controllers
             var myName = _userService.GetMyName();
             return Ok(new { Username = myName });
         }
-        
+
+        [HttpGet("id"), Authorize]
+        public ActionResult<string> GetMyId()
+        {
+            var myId = _userService.GetMyId();
+            return Ok(new { Id = myId });
+        }
+
         [HttpGet("email"), Authorize(Roles = "Admin")]
         public ActionResult<string> GetMyEmail()
         {
             var myEmail = _userService.GetMyEmail();
-            return Ok(new { Username = myEmail });
+            return Ok(new { Email = myEmail });
         }
 
         [HttpPost("register")]
@@ -52,7 +60,7 @@ namespace Find_Your_Home.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UserLoginDto request)
+        public async Task<ActionResult> Login(UserLoginDto request)
         {
             try
             {
@@ -66,11 +74,11 @@ namespace Find_Your_Home.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<string>> RefreshToken()
+        public async Task<ActionResult> RefreshToken()
         {
             try
             {
-                var token = _authService.GenerateRefreshToken();
+                var token = await _authService.RefreshToken();
                 return Ok(new { Token = token });
             }
             catch (UnauthorizedAccessException ex)
@@ -78,7 +86,7 @@ namespace Find_Your_Home.Controllers
                 return Unauthorized(new { Message = ex.Message });
             }
         }
-        
+
         [HttpPost("logout"), Authorize]
         public async Task<ActionResult> Logout()
         {

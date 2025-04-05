@@ -70,7 +70,7 @@ namespace Find_Your_Home.Controllers
             return Ok(propertyDto);
         }
         
-        [HttpGet("getAllPropertyImages")] 
+        [HttpGet("getAllPropertyImages"), Authorize] 
          public async Task<ActionResult<string>> GetPropertyImages(Guid propertyId)
         {
             var propertyImages = await _propertyImagesService.GetPropertyImages(propertyId);
@@ -78,13 +78,37 @@ namespace Find_Your_Home.Controllers
             return Ok(imagesUrl);
         }
          
-         [HttpGet("getAllProperties")]
+         [HttpGet("getAllProperties"), Authorize]
          public async Task<ActionResult<IEnumerable<PropertyResponse>>> GetAllProperties()
          {
              var properties = await _propertyService.GetAllProperties();
              var propertiesDto = _mapper.Map<IEnumerable<PropertyResponse>>(properties);
              return Ok(propertiesDto);
          }
+
+         
+         [HttpGet("getAllPropertiesByUserId"), Authorize]
+         public async Task<ActionResult<IEnumerable<PropertyResponse>>> GetAllPropertiesByUserId(Guid userId)
+         {
+             var properties = await _propertyService.GetAllPropertiesByUserId(userId);
+             var propertyIds = properties.Select(p => p.Id).ToList();
+
+
+             var propertyImages = await _propertyImagesService.GetFirstPropertyImages(propertyIds);
+
+             var propertiesDto = new List<PropertyResponse>();
+
+             foreach (var property in properties)
+             {
+                 var propertyResponse = _mapper.Map<PropertyResponse>(property);
+                 var propertyImage = propertyImages.FirstOrDefault(pi => pi.PropertyId == property.Id);
+                 propertyResponse.FirstImageUrl = propertyImage?.ImageUrl;
+                 propertiesDto.Add(propertyResponse);
+             }
+
+             return Ok(propertiesDto);
+         }
+
          
          /*//Filter properties
          [HttpGet("filterProperties")]
@@ -116,7 +140,7 @@ namespace Find_Your_Home.Controllers
 
         
         //get property by id
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
 
         public async Task<ActionResult<PropertyResponse>> GetPropertyById(Guid id)
         {
@@ -125,7 +149,7 @@ namespace Find_Your_Home.Controllers
             return Ok(propertyResponse);
         }
 
-        [HttpGet("sortProperties")]
+        [HttpGet("sortProperties"), Authorize]
         public async Task<ActionResult<List<PropertyResponse>>> SortProperties([FromQuery] SortCriteria sortCriteria)
         {
             var properties = await _propertyService.SortProperties(sortCriteria);
@@ -144,8 +168,8 @@ namespace Find_Your_Home.Controllers
             return Ok(propertiesDto);
         }
         
-        [HttpGet("searchProperties")]
-        /*public async Task<ActionResult<List<PropertyResponse>>> SearchProperties([FromQuery] string searchText)
+       /* [HttpGet("searchProperties")]
+        public async Task<ActionResult<List<PropertyResponse>>> SearchProperties([FromQuery] string searchText)
         {
             var properties = await _propertyService.SearchProperties(searchText);
             var propertiesDto = new List<PropertyResponse>();
@@ -163,7 +187,7 @@ namespace Find_Your_Home.Controllers
             return Ok(propertiesDto);
         }*/
         
-        [HttpGet("filterAndSortProperties")]
+        [HttpGet("filterAndSortProperties"), Authorize]
         public async Task<ActionResult<PaginatedResponse<PropertyResponse>>> FilterAndSortProperties(
             [FromQuery] FilterCriteria filterRequest, 
             [FromQuery] SortCriteria sortCriteria, 

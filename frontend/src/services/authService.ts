@@ -1,63 +1,59 @@
-import axios from "axios";
+// src/authService.ts
+import api from "../api";
 
-const API_URL = "http://localhost:5266/api/Auth"; 
+const AUTH_URL = "/Auth";
 
-axios.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  }, (error) => {
-    return Promise.reject(error);
-  });
-
-
-  export const login = async (email: string, password: string) => {
-    try {
-      const response = await axios.post(`${API_URL}/login`, { email, password });
-  
-      localStorage.setItem("token", response.data.token);
-      return response.data;
-    } catch (error: any) {
-      console.error("Eroare la login:", error);
-  
-      if (error.response) {
-        if (error.response.status === 401) {
-          if (error.response.data?.message.includes("parolă greșită")) {
-            throw new Error("Parolă greșită.");
-          } else if (error.response.data?.message.includes("utilizator inexistent")) {
-            throw new Error("Utilizatorul nu există. Te rugăm să te înregistrezi.");
-          }
-        }
-  
-        throw new Error(error.response.data?.message || "Nu sunteți înregistrat. Creați-vă un cont.");
-      }
-  
-      throw new Error("Eroare de rețea. Verificați conexiunea la internet.");
-    }
-  };
-  
-  
-
-export const register = async (email: string, username: string, password: string, role: number) => {
+export const login = async (email: string, password: string) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, { email, username, password, role });
+    const response = await api.post(
+      `${AUTH_URL}/login`,
+      { email, password },
+      { withCredentials: true } 
+    );
+
+    const token = response.data.token;
+    localStorage.setItem("token", token);
     return response.data;
-  } catch (error:any) {
-    throw new Error(error.response?.data?.Message || "Înregistrare eșuată");
+  } catch (error: any) {
+    console.error("Eroare la login:", error);
+    throw new Error(error.response?.data?.message || "Login eșuat");
   }
 };
 
 
+export const register = async (email: string, username: string, password: string, role: number) => {
+  try {
+    const response = await api.post(`${AUTH_URL}/register`, {
+      email,
+      username,
+      password,
+      role,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.Message || "Înregistrare eșuată");
+  }
+};
 
 export const logout = async () => {
   try {
-    await axios.post(`${API_URL}/logout`);
+    await api.post(`${AUTH_URL}/logout`);
     localStorage.removeItem("token");
-    localStorage.removeItem("role");
   } catch (error: any) {
     console.error("Eroare la delogare:", error);
     throw new Error("Delogare eșuată");
+  }
+};
+
+export const refreshToken = async (): Promise<string> => {
+  try {
+    const response = await api.post(`${AUTH_URL}/refresh-token`, {}, {
+      withCredentials: true
+    });
+
+    return response.data.token;
+  } catch (error) {
+    console.error("Eroare la refresh token:", error);
+    throw new Error("Tokenul a expirat. Trebuie să vă reconectați.");
   }
 };
