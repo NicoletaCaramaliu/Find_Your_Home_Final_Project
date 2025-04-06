@@ -3,39 +3,12 @@ import { useParams } from 'react-router-dom';
 import MainNavBar from '../components/MainNavBar';
 import OwnerProfileCard from '../components/properties/OwnerProfileCard';
 import api from "../api";
-
+import { Property } from '../types/PropertyDetails';
 
 const API_URL = "http://localhost:5266/api/Properties";
 const USER_API_URL = "http://localhost:5266/api/User";
 
-interface Property {
-    id: string;
-    category: string;
-    name: string;
-    description: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    price: number;
-    rooms: number;
-    bathrooms: number;
-    garage: boolean;
-    squareFeet: number;
-    level: number;
-    numberOfKitchen: number;
-    numberOfBalconies: number;
-    hasGarden: boolean;
-    forRent: boolean;
-    views: number;
-    yearOfConstruction: number;
-    furnished: boolean;
-    createdAt: string;
-    updatedAt: string;
-    isAvailable: boolean;
-    ownerId: string;
-    imageUrls: string[];
-}
+
 
 interface Owner {
     id: string;
@@ -189,7 +162,6 @@ const PropertyDetailsPage: React.FC = () => {
                             <p className="text-gray-700 dark:text-gray-300">Balcoane: {property.numberOfBalconies}</p>
                             <p className="text-gray-700 dark:text-gray-300">Grădină: {property.hasGarden ? "Da" : "Nu"}</p>
                             <p className="text-gray-700 dark:text-gray-300">De închiriat: {property.forRent ? "Da" : "Nu"}</p>
-                            <p className="text-gray-700 dark:text-gray-300">Vizualizări: {property.views}</p>
                             <p className="text-gray-700 dark:text-gray-300">An construcție: {property.yearOfConstruction}</p>
                             <p className="text-gray-700 dark:text-gray-300">Mobilat: {property.furnished ? "Da" : "Nu"}</p>
                         </div>
@@ -210,7 +182,9 @@ const PropertyDetailsPage: React.FC = () => {
                             )}
                         </div>
                         <p className="text-gray-700 dark:text-gray-300">Data publicării: {new Date(property.createdAt).toLocaleDateString()}</p>
-                        <p className="text-gray-700 dark:text-gray-300">Data actualizării: {new Date(property.updatedAt).toLocaleDateString()}</p>    
+                        <p className="text-gray-700 dark:text-gray-300">Data actualizării: {new Date(property.updatedAt).toLocaleDateString()}</p>
+                        <p className="text-right text-gray-700 dark:text-gray-300">Vizualizări: {property.views}</p>
+    
                     </div>
                     
                 )}

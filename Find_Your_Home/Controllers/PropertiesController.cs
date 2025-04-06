@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
@@ -241,7 +242,24 @@ namespace Find_Your_Home.Controllers
                 TotalCount = totalCount
             });
         }
+        
+        [HttpPost("increaseViews"), Authorize]
+        public async Task<ActionResult<PropertyResponse>> IncreaseViews(Guid propertyId)
+        {
+            var property = await _propertyService.GetPropertyByID(propertyId);
+            //verify if the user authenticated is the owner of the property
+            var userId = _userService.GetMyId();
+            if (property.OwnerId == userId)
+            {
+                return Ok(property);
+            }
 
+            property.Views++;
+            await _propertyService.UpdateProperty(property);
+
+            var propertyResponse = _mapper.Map<PropertyResponse>(property);
+            return Ok(propertyResponse);
+        }
 
         
     }

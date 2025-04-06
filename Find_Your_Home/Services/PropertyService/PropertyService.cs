@@ -94,5 +94,12 @@ namespace Find_Your_Home.Services.PropertyService
             return filteredProperties;
         }
 
+        public async Task<Property> UpdateProperty(Property property)
+        {
+            var updatedProperty = _propertyRepository.Update(property);
+            await _propertyRepository.SaveAsync();
+            return updatedProperty;
+        }
+
     }
 }

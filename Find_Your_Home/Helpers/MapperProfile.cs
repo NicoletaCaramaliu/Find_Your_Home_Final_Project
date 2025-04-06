@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Find_Your_Home.Models.Favorites;
+using Find_Your_Home.Models.Favorites.DTO;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
 using Find_Your_Home.Models.Users;
@@ -22,6 +24,8 @@ namespace Find_Your_Home.Helpers
             CreateMap<PropertyResponse, Property>();
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
+            CreateMap<Favorite, FavoriteResponse>();
+            CreateMap<FavoriteResponse, Favorite>();
         }
     }
 }

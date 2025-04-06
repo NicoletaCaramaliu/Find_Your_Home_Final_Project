@@ -21,5 +21,7 @@ namespace Find_Your_Home.Services.PropertyService
         Task<IQueryable<Property>> SearchProperties(IQueryable<Property> properties, string searchText);
         
         Task<IQueryable<Property>> GetAllPropertiesByUserId(Guid userId);
+        
+        Task<Property> UpdateProperty(Property property);
     }
 }
