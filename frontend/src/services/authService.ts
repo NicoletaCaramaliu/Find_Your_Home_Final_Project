@@ -1,18 +1,28 @@
-// src/authService.ts
-import api from "../api";
+import axios from "axios";
+
+
+const refreshApi = axios.create({
+  baseURL: "http://localhost:5266/api",
+  withCredentials: true,
+});
 
 const AUTH_URL = "/Auth";
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await api.post(
+    const response = await axios.post(
       `${AUTH_URL}/login`,
       { email, password },
-      { withCredentials: true } 
+      { baseURL: "http://localhost:5266/api", withCredentials: true }
     );
 
     const token = response.data.token;
     localStorage.setItem("token", token);
+    
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
+    
     return response.data;
   } catch (error: any) {
     console.error("Eroare la login:", error);
@@ -20,14 +30,15 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-
 export const register = async (email: string, username: string, password: string, role: number) => {
   try {
-    const response = await api.post(`${AUTH_URL}/register`, {
+    const response = await axios.post(`${AUTH_URL}/register`, {
       email,
       username,
       password,
       role,
+    }, {
+      baseURL: "http://localhost:5266/api",
     });
     return response.data;
   } catch (error: any) {
@@ -37,7 +48,10 @@ export const register = async (email: string, username: string, password: string
 
 export const logout = async () => {
   try {
-    await api.post(`${AUTH_URL}/logout`);
+    await axios.post(`${AUTH_URL}/logout`, {}, {
+      baseURL: "http://localhost:5266/api",
+      withCredentials: true
+    });
     localStorage.removeItem("token");
   } catch (error: any) {
     console.error("Eroare la delogare:", error);
@@ -47,10 +61,7 @@ export const logout = async () => {
 
 export const refreshToken = async (): Promise<string> => {
   try {
-    const response = await api.post(`${AUTH_URL}/refresh-token`, {}, {
-      withCredentials: true
-    });
-
+    const response = await refreshApi.post("/Auth/refresh-token");
     return response.data.token;
   } catch (error) {
     console.error("Eroare la refresh token:", error);

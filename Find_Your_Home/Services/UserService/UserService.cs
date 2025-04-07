@@ -81,5 +81,12 @@ namespace Find_Your_Home.Services.UserService
             return user;
         }
         
+        public async Task<User?> GetUserByRefreshToken(string refreshToken)
+        {
+            return await _userRepository.GetByRefreshToken(refreshToken);
+        }
+
+
+        
     }
 }

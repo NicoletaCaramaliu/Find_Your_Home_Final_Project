@@ -14,5 +14,6 @@ namespace Find_Your_Home.Services.UserService
         Task<IEnumerable<User>> GetAllUsers();
         
         Task<User> UpdateUser(User user);
+        Task<User?> GetUserByRefreshToken(string refreshToken);
     }
 }

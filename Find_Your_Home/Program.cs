@@ -106,6 +106,7 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
         ValidateIssuer = false,
         RoleClaimType = ClaimTypes.Role ,
         NameClaimType = ClaimTypes.Email,
+        ClockSkew = TimeSpan.Zero,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 builder.Configuration.GetSection("AppSettings:Token").Value!))
     };
@@ -125,9 +126,9 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader();
         });*/
     options.AddPolicy("AllowFrontend",
-        policy =>
+        builder =>
         {
-            policy.WithOrigins("http://localhost:5173") 
+            builder.WithOrigins("http://localhost:5173") 
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();

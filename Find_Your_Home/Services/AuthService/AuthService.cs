@@ -69,6 +69,8 @@ namespace Find_Your_Home.Services.AuthService
 
         private string CreateToken(User user)
         {
+            Console.WriteLine("[DEBUG] Creez token JWT cu expirare 30 sec...");
+            
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
@@ -76,15 +78,21 @@ namespace Find_Your_Home.Services.AuthService
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             };
-
+            
+            var expires = DateTime.UtcNow.AddSeconds(30);
+            Console.WriteLine("[DEBUG] Expiră la: " + expires.ToString("O"));
+            
+            
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Token"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(30),
                 signingCredentials: creds
             );
+
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -95,8 +103,8 @@ namespace Find_Your_Home.Services.AuthService
             return new RefreshToken
             {
                 Token = Convert.ToBase64String(randomBytes),
-                Created = DateTime.Now,
-                Expires = DateTime.Now.AddDays(7)
+                Created = DateTime.UtcNow,
+                Expires = DateTime.UtcNow.AddDays(7)
             };
         }
 
@@ -106,27 +114,33 @@ namespace Find_Your_Home.Services.AuthService
             {
                 HttpOnly = true,
                 Expires = refreshToken.Expires,
-                Secure = false, //temporar
-                SameSite = SameSiteMode.Strict,
-                Domain = "localhost", 
+                Secure = true,
+                SameSite = SameSiteMode.None,
                 Path = "/"
             };
             _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
         }
 
-        public async Task<string> RefreshToken()
+        public async Task<object> RefreshToken()
         {
-            var refreshToken = _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"];
-            var email = _userService.GetMyEmail();
-            var user = await _userService.GetUserByEmail(email);
+            Console.WriteLine("[DEBUG] RefreshToken controller called");
 
-            if (user == null || user.RefreshToken != refreshToken || user.TokenExpires < DateTime.Now)
+            var refreshToken = _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                throw new UnauthorizedAccessException("Nu s-a găsit refreshToken în cookie.");
+            }
+
+            var user = await _userService.GetUserByRefreshToken(refreshToken);
+
+            if (user == null || user.RefreshToken != refreshToken || user.TokenExpires < DateTime.UtcNow)
             {
                 throw new UnauthorizedAccessException("Token invalid sau expirat.");
             }
 
             string newToken = CreateToken(user);
             var newRefreshToken = GenerateRefreshToken();
+
             user.RefreshToken = newRefreshToken.Token;
             user.TokenCreated = newRefreshToken.Created;
             user.TokenExpires = newRefreshToken.Expires;
@@ -134,8 +148,9 @@ namespace Find_Your_Home.Services.AuthService
             await _userService.UpdateUser(user);
             SetRefreshTokenInCookie(newRefreshToken);
 
-            return newToken;
+            return newToken ;
         }
+
 
         public async Task<string> Logout()
         {

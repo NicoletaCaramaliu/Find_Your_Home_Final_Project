@@ -65,7 +65,7 @@ namespace Find_Your_Home.Controllers
             try
             {
                 var token = await _authService.Login(request);
-                return Ok(new { Token = token });
+                return Ok(new { token });
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -79,7 +79,7 @@ namespace Find_Your_Home.Controllers
             try
             {
                 var token = await _authService.RefreshToken();
-                return Ok(new { Token = token });
+                return Ok(new { token });
             }
             catch (UnauthorizedAccessException ex)
             {

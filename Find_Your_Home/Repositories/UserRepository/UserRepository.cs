@@ -14,6 +14,12 @@ namespace Find_Your_Home.Repositories.UserRepository
         {
             return await FindSingleOrDefaultAsync(user => user.Email == email);
         }
+        
+        public async Task<User?> GetByRefreshToken(string refreshToken)
+        {
+            return await FindSingleOrDefaultAsync(u => u.RefreshToken == refreshToken);
+        }
+
 
     }
 }

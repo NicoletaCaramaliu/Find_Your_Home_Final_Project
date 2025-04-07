@@ -206,16 +206,6 @@ namespace Find_Your_Home.Controllers
                 propertiesQuery = await _propertyService.SearchProperties(propertiesQuery, searchText);
             }
 
-            if (filterRequest != null )
-            {
-                propertiesQuery = await _propertyService.FilterProperties(propertiesQuery, filterRequest);
-            }
-
-            if (sortCriteria != null)
-            {
-                propertiesQuery = await _propertyService.SortFilteredProperties(propertiesQuery, sortCriteria);
-            }
-
             var totalCount = await propertiesQuery.CountAsync();
 
             var propertiesFiltered = await propertiesQuery

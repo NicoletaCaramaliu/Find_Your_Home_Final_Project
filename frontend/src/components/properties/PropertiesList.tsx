@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PropertyCard } from '../ui/PropertyCard';
 import api from '../../api'; // Import API pentru apeluri HTTP
 
