@@ -10,20 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/FavoritesContoller.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/FavoriteRepository/FavoriteRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/FavoriteRepository/IFavoriteRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Services/FavoriteService/FavoriteService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Services/FavoriteService/IFavoriteService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/PropertiesController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/PropertiesController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Helpers/Extensions/ServiceExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Helpers/Extensions/ServiceExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Helpers/MapperProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Helpers/MapperProfile.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/GenericRepository/GenericRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/GenericRepository/GenericRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/GenericRepository/IGenericRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/GenericRepository/IGenericRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/IPropertyService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/IPropertyService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/PropertyService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/PropertyService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/properties/PropertiesList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/properties/PropertiesList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/PropertyDetailsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/PropertyDetailsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/FavoritesContoller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/FavoritesContoller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/FavoriteRepository/FavoriteRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/FavoriteRepository/FavoriteRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/FavoriteRepository/IFavoriteRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/FavoriteRepository/IFavoriteRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/FavoriteService/FavoriteService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/FavoriteService/FavoriteService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/FavoriteService/IFavoriteService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/FavoriteService/IFavoriteService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ui/PropertyCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ui/PropertyCard.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,6 +209,7 @@
       <workItem from="1743543033070" duration="14387000" />
       <workItem from="1743622148379" duration="13955000" />
       <workItem from="1743873271106" duration="23725000" />
+      <workItem from="1743963848074" duration="16304000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />
