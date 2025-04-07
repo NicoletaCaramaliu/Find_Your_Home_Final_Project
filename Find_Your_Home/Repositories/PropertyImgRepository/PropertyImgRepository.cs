@@ -28,5 +28,20 @@ namespace Find_Your_Home.Repositories.PropertyImgRepository
                 .Select(group => group.OrderBy(img => img.Order).First())
                 .ToListAsync();
         }
+        
+        public async Task<PropertyImage> GetByIdAsync(Guid id)
+        {
+            return await _context.PropertyImages
+                .FirstOrDefaultAsync(img => img.Id == id);
+        }
+        
+        public async Task DeleteImageAsync(Guid id)
+        {
+            var image = await GetByIdAsync(id);
+            
+            _context.PropertyImages.Remove(image);
+            await _context.SaveChangesAsync();
+            
+        }
     }
 }

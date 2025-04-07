@@ -49,7 +49,7 @@ namespace Find_Your_Home.Data
                 .HasOne(f => f.Property)
                 .WithMany(p => p.FavoritedBy)
                 .HasForeignKey(f => f.PropertyId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Favorite>()
                 .HasIndex(f => new { f.UserId, f.PropertyId })

@@ -30,5 +30,18 @@ namespace Find_Your_Home.Services.PropertyImagesService
         {
             return await _propertyImgRepository.GetFirstImages(propertyId);
         }
+
+        public async Task<PropertyImage> GetImageById(Guid id)
+        {
+            return await _propertyImgRepository.GetByIdAsync(id);
+        }
+
+        public async Task DeleteImage(Guid id)
+        {
+            var image = await _propertyImgRepository.GetByIdAsync(id);
+            
+            await _propertyImgRepository.DeleteImageAsync(id); 
+            await _unitOfWork.SaveAsync();
+        }
     }
 }

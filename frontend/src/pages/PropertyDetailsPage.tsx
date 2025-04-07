@@ -8,13 +8,16 @@ import { Property } from '../types/PropertyDetails';
 const API_URL = "http://localhost:5266/api/Properties";
 const USER_API_URL = "http://localhost:5266/api/User";
 
-
-
 interface Owner {
     id: string;
     email: string;
     username: string;
     profilePicture: string;
+}
+
+interface PropertyImage {
+    id: string;
+    imageUrl: string;
 }
 
 const PropertyDetailsPage: React.FC = () => {
@@ -23,7 +26,7 @@ const PropertyDetailsPage: React.FC = () => {
     const [owner, setOwner] = useState<Owner | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [images, setImages] = useState<string[]>([]);
+    const [images, setImages] = useState<PropertyImage[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number | null>(null);
 
     // Fetch property details
@@ -33,15 +36,15 @@ const PropertyDetailsPage: React.FC = () => {
             setLoading(false);
             return;
         }
-    
+
         api.get(`${API_URL}/${id}`)
             .then(response => {
                 const data = response.data;
-    
+
                 if (!data) {
                     throw new Error("Property not found.");
                 }
-    
+
                 setProperty({
                     id: data.id,
                     category: data.category,
@@ -70,11 +73,11 @@ const PropertyDetailsPage: React.FC = () => {
                     createdAt: data.createdAt,
                     updatedAt: data.updatedAt,
                 });
-    
+
                 return api.get(`${API_URL}/getAllPropertyImages?propertyId=${data.id}`);
             })
             .then(response => {
-                setImages(response.data);
+                setImages(response.data); // Now expecting { id, imageUrl }
             })
             .catch(err => {
                 console.error("Error fetching property details:", err);
@@ -83,10 +86,8 @@ const PropertyDetailsPage: React.FC = () => {
             .finally(() => setLoading(false));
     }, [id]);
 
-    
     useEffect(() => {
         if (property?.ownerId) {
-            console.log("Fetching owner:", property.ownerId);
             api.get(`${USER_API_URL}/getUser`, {
                 params: { id: property.ownerId },
             })
@@ -98,18 +99,19 @@ const PropertyDetailsPage: React.FC = () => {
                 });
         }
     }, [property?.ownerId]);
-    
 
     const handlePrevImage = () => {
-        setCurrentIndex((prevIndex) => (prevIndex !== null ? (prevIndex === 0 ? images.length - 1 : prevIndex - 1) : 0));
+        setCurrentIndex((prevIndex) =>
+            prevIndex !== null ? (prevIndex === 0 ? images.length - 1 : prevIndex - 1) : 0
+        );
     };
-    
-    const handleNextImage = () => {
-        setCurrentIndex((prevIndex) => (prevIndex !== null ? (prevIndex === images.length - 1 ? 0 : prevIndex + 1) : 0));
-    };
-    
 
-    //  taste <- ->
+    const handleNextImage = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex !== null ? (prevIndex === images.length - 1 ? 0 : prevIndex + 1) : 0
+        );
+    };
+
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (currentIndex !== null) {
@@ -118,7 +120,7 @@ const PropertyDetailsPage: React.FC = () => {
                 } else if (event.key === "ArrowRight") {
                     handleNextImage();
                 } else if (event.key === "Escape") {
-                    setCurrentIndex(null); // Închide lightbox-ul cu Esc
+                    setCurrentIndex(null);
                 }
             }
         };
@@ -152,8 +154,7 @@ const PropertyDetailsPage: React.FC = () => {
                             ${property.price.toLocaleString()}
                         </p>
                         <div className="grid grid-cols-2 gap-4 mt-4">
-                        <p className="text-gray-700 dark:text-gray-300">Camere: {property.rooms}</p>
-                        <p className="text-gray-700 dark:text-gray-300">Număr camere: {property.rooms}</p>
+                            <p className="text-gray-700 dark:text-gray-300">Camere: {property.rooms}</p>
                             <p className="text-gray-700 dark:text-gray-300">Număr băi: {property.bathrooms}</p>
                             <p className="text-gray-700 dark:text-gray-300">Garaj: {property.garage ? "Da" : "Nu"}</p>
                             <p className="text-gray-700 dark:text-gray-300">Suprafață: {property.squareFeet} mp</p>
@@ -165,13 +166,14 @@ const PropertyDetailsPage: React.FC = () => {
                             <p className="text-gray-700 dark:text-gray-300">An construcție: {property.yearOfConstruction}</p>
                             <p className="text-gray-700 dark:text-gray-300">Mobilat: {property.furnished ? "Da" : "Nu"}</p>
                         </div>
+
                         {/* Property images */}
                         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {images.length > 0 ? (
-                                images.map((url, index) => (
+                                images.map((img, index) => (
                                     <img
-                                        key={index}
-                                        src={url}
+                                        key={img.id}
+                                        src={img.imageUrl}
                                         alt={`Property ${index + 1}`}
                                         className="w-full h-64 object-cover rounded-lg mb-4 cursor-pointer transition-transform transform hover:scale-105"
                                         onClick={() => setCurrentIndex(index)}
@@ -181,32 +183,32 @@ const PropertyDetailsPage: React.FC = () => {
                                 <p className="text-gray-500 dark:text-gray-400">No images available</p>
                             )}
                         </div>
+
                         <p className="text-gray-700 dark:text-gray-300">Data publicării: {new Date(property.createdAt).toLocaleDateString()}</p>
                         <p className="text-gray-700 dark:text-gray-300">Data actualizării: {new Date(property.updatedAt).toLocaleDateString()}</p>
                         <p className="text-right text-gray-700 dark:text-gray-300">Vizualizări: {property.views}</p>
-    
                     </div>
-                    
                 )}
+
+                {/* Owner info */}
                 <div className="mt-6">
-                            {owner && (
-                                <OwnerProfileCard
-                                name={owner.username}
-                                profileImageUrl={owner.profilePicture}
-                                ownerId={owner.id}
-                            />
-                            )}
-                        </div>
+                    {owner && (
+                        <OwnerProfileCard
+                            name={owner.username}
+                            profileImageUrl={owner.profilePicture}
+                            ownerId={owner.id}
+                        />
+                    )}
+                </div>
             </div>
 
-            {/* Lightbox for image navigation */}
+            {/* Lightbox */}
             {currentIndex !== null && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50"
                     onClick={() => setCurrentIndex(null)}
                 >
                     <div className="relative">
-                        {/* Close button */}
                         <button
                             className="absolute top-5 right-5 text-white text-3xl bg-black bg-opacity-50 rounded-full p-3 hover:bg-opacity-70 transition"
                             onClick={(e) => {
@@ -217,7 +219,6 @@ const PropertyDetailsPage: React.FC = () => {
                             ✕
                         </button>
 
-                        {/* Previous button */}
                         <button
                             className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white text-3xl p-3 rounded-full hover:bg-opacity-70 transition"
                             onClick={(e) => {
@@ -228,14 +229,12 @@ const PropertyDetailsPage: React.FC = () => {
                             ❮
                         </button>
 
-                        {/* Image */}
                         <img
-                            src={images[currentIndex]}
+                            src={images[currentIndex].imageUrl}
                             alt="Selected"
                             className="w-screen h-screen max-w-full max-h-full object-contain"
                         />
 
-                        {/* Next button */}
                         <button
                             className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white text-3xl p-3 rounded-full hover:bg-opacity-70 transition"
                             onClick={(e) => {

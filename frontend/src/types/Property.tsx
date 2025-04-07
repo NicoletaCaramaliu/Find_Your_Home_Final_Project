@@ -1,5 +1,6 @@
 export interface Property {
     id: string;
+    category: string;
     name: string;
     description: string;
     address: string;
@@ -10,15 +11,20 @@ export interface Property {
     rooms: number;
     bathrooms: number;
     garage: boolean;
-    squareFeet: number;
     level: number;
+    squareFeet: number;
     isAvailable: boolean;
     numberOfKitchen: number;
     numberOfBalconies: number;
     hasGarden: boolean;
     forRent: boolean;
-    views: number;
     yearOfConstruction: number;
     furnished: boolean;
+    petFriendly: boolean;
     firstImageUrl: string;
-}
+    createdAt: string;
+    updatedAt: string;
+    ownerId: string;
+    views: number; 
+  }
+  

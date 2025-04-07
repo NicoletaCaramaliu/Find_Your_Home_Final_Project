@@ -8,5 +8,9 @@ namespace Find_Your_Home.Repositories.PropertyImgRepository
         Task<IEnumerable<PropertyImage>> GetImages(Guid propertyId);
         
         Task<List<PropertyImage>> GetFirstImages(List<Guid> propertyId);
+        
+        Task<PropertyImage> GetByIdAsync(Guid id);
+        
+        Task DeleteImageAsync(Guid id);
     }
 }

@@ -4,6 +4,8 @@ namespace Find_Your_Home.Models.Properties.DTO
 {
     public class PropertyRequest
     {
+        public Guid Id { get; set; } 
+        
         [Required]
         public string Category { get; set; }
         
@@ -11,7 +13,7 @@ namespace Find_Your_Home.Models.Properties.DTO
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(500)]
+        [MaxLength(5000)]
         public string Description { get; set; }
 
         [Required]
@@ -24,11 +26,11 @@ namespace Find_Your_Home.Models.Properties.DTO
         public string State { get; set; }
 
         [Required]
-        [RegularExpression(@"^\d{5}$", ErrorMessage = "Invalid ZIP Code")]
+        [RegularExpression(@"^\d{6}$", ErrorMessage = "Invalid ZIP Code")]
         public string Zip { get; set; }
 
         [Required]
-        [Range(1000, 10000000, ErrorMessage = "Price must be realistic")]
+        [Range(100, 10000000, ErrorMessage = "Price must be realistic")]
         public decimal Price { get; set; }
 
         [Required]
@@ -60,8 +62,6 @@ namespace Find_Your_Home.Models.Properties.DTO
         public bool hasGarden { get; set; }
         [Required]
         public bool forRent { get; set; }
-        [Required]
-        public int views { get; set; }
         [Required]
         public int yearOfConstruction { get; set; }
         [Required]

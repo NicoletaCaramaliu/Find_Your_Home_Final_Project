@@ -7,6 +7,8 @@ import { ThemeProvider } from "./context/ThemeContext";
 import PropertyDetailsPage from './pages/PropertyDetailsPage';
 import OwnerPageDetails from './pages/OwnerPageDetails';
 import MyAccountPage from './pages/MyAccountPage';
+import EditPropertyPage from "./pages/EditPropertyPage";
+
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
       <Route path="/properties/:id" element={<PropertyDetailsPage />} />
       <Route path="/ownerPage/:ownerId" element={<OwnerPageDetails />} />
       <Route path="/myAccount" element={<MyAccountPage />} />
+      <Route path="/edit-property/:id" element={<EditPropertyPage />} />
     </Routes>
     </ThemeProvider>
   );

@@ -72,12 +72,35 @@ namespace Find_Your_Home.Controllers
         }
         
         [HttpGet("getAllPropertyImages"), Authorize] 
-         public async Task<ActionResult<string>> GetPropertyImages(Guid propertyId)
+        public async Task<ActionResult<IEnumerable<object>>> GetPropertyImages(Guid propertyId)
         {
             var propertyImages = await _propertyImagesService.GetPropertyImages(propertyId);
-            var imagesUrl = propertyImages.Select(img => img.ImageUrl).ToList();
-            return Ok(imagesUrl);
+
+            var result = propertyImages.Select(img => new
+            {
+                id = img.Id,
+                imageUrl = img.ImageUrl
+            });
+
+            return Ok(result);
         }
+         
+        [HttpDelete("deletePropertyImage"), Authorize(Roles = "Admin, Agent, PropertyOwner")]
+        public async Task<IActionResult> DeletePropertyImage(Guid imageId)
+        {
+            var userId = _userService.GetMyId();
+            var image = await _propertyImagesService.GetImageById(imageId);
+
+            var property = await _propertyService.GetPropertyByID(image.PropertyId);
+            if (property.OwnerId != userId)
+            {
+                return Unauthorized("You are not authorized to delete this image");
+            }
+
+            await _propertyImagesService.DeleteImage(imageId);
+            return Ok("Image deleted successfully");
+        }
+
          
          [HttpGet("getAllProperties"), Authorize]
          public async Task<ActionResult<IEnumerable<PropertyResponse>>> GetAllProperties()
@@ -206,13 +229,10 @@ namespace Find_Your_Home.Controllers
                propertiesQuery = await _propertyService.SearchProperties(propertiesQuery, searchText);
            }
 
-           // ✅ Aplică filtrare
            propertiesQuery = await _propertyService.FilterProperties(propertiesQuery, filterRequest);
 
-           // ✅ Aplică sortare
            propertiesQuery = await _propertyService.SortFilteredProperties(propertiesQuery, sortCriteria);
 
-           // ✅ Count și paginare
            var totalCount = await propertiesQuery.CountAsync();
            var propertiesFiltered = await propertiesQuery
                .Skip((pageNumber - 1) * pageSize)
@@ -257,6 +277,83 @@ namespace Find_Your_Home.Controllers
             return Ok(propertyResponse);
         }
 
+        [HttpPut("updateProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner")]
+        public async Task<ActionResult<PropertyResponse>> UpdateProperty(
+            [FromForm] PropertyRequest propertyRequest,
+            [FromForm] List<IFormFile> images,
+            [FromServices] ImageService imageService)
+        {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return Unauthorized("User not authenticated");
+            }
+
+            var user = await _userService.GetUserByEmail(userEmail);
+
+
+            var property = await _propertyService.GetPropertyByID(propertyRequest.Id);
+            if (property == null)
+            {
+                return NotFound("Property not found");
+            }
+
+            //userul autentificat e ownerul
+            var userId = _userService.GetMyId();
+            if (property.OwnerId != userId)
+            {
+                return Unauthorized("You are not authorized to update this property");
+            }
+
+            var updatedProperty = _mapper.Map(propertyRequest, property);
+
+            //salvare imagini Azure
+            if (images.Count > 0)
+            {
+                int order = 1;
+                foreach (var image in images)
+                {
+                    var imageUrl = await imageService.SaveImageAsync(image);
+                    var propertyImage = new PropertyImage
+                    {
+                        ImageUrl = imageUrl,
+                        PropertyId = updatedProperty.Id,
+                        Order = order++
+
+                    };
+                    await _propertyImagesService.AddImageToProperty(propertyImage);
+                }
+            }
+
+            await _propertyService.UpdateProperty(updatedProperty);
+
+            var propertyDto = _mapper.Map<PropertyResponse>(updatedProperty);
+            return Ok(propertyDto);
+        }
         
+        [HttpDelete("deleteProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner, Moderator")]
+        public async Task<ActionResult> DeleteProperty(Guid propertyId)
+        {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return Unauthorized("User not authenticated");
+            }
+
+
+            var property = await _propertyService.GetPropertyByID(propertyId);
+
+            var userId = _userService.GetMyId();
+            if (property.OwnerId != userId)
+            {
+                return Unauthorized("You are not authorized to delete this property");
+            }
+
+            await _propertyService.DeleteProperty(property.Id);
+            return NoContent();
+        }
+
     }
 }

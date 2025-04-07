@@ -4,6 +4,7 @@ import api from "../api";
 import { Property } from "../types/Property";
 import { rolesMap } from "../constants/roles";
 import MainNavBar from "../components/MainNavBar";
+import AddPropertyForm from "../components/properties/AddPropertyForm";
 
 interface LoggedUser {
   id: string;
@@ -20,6 +21,7 @@ const MyAccountPage: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [user, setUser] = useState<LoggedUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showAddForm, setShowAddForm] = useState(false);
   const navigate = useNavigate();
 
   const fetchMyProperties = async () => {
@@ -73,12 +75,24 @@ const MyAccountPage: React.FC = () => {
 
             {isAllowedToManageProperties(user.role) ? (
               <>
-                <button
-                  onClick={() => navigate("/add-property")}
-                  className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-                >
-                  + Adaugă Proprietate
-                </button>
+                {!showAddForm && (
+                  <button
+                    onClick={() => setShowAddForm(true)}
+                    className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                  >
+                    + Adaugă Proprietate
+                  </button>
+                )}
+
+                {showAddForm && (
+                  <AddPropertyForm
+                    onSuccess={() => {
+                      setShowAddForm(false);
+                      fetchMyProperties();
+                    }}
+                    onCancel={() => setShowAddForm(false)}
+                  />
+                )}
 
                 {loading ? (
                   <p>Se încarcă...</p>

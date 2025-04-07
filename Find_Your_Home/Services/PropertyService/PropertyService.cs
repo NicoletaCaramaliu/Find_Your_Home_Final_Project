@@ -101,5 +101,14 @@ namespace Find_Your_Home.Services.PropertyService
             return updatedProperty;
         }
 
+        public async Task<Property> DeleteProperty(Guid id)
+        {
+            var property = await _propertyRepository.FindByIdAsync(id);
+
+            _propertyRepository.Delete(property);
+            await _unitOfWork.SaveAsync();
+            return property;
+        }
+
     }
 }
