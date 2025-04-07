@@ -188,50 +188,56 @@ namespace Find_Your_Home.Controllers
             return Ok(propertiesDto);
         }*/
         
-        [HttpGet("filterAndSortProperties"), Authorize]
-        public async Task<ActionResult<PaginatedResponse<PropertyResponse>>> FilterAndSortProperties(
-            [FromQuery] FilterCriteria filterRequest, 
-            [FromQuery] SortCriteria sortCriteria, 
-            [FromQuery] string searchText = null,
-            int pageNumber = 1, 
-            int pageSize = 30)
-        {
-            if (pageNumber <= 0) pageNumber = 1;
-            if (pageSize <= 0 || pageSize > 50) pageSize = 10;
+       [HttpGet("filterAndSortProperties"), Authorize]
+       public async Task<ActionResult<PaginatedResponse<PropertyResponse>>> FilterAndSortProperties(
+           [FromQuery] FilterCriteria filterRequest,
+           [FromQuery] SortCriteria sortCriteria,
+           [FromQuery] string searchText = null,
+           [FromQuery] int pageNumber = 1,
+           [FromQuery] int pageSize = 30)
+       {
+           if (pageNumber <= 0) pageNumber = 1;
+           if (pageSize <= 0 || pageSize > 50) pageSize = 10;
 
-            var propertiesQuery = await _propertyService.GetAllProperties();
-            
-            if (!string.IsNullOrEmpty(searchText))
-            {
-                propertiesQuery = await _propertyService.SearchProperties(propertiesQuery, searchText);
-            }
+           var propertiesQuery = await _propertyService.GetAllProperties();
 
-            var totalCount = await propertiesQuery.CountAsync();
+           if (!string.IsNullOrEmpty(searchText))
+           {
+               propertiesQuery = await _propertyService.SearchProperties(propertiesQuery, searchText);
+           }
 
-            var propertiesFiltered = await propertiesQuery
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+           // ✅ Aplică filtrare
+           propertiesQuery = await _propertyService.FilterProperties(propertiesQuery, filterRequest);
 
-            var propertyIds = propertiesFiltered.Select(p => p.Id).ToList();
-            var propertyImages = await _propertyImagesService.GetFirstPropertyImages(propertyIds);
+           // ✅ Aplică sortare
+           propertiesQuery = await _propertyService.SortFilteredProperties(propertiesQuery, sortCriteria);
 
-            var propertiesDto = new List<PropertyResponse>();
-            
-            foreach (var property in propertiesFiltered)
-            {
-                var propertyResponse = _mapper.Map<PropertyResponse>(property);
-                var propertyImage = propertyImages.FirstOrDefault(pi => pi.PropertyId == property.Id);
-                propertyResponse.FirstImageUrl = propertyImage?.ImageUrl;
-                propertiesDto.Add(propertyResponse);
-            }
+           // ✅ Count și paginare
+           var totalCount = await propertiesQuery.CountAsync();
+           var propertiesFiltered = await propertiesQuery
+               .Skip((pageNumber - 1) * pageSize)
+               .Take(pageSize)
+               .ToListAsync();
 
-            return Ok(new PaginatedResponse<PropertyResponse>
-            {
-                Items = propertiesDto,
-                TotalCount = totalCount
-            });
-        }
+           var propertyIds = propertiesFiltered.Select(p => p.Id).ToList();
+           var propertyImages = await _propertyImagesService.GetFirstPropertyImages(propertyIds);
+
+           var propertiesDto = new List<PropertyResponse>();
+           foreach (var property in propertiesFiltered)
+           {
+               var propertyResponse = _mapper.Map<PropertyResponse>(property);
+               var propertyImage = propertyImages.FirstOrDefault(pi => pi.PropertyId == property.Id);
+               propertyResponse.FirstImageUrl = propertyImage?.ImageUrl;
+               propertiesDto.Add(propertyResponse);
+           }
+
+           return Ok(new PaginatedResponse<PropertyResponse>
+           {
+               Items = propertiesDto,
+               TotalCount = totalCount
+           });
+       }
+
         
         [HttpPost("increaseViews"), Authorize]
         public async Task<ActionResult<PropertyResponse>> IncreaseViews(Guid propertyId)

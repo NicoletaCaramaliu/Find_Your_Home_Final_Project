@@ -27,20 +27,29 @@ const PropertiesPage: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const { filters, pagination, searchText, sortCriteria } = getQueryStateFromSearchParams(location.search);
-
-        setFilters(filters);
-        setPagination(pagination);
-        setSearchText(searchText);
-        setSortCriteria(sortCriteria);
-
-        const queryParams = buildQueryParamsFromState(filters, pagination, searchText, sortCriteria);
+        const {
+            filters: queryFilters,
+            pagination: queryPagination,
+            searchText: querySearchText,
+            sortCriteria: querySortCriteria
+        } = getQueryStateFromSearchParams(location.search);
+    
+        setFilters(queryFilters);
+        setPagination(queryPagination);
+        setSearchText(querySearchText);
+        setSortCriteria(querySortCriteria);
+    
+        const queryParams = buildQueryParamsFromState(
+            queryFilters,
+            queryPagination,
+            querySearchText,
+            querySortCriteria
+        );
+    
         fetchProperties(queryParams);
-
-        if (!loading) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
     }, [location.search]);
+    
+    
 
     const fetchProperties = async (queryParams: string) => {
         setLoading(true);
@@ -61,17 +70,26 @@ const PropertiesPage: React.FC = () => {
         }
     };
 
-    const updateURL = (customPagination = pagination) => {
-        const query = buildQueryParamsFromState(filters, customPagination, searchText, sortCriteria);
+    const updateURL = async (
+        customFilters = filters,
+        customPagination = pagination,
+        customSearchText = searchText,
+        customSortCriteria = sortCriteria
+    ) => {
+        const query = buildQueryParamsFromState(customFilters, customPagination, customSearchText, customSortCriteria);
         navigate(`?${query}`);
+        await fetchProperties(query);
     };
+    
 
     const handleSortChange = (sortBy: string, sortOrder: string) => {
-        setSortCriteria({ sortBy, sortOrder });
+        const newSort = { sortBy, sortOrder };
         const newPagination = { ...pagination, pageNumber: 1 };
+        setSortCriteria(newSort);
         setPagination(newPagination);
-        updateURL(newPagination);
+        updateURL(filters, newPagination, searchText, newSort);
     };
+    
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
@@ -84,9 +102,11 @@ const PropertiesPage: React.FC = () => {
     const applyFilters = (e: React.FormEvent) => {
         e.preventDefault();
         const newPagination = { ...pagination, pageNumber: 1 };
+        const newFilters = { ...filters }; // sau ia din formular dacă vrei
         setPagination(newPagination);
-        updateURL(newPagination);
+        updateURL(newFilters, newPagination, searchText, sortCriteria);
     };
+    
 
     const handleClearFilters = () => {
         setFilters(defaultFilters);
@@ -101,14 +121,14 @@ const PropertiesPage: React.FC = () => {
     const handlePageChange = (newPageNumber: number) => {
         const newPagination = { ...pagination, pageNumber: newPageNumber };
         setPagination(newPagination);
-        updateURL(newPagination);
+        updateURL(filters, newPagination, searchText, sortCriteria);
     };
 
     const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newSize = parseInt(e.target.value, 10);
         const newPagination = { pageNumber: 1, pageSize: newSize };
         setPagination(newPagination);
-        updateURL(newPagination);
+        updateURL(filters, newPagination, searchText, sortCriteria);
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,7 +138,7 @@ const PropertiesPage: React.FC = () => {
     const handleSearchSubmit = () => {
         const newPagination = { ...pagination, pageNumber: 1 };
         setPagination(newPagination);
-        updateURL(newPagination);
+        updateURL(filters, newPagination, searchText, sortCriteria);
     };
 
     return (
