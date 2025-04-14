@@ -14,8 +14,14 @@ interface LoggedUser {
   role: number;
 }
 
+type FavoriteResponse = Property;
+
+
 const isAllowedToManageProperties = (role: number) =>
   [0, 2, 3].includes(role); // Admin, PropertyOwner, Agent
+
+const shouldSeeFavoritesInstead = (role: number) => ![0, 2, 3].includes(role);
+
 
 const MyAccountPage: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -23,6 +29,9 @@ const MyAccountPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const navigate = useNavigate();
+  const [favorites, setFavorites] = useState<Property[]>([]);
+  const [favoritesLoading, setFavoritesLoading] = useState(true);
+
 
   const fetchMyProperties = async () => {
     try {
@@ -43,6 +52,37 @@ const MyAccountPage: React.FC = () => {
       console.error("Eroare la preluarea utilizatorului logat:", err);
     }
   };
+
+  useEffect(() => {
+    if (user && shouldSeeFavoritesInstead(user.role)) {
+      fetchFavorites();
+    }
+  }, [user]);
+  
+
+  const fetchFavorites = async () => {
+    try {
+      const res = await api.get("/Favorites/getMyFavorites");
+      setFavorites(res.data);
+    } catch (err) {
+      console.error("Eroare la preluarea proprietăților favorite:", err);
+    } finally {
+      setFavoritesLoading(false);
+    }
+  };
+  
+  const removeFromFavorites = async (propertyId: string) => {
+    try {
+      await api.delete(`/Favorites/removeFromFavorites`, {
+        params: { propertyId },
+      });
+      setFavorites((prev) => prev.filter((p) => p.id !== propertyId));
+    } catch (err) {
+      console.error("Eroare la ștergerea proprietății din favorite:", err);
+    }
+  };
+  
+
 
   useEffect(() => {
     fetchLoggedUser();
@@ -133,9 +173,44 @@ const MyAccountPage: React.FC = () => {
                 )}
               </>
             ) : (
-              <p className="text-red-500 text-lg font-medium">
-                Nu ai permisiunea de a gestiona proprietăți.
-              </p>
+              shouldSeeFavoritesInstead(user.role) ? (
+                <div className="mt-6">
+                  <h2 className="text-2xl font-semibold mb-2">Proprietăți Favorite</h2>
+                  {favoritesLoading ? (
+                    <p>Se încarcă proprietățile favorite...</p>
+                  ) : favorites.length === 0 ? (
+                    <p>Nu ai nicio proprietate favorită.</p>
+                  ) : (
+                    <div className="grid gap-4">
+                      {favorites.map((property) => (
+                      <div
+                      key={property.id}
+                      className="bg-white dark:bg-gray-800 p-4 rounded shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                    >
+                      <div onClick={() => navigate(`/properties/${property.id}`)} className="cursor-pointer">
+                        <h3 className="text-lg font-bold">{property.name}</h3>
+                        <p>{property.address}</p>
+                        <p>Preț: {property.price} €</p>
+                      </div>
+                    
+                      <button
+                        onClick={() => removeFromFavorites(property.id)}
+                        className="mt-2 px-3 py-1 bg-red-600 dark:bg-red-900 text-white text-sm rounded hover:bg-red-700"
+                      >
+                        Șterge din Favorite
+                      </button>
+                    </div>
+                    
+                    ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-red-500 text-lg font-medium">
+                  Nu ai permisiunea de a gestiona proprietăți.
+                </p>
+              )
+              
             )}
           </>
         ) : (

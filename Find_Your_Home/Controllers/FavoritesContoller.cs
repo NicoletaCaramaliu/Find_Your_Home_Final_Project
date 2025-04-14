@@ -71,6 +71,7 @@ namespace Find_Your_Home.Controllers
         }
 
 
+        /*
         [HttpGet("getMyFavorites"), Authorize]
         public async Task<ActionResult<IEnumerable<FavoriteResponse>>> GetMyFavorites()
         {
@@ -84,6 +85,25 @@ namespace Find_Your_Home.Controllers
             var favoriteDtos = _mapper.Map<IEnumerable<FavoriteResponse>>(favorites);
             return Ok(favoriteDtos);
         }
+        */
+        
+        [HttpGet("getMyFavorites"), Authorize]
+        public async Task<ActionResult<IEnumerable<PropertyResponse>>> GetMyFavorites()
+        {
+            var userId = _userService.GetMyId();
+            var favorites = await _favoriteService.GetFavoritesByUserId(userId);
+
+
+            var properties = favorites
+                .Where(f => f.Property != null)
+                .Select(f => f.Property)
+                .ToList();
+
+            var propertyDtos = _mapper.Map<IEnumerable<PropertyResponse>>(properties);
+
+            return Ok(propertyDtos);
+        }
+
         
         [HttpGet("isAlreadyFavorited"), Authorize]
         public async Task<ActionResult<bool>> IsAlreadyFavorited(Guid propertyId)

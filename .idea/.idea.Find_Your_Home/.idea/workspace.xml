@@ -9,14 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/FavoritesContoller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/FavoritesContoller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/FavoriteRepository/FavoriteRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/FavoriteRepository/FavoriteRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/FavoriteRepository/IFavoriteRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/FavoriteRepository/IFavoriteRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/FavoriteService/FavoriteService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/FavoriteService/FavoriteService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/FavoriteService/IFavoriteService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/FavoriteService/IFavoriteService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ui/PropertyCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ui/PropertyCard.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -210,6 +203,7 @@
       <workItem from="1743622148379" duration="13955000" />
       <workItem from="1743873271106" duration="23725000" />
       <workItem from="1743963848074" duration="16304000" />
+      <workItem from="1744038210517" duration="13393000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />

@@ -122,7 +122,9 @@ const PropertiesPage: React.FC = () => {
         const newPagination = { ...pagination, pageNumber: newPageNumber };
         setPagination(newPagination);
         updateURL(filters, newPagination, searchText, sortCriteria);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+    
 
     const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newSize = parseInt(e.target.value, 10);
