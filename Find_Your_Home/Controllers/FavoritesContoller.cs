@@ -93,16 +93,16 @@ namespace Find_Your_Home.Controllers
             var userId = _userService.GetMyId();
             var favorites = await _favoriteService.GetFavoritesByUserId(userId);
 
-
             var properties = favorites
                 .Where(f => f.Property != null)
                 .Select(f => f.Property)
                 .ToList();
 
-            var propertyDtos = _mapper.Map<IEnumerable<PropertyResponse>>(properties);
+            var propertyDtos = await _propertyService.MapPropertiesWithImagesAsync(properties);
 
             return Ok(propertyDtos);
         }
+
 
         
         [HttpGet("isAlreadyFavorited"), Authorize]

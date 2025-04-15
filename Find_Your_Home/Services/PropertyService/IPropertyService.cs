@@ -7,6 +7,8 @@ namespace Find_Your_Home.Services.PropertyService
     {
         Task<Property> CreateProperty(Property property);
         Task<IQueryable<Property>> GetAllProperties();
+        
+        Task<IQueryable<Property>> GetAllAvailableProperties();
         /*Task<IEnumerable<Property>> FilterProperties(FilterCriteria filterCriteria, int pageNumber, int pageSize);
         */
         Task<IQueryable<Property>> FilterProperties(IQueryable<Property> properties, FilterCriteria filterCriteria);
@@ -25,5 +27,8 @@ namespace Find_Your_Home.Services.PropertyService
         Task<Property> UpdateProperty(Property property);
         
         Task<Property> DeleteProperty(Guid id);
+        
+        Task<List<PropertyResponse>> MapPropertiesWithImagesAsync(List<Property> properties);
+
     }
 }

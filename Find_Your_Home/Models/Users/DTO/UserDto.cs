@@ -9,5 +9,7 @@ namespace Find_Your_Home.Models.Users.DTO
         public string Username { get; set; }
         public string ProfilePicture { get; set; }
         public Role Role { get; set; }
+        
+        public DateTime CreatedAt { get; set; }
     }
 }

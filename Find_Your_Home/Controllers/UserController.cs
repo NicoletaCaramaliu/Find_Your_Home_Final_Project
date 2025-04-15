@@ -53,6 +53,57 @@ namespace Find_Your_Home.Controllers
             var propertiesDto = _mapper.Map<IEnumerable<PropertyResponse>>(properties);
             return Ok(propertiesDto);
         }
+        
+        [HttpPut("updateMyInfo"), Authorize]
+        public async Task<ActionResult<UserDto>> UpdateMyInfo([FromBody] UpdateUserRequest request)
+        {
+            var userId = _userService.GetMyId();
+            var user = await _userService.GetUserById(userId);
+
+            user.Username = request.Username;
+            user.ProfilePicture = request.ProfilePicture;
+
+            var result = await _userService.UpdateUser(user);
+            var userDto = _mapper.Map<UserDto>(result);
+            return Ok(userDto);
+        }
+
+        [HttpPut("updateProfilePicture"), Authorize]
+        public async Task<ActionResult<string>> UpdateProfilePicture(
+            [FromForm] IFormFile file,
+            [FromServices] ImageService imageService)
+        {
+            if (file.Length == 0)
+                return BadRequest("Fișier invalid.");
+
+            var userId = _userService.GetMyId();
+            var user = await _userService.GetUserById(userId);
+            
+            var imageUrl = await imageService.SaveImageAsync(file); 
+
+            user.ProfilePicture = imageUrl;
+            await _userService.UpdateUser(user);
+
+            return Ok(imageUrl);
+        }
+
+        [HttpPut("changePassword"), Authorize]
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            var userId = _userService.GetMyId();
+            var user = await _userService.GetUserById(userId);
+
+            if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, user.Password))
+                return BadRequest("Parola veche este incorectă.");
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            await _userService.UpdateUser(user);
+
+            return Ok("Parola a fost schimbată cu succes.");
+        }
+
+
+
     }
 }
 

@@ -1,8 +1,10 @@
-﻿using Find_Your_Home.Helpers;
+﻿using AutoMapper;
+using Find_Your_Home.Helpers;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
 using Find_Your_Home.Repositories.PropertyRepository;
 using Find_Your_Home.Repositories.UnitOfWork;
+using Find_Your_Home.Services.PropertyImagesService;
 using Microsoft.EntityFrameworkCore;
 
 namespace Find_Your_Home.Services.PropertyService
@@ -10,13 +12,18 @@ namespace Find_Your_Home.Services.PropertyService
     public class PropertyService : IPropertyService
     {
         private readonly IPropertyRepository _propertyRepository;
+        private readonly IPropertyImgService _propertyImagesService;
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public PropertyService(IPropertyRepository propertyRepository, IUnitOfWork unitOfWork)
+        public PropertyService(IPropertyRepository propertyRepository, IUnitOfWork unitOfWork, IPropertyImgService propertyImagesService, IMapper mapper)
         {
+            _mapper = mapper;
             _propertyRepository = propertyRepository;
             _unitOfWork = unitOfWork;
+            _propertyImagesService = propertyImagesService;
         }
+
         
         public async Task<Property> CreateProperty(Property property)
         {
@@ -29,6 +36,13 @@ namespace Find_Your_Home.Services.PropertyService
         {
             var properties = await _propertyRepository.GetAllQueryableAsync();
             return properties;
+        }
+        
+        public async Task<IQueryable<Property>> GetAllAvailableProperties()
+        {
+            var properties = await _propertyRepository.GetAllQueryableAsync();
+            var availableProperties = properties.Where(p => p.IsAvailable == true);
+            return availableProperties;
         }
         
         public async Task<IQueryable<Property>> FilterProperties(IQueryable<Property> properties, FilterCriteria filterCriteria)
@@ -108,6 +122,29 @@ namespace Find_Your_Home.Services.PropertyService
             _propertyRepository.Delete(property);
             await _unitOfWork.SaveAsync();
             return property;
+        }
+        
+        
+        public async Task<List<PropertyResponse>> MapPropertiesWithImagesAsync(List<Property> properties)
+        {
+            var propertyIds = properties.Select(p => p.Id).ToList();
+            var propertyImages = await _propertyImagesService.GetFirstPropertyImages(propertyIds);
+
+            var imageDict = propertyImages
+                .GroupBy(img => img.PropertyId)
+                .ToDictionary(g => g.Key, g => g.FirstOrDefault());
+
+            var propertyDtos = properties.Select(property =>
+            {
+                var dto = _mapper.Map<PropertyResponse>(property);
+                if (imageDict.TryGetValue(property.Id, out var image))
+                {
+                    dto.FirstImageUrl = image?.ImageUrl;
+                }
+                return dto;
+            }).ToList();
+
+            return propertyDtos;
         }
 
     }

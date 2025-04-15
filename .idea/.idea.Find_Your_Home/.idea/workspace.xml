@@ -9,7 +9,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="" />
+    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Users/DTO/ChangePasswordRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Users/DTO/UpdateUserRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/FavoritesContoller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/FavoritesContoller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/PropertiesController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/PropertiesController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/UserController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Models/Users/DTO/UserDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Users/DTO/UserDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/IPropertyService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/IPropertyService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/PropertyService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyService/PropertyService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MyAccountPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MyAccountPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/PropertiesPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/PropertiesPage.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -204,6 +216,8 @@
       <workItem from="1743873271106" duration="23725000" />
       <workItem from="1743963848074" duration="16304000" />
       <workItem from="1744038210517" duration="13393000" />
+      <workItem from="1744666106757" duration="4536000" />
+      <workItem from="1744750018416" duration="6987000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />

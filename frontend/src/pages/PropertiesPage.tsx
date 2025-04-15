@@ -48,6 +48,12 @@ const PropertiesPage: React.FC = () => {
     
         fetchProperties(queryParams);
     }, [location.search]);
+
+    useEffect(() => {
+        if (!loading) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [pagination.pageNumber, loading]);
     
     
 
@@ -102,7 +108,7 @@ const PropertiesPage: React.FC = () => {
     const applyFilters = (e: React.FormEvent) => {
         e.preventDefault();
         const newPagination = { ...pagination, pageNumber: 1 };
-        const newFilters = { ...filters }; // sau ia din formular dacă vrei
+        const newFilters = { ...filters }; 
         setPagination(newPagination);
         updateURL(newFilters, newPagination, searchText, sortCriteria);
     };
@@ -122,7 +128,6 @@ const PropertiesPage: React.FC = () => {
         const newPagination = { ...pagination, pageNumber: newPageNumber };
         setPagination(newPagination);
         updateURL(filters, newPagination, searchText, sortCriteria);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     
 

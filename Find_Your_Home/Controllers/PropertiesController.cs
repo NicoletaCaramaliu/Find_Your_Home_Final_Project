@@ -222,7 +222,7 @@ namespace Find_Your_Home.Controllers
            if (pageNumber <= 0) pageNumber = 1;
            if (pageSize <= 0 || pageSize > 50) pageSize = 10;
 
-           var propertiesQuery = await _propertyService.GetAllProperties();
+           var propertiesQuery = await _propertyService.GetAllAvailableProperties();
 
            if (!string.IsNullOrEmpty(searchText))
            {
@@ -230,7 +230,6 @@ namespace Find_Your_Home.Controllers
            }
 
            propertiesQuery = await _propertyService.FilterProperties(propertiesQuery, filterRequest);
-
            propertiesQuery = await _propertyService.SortFilteredProperties(propertiesQuery, sortCriteria);
 
            var totalCount = await propertiesQuery.CountAsync();
@@ -239,17 +238,7 @@ namespace Find_Your_Home.Controllers
                .Take(pageSize)
                .ToListAsync();
 
-           var propertyIds = propertiesFiltered.Select(p => p.Id).ToList();
-           var propertyImages = await _propertyImagesService.GetFirstPropertyImages(propertyIds);
-
-           var propertiesDto = new List<PropertyResponse>();
-           foreach (var property in propertiesFiltered)
-           {
-               var propertyResponse = _mapper.Map<PropertyResponse>(property);
-               var propertyImage = propertyImages.FirstOrDefault(pi => pi.PropertyId == property.Id);
-               propertyResponse.FirstImageUrl = propertyImage?.ImageUrl;
-               propertiesDto.Add(propertyResponse);
-           }
+           var propertiesDto = await _propertyService.MapPropertiesWithImagesAsync(propertiesFiltered);
 
            return Ok(new PaginatedResponse<PropertyResponse>
            {
@@ -257,6 +246,8 @@ namespace Find_Your_Home.Controllers
                TotalCount = totalCount
            });
        }
+
+
 
         
         [HttpPost("increaseViews"), Authorize]
@@ -294,10 +285,6 @@ namespace Find_Your_Home.Controllers
 
 
             var property = await _propertyService.GetPropertyByID(propertyRequest.Id);
-            if (property == null)
-            {
-                return NotFound("Property not found");
-            }
 
             //userul autentificat e ownerul
             var userId = _userService.GetMyId();
