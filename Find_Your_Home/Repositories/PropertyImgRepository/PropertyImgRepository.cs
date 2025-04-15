@@ -1,4 +1,5 @@
-﻿using Find_Your_Home.Data;
+﻿using System.Linq.Expressions;
+using Find_Your_Home.Data;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Repositories.GenericRepository;
 using Microsoft.EntityFrameworkCore;
@@ -43,5 +44,11 @@ namespace Find_Your_Home.Repositories.PropertyImgRepository
             await _context.SaveChangesAsync();
             
         }
+        
+        public async Task<bool> AnyAsync(Expression<Func<PropertyImage, bool>> predicate)
+        {
+            return await _context.PropertyImages.AnyAsync(predicate);
+        }
+
     }
 }

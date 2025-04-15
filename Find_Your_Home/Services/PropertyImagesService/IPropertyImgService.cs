@@ -11,5 +11,7 @@ namespace Find_Your_Home.Services.PropertyImagesService
         
         Task<PropertyImage> GetImageById(Guid id);
         Task DeleteImage(Guid id);
+        Task<bool> ImageHashExistsAsync(Guid propertyId, string hash);
+
     }
 }

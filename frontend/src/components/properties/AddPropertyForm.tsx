@@ -79,8 +79,16 @@ const AddPropertyForm: React.FC<Props> = ({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setImages(Array.from(e.target.files));
+      const newFiles = Array.from(e.target.files);
+      const uniqueNewFiles = newFiles.filter(newFile =>
+        !images.some(existing => existing.name === newFile.name && existing.size === newFile.size)
+      );
+      setImages(prev => [...prev, ...uniqueNewFiles]);
     }
+  };
+
+  const handleRemoveNewImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleDeleteImage = async (imageId: string) => {
@@ -107,45 +115,57 @@ const AddPropertyForm: React.FC<Props> = ({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage(isEdit ? "Se salvează modificările..." : "Se încarcă proprietatea...");
-
-    const formData = new FormData();
-    Object.entries(form).forEach(([key, value]) => {
-      formData.append(key, value != null ? value.toString() : "");
-    });
-    images.forEach((file) => formData.append("images", file));
-
-    try {
-      if (isEdit && initialData?.id) {
-        formData.append("Id", initialData.id);
-        await api.put(`/Properties/updateProperty`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        setMessage("✅ Proprietatea a fost actualizată!");
-      } else {
-        await api.post("/Properties/createProperty", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        setMessage("✅ Anunț publicat cu succes!");
-      }
-
-      onSuccess();
-      setTimeout(() => {
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+      setMessage(isEdit ? "Se salvează modificările..." : "Se încarcă proprietatea...");
+    
+      const formData = new FormData();
+      Object.entries(form).forEach(([key, value]) => {
+        formData.append(key, value != null ? value.toString() : "");
+      });
+      images.forEach((file) => formData.append("images", file));
+    
+      try {
+        if (isEdit && initialData?.id) {
+          formData.append("Id", initialData.id);
+    
+          const res = await api.put(`/Properties/updateProperty`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+    
+          const { Duplicates } = res.data;
+    
+          setMessage("✅ Proprietatea a fost actualizată!");
+    
+          if (Duplicates && Duplicates.length > 0) {
+            alert(
+              `⚠️ Următoarele imagini existau deja și nu au fost adăugate:\n\n${Duplicates.join("\n")}`
+            );
+          }
+    
+        } else {
+          await api.post("/Properties/createProperty", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          setMessage("✅ Anunț publicat cu succes!");
+        }
+    
+        onSuccess();
+        setTimeout(() => {
+          setLoading(false);
+          onCancel();
+        }, 1500);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const err = error.response?.data?.errors;
+          console.error("Eroare API:", err);
+          setMessage("❌ Eroare: " + JSON.stringify(err, null, 2));
+        }
         setLoading(false);
-        onCancel();
-      }, 1500);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const err = error.response?.data?.errors;
-        console.error("Eroare API:", err);
-        setMessage("❌ Eroare: " + JSON.stringify(err, null, 2));
       }
-      setLoading(false);
-    }
-  };
+    };
+  
 
   const textFields = [
     { name: "name", label: "Nume", type: "text" },
@@ -235,6 +255,27 @@ const AddPropertyForm: React.FC<Props> = ({
             className="p-2 border rounded bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
           />
         </div>
+
+        {images.length > 0 && (
+          <div className="col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+            {images.map((file, index) => (
+              <div key={index} className="relative border rounded overflow-hidden shadow dark:border-gray-700">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={`new-${index}`}
+                  className="w-full h-40 object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveNewImage(index)}
+                  className="absolute top-1 right-1 bg-red-600 text-white px-2 py-1 text-xs rounded hover:bg-red-700"
+                >
+                  Elimină
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         {isEdit && existingImages.length > 0 && (
           <div className="col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">

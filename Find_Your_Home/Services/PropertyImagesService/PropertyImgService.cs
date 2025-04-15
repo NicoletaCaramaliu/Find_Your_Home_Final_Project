@@ -44,5 +44,12 @@ namespace Find_Your_Home.Services.PropertyImagesService
             await _propertyImgRepository.DeleteImageAsync(id); 
             await _unitOfWork.SaveAsync();
         }
+        public async Task<bool> ImageHashExistsAsync(Guid propertyId, string hash)
+        {
+            return await _propertyImgRepository
+                .AnyAsync(img => img.PropertyId == propertyId && img.Hash == hash);
+        }
+
+        
     }
 }

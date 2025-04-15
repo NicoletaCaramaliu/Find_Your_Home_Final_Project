@@ -52,6 +52,8 @@ builder.Services.AddScoped<IPropertyImgRepository, PropertyImgRepository>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSingleton<ImageService>();
+builder.Services.AddScoped<ImageHashService>();
+
 
 
 builder.Services.AddSwaggerGen(options =>

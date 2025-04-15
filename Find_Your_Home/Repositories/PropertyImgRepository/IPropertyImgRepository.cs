@@ -1,4 +1,5 @@
-﻿using Find_Your_Home.Models.Properties;
+﻿using System.Linq.Expressions;
+using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Repositories.GenericRepository;
 
 namespace Find_Your_Home.Repositories.PropertyImgRepository
@@ -12,5 +13,7 @@ namespace Find_Your_Home.Repositories.PropertyImgRepository
         Task<PropertyImage> GetByIdAsync(Guid id);
         
         Task DeleteImageAsync(Guid id);
+        Task<bool> AnyAsync(Expression<Func<PropertyImage, bool>> predicate);
+
     }
 }

@@ -33,7 +33,8 @@ namespace Find_Your_Home.Controllers
         public async Task<ActionResult<PropertyResponse>> CreateProperty(
             [FromForm] PropertyRequest propertyRequest,
             [FromForm] List<IFormFile> images,
-            [FromServices] ImageService imageService)
+            [FromServices] ImageService imageService,
+            [FromServices] ImageHashService hashService)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
             
@@ -55,11 +56,19 @@ namespace Find_Your_Home.Controllers
                 int order = 1;
                 foreach (var image in images)
                 {
+                    var hash = await hashService.ComputeHashAsync(image);
+
+                    bool alreadyExists = await _propertyImagesService.ImageHashExistsAsync(createdProperty.Id, hash);
+
+                    if (alreadyExists)
+                        continue;
+
                     var imageUrl = await imageService.SaveImageAsync(image);
                     var propertyImage = new PropertyImage
                     {
                         ImageUrl = imageUrl,
                         PropertyId = createdProperty.Id,
+                        Hash = hash,  
                         Order = order++
                         
                     };
@@ -269,55 +278,68 @@ namespace Find_Your_Home.Controllers
         }
 
         [HttpPut("updateProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner")]
-        public async Task<ActionResult<PropertyResponse>> UpdateProperty(
+        public async Task<ActionResult<object>> UpdateProperty(
             [FromForm] PropertyRequest propertyRequest,
             [FromForm] List<IFormFile> images,
-            [FromServices] ImageService imageService)
+            [FromServices] ImageService imageService,
+            [FromServices] ImageHashService hashService)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                return Unauthorized("User not authenticated");
-            }
+            if (string.IsNullOrEmpty(userEmail)) return Unauthorized("User not authenticated");
 
             var user = await _userService.GetUserByEmail(userEmail);
-
-
             var property = await _propertyService.GetPropertyByID(propertyRequest.Id);
-
-            //userul autentificat e ownerul
             var userId = _userService.GetMyId();
+
             if (property.OwnerId != userId)
-            {
                 return Unauthorized("You are not authorized to update this property");
-            }
 
             var updatedProperty = _mapper.Map(propertyRequest, property);
 
-            //salvare imagini Azure
+            List<string> duplicates = new();
+
             if (images.Count > 0)
             {
-                int order = 1;
+                var existingImages = await _propertyImagesService.GetPropertyImages(updatedProperty.Id);
+                var existingHashes = existingImages
+                    .Where(i => !string.IsNullOrEmpty(i.Hash))
+                    .Select(i => i.Hash!)
+                    .ToHashSet();
+
+                int maxOrder = existingImages.Any() ? existingImages.Max(i => i.Order) : 0;
+
                 foreach (var image in images)
                 {
+                    var hash = await hashService.ComputeHashAsync(image);
+
+                    if (existingHashes.Contains(hash))
+                    {
+                        duplicates.Add(image.FileName);
+                        continue;
+                    }
+
                     var imageUrl = await imageService.SaveImageAsync(image);
                     var propertyImage = new PropertyImage
                     {
                         ImageUrl = imageUrl,
                         PropertyId = updatedProperty.Id,
-                        Order = order++
-
+                        Hash = hash,
+                        Order = ++maxOrder
                     };
                     await _propertyImagesService.AddImageToProperty(propertyImage);
                 }
             }
 
             await _propertyService.UpdateProperty(updatedProperty);
-
             var propertyDto = _mapper.Map<PropertyResponse>(updatedProperty);
-            return Ok(propertyDto);
+
+            return Ok(new
+            {
+                Property = propertyDto,
+                Duplicates = duplicates
+            });
         }
+
         
         [HttpDelete("deleteProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner, Moderator")]
         public async Task<ActionResult> DeleteProperty(Guid propertyId)
