@@ -29,6 +29,10 @@ namespace Find_Your_Home.Models.Users
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
         
+        public string? ResetToken { get; set; } 
+        
+        public DateTime? ResetTokenExpires { get; set; }
+        
         public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
     }
 }

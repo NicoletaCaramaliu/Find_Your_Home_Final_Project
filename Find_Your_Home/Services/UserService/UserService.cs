@@ -1,5 +1,6 @@
 ﻿using Find_Your_Home.Services.UserService;
 using System.Security.Claims;
+using Find_Your_Home.Data;
 using Find_Your_Home.Models.Users;
 using Find_Your_Home.Repositories.UserRepository;
 
@@ -9,11 +10,13 @@ namespace Find_Your_Home.Services.UserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
+        private readonly ApplicationDbContext _context;
 
-        public UserService(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
+        public UserService(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository, ApplicationDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
             _userRepository = userRepository;
+            _context = context;
         }
         public string GetMyName()
         {
@@ -84,6 +87,38 @@ namespace Find_Your_Home.Services.UserService
         public async Task<User?> GetUserByRefreshToken(string refreshToken)
         {
             return await _userRepository.GetByRefreshToken(refreshToken);
+        }
+
+        public async Task<User?> GetUserByResetToken(string token)
+        {
+            return await _userRepository.GetUserByResetTokenAsync(token);
+        }
+        
+        public async Task<bool> DeleteUserAndDependencies(Guid userId)
+        {
+            var user = await _userRepository.GetUserWithDependencies(userId);
+            if (user == null)
+                return false;
+
+            // Șterge imaginile proprietăților
+            var allImages = user.Properties
+                .SelectMany(p => p.Images)
+                .ToList();
+
+            _context.PropertyImages.RemoveRange(allImages);
+
+            // Șterge proprietățile
+            _context.Properties.RemoveRange(user.Properties);
+
+            // Șterge favoritele
+            _context.Favorites.RemoveRange(user.Favorites);
+
+            // Șterge userul
+            _userRepository.Delete(user);
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
 

@@ -20,6 +20,11 @@ namespace Find_Your_Home.Data
                 .ToTable("Users")
                 .HasKey(u => u.Id);
 
+            //email and username are unique
+            /*modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();*/
+            
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();

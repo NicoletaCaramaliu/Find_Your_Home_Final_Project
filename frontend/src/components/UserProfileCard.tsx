@@ -21,6 +21,8 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
   const handleSave = async () => {
     try {
       let imageUrl = editProfilePicture;
@@ -81,6 +83,17 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    try {
+      await api.delete("/User/deleteMe");
+      alert("Contul a fost șters. Ne pare rău că pleci 😢");
+      window.location.href = "/login";
+    } catch (error: any) {
+      console.error("Eroare la ștergere cont:", error);
+      alert(error.response?.data || "A apărut o eroare la ștergerea contului.");
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-gray-700 p-4 rounded shadow mb-6">
       {!isEditing ? (
@@ -106,12 +119,20 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
             </div>
           </div>
 
-          <button
-            onClick={() => setIsEditing(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Editează
-          </button>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Editează
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            >
+              Șterge contul
+            </button>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
@@ -197,6 +218,27 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
             </button>
             <button
               onClick={() => setIsEditing(false)}
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+            >
+              Anulează
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showDeleteConfirm && (
+        <div className="mt-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          <p className="font-semibold">Ești sigur că vrei să ștergi contul?</p>
+          <p className="text-sm">Această acțiune este ireversibilă.</p>
+          <div className="flex gap-4 mt-3">
+            <button
+              onClick={handleDeleteAccount}
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            >
+              Da, șterge
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
               className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
             >
               Anulează

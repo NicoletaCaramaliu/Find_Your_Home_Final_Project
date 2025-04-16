@@ -33,6 +33,7 @@ namespace Find_Your_Home.Helpers.Extensions
             services.AddTransient<IPropertyImgService, PropertyImgService>();
             services.AddTransient<IPropertyService, PropertyService>();
             services.AddTransient<IFavoriteService, FavoriteService>();
+            services.AddTransient<IEmailService, EmailService>();
             return services;
         }
     }

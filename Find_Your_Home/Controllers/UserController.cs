@@ -101,6 +101,17 @@ namespace Find_Your_Home.Controllers
 
             return Ok("Parola a fost schimbată cu succes.");
         }
+        
+        [HttpDelete("deleteMe"), Authorize]
+        public async Task<IActionResult> DeleteMyAccount()
+        {
+            var userId = _userService.GetMyId();
+            var result = await _userService.DeleteUserAndDependencies(userId);
+            if (!result)
+                return NotFound("Utilizatorul nu a fost găsit.");
+
+            return Ok("Utilizatorul și toate datele asociate au fost șterse.");
+        }
 
 
 

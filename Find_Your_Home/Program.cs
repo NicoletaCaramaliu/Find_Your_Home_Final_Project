@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using Find_Your_Home.Helpers;
+using Find_Your_Home.Models.Users;
 using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
 using Find_Your_Home.Repositories.UnitOfWork;
@@ -53,6 +54,11 @@ builder.Services.AddScoped<IPropertyImgRepository, PropertyImgRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSingleton<ImageService>();
 builder.Services.AddScoped<ImageHashService>();
+
+
+builder.Services.AddScoped<EmailService>(); 
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 
 

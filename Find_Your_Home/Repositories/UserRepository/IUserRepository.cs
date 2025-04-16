@@ -7,5 +7,9 @@ namespace Find_Your_Home.Repositories.UserRepository
     {
         Task<User> GetByEmail(string email);
         Task<User?> GetByRefreshToken(string refreshToken);
+        
+        Task<User?> GetUserByResetTokenAsync(string token);
+        Task<User?> GetUserWithDependencies(Guid userId);
+
     }
 }

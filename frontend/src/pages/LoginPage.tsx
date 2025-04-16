@@ -67,6 +67,12 @@ export default function LoginPage() {
 
             <LoginForm onLogin={handleLogin} errorMessage={errorMessage} />
 
+            <Link
+              to="/forgot-password"
+              className="text-blue-600 dark:text-blue-400 hover:underline text-sm block text-center mt-3">
+              Ai uitat parola?
+            </Link>
+
             <p className="mt-6 text-gray-600 dark:text-gray-400 text-center">
               Nu ai cont?{" "}
               <Link

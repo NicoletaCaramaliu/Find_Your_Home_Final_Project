@@ -122,7 +122,7 @@ namespace Find_Your_Home.Repositories.PropertyRepository
             properties = sortBy switch
             {
                 "price" => sortOrder ? properties.OrderByDescending(p => p.Price) : properties.OrderBy(p => p.Price),
-                "date" => sortOrder
+                "createdat" => sortOrder
                     ? properties.OrderByDescending(p => p.CreatedAt)
                     : properties.OrderBy(p => p.CreatedAt),
                 _ => properties

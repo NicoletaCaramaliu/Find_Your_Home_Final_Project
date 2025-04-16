@@ -15,5 +15,9 @@ namespace Find_Your_Home.Services.UserService
         
         Task<User> UpdateUser(User user);
         Task<User?> GetUserByRefreshToken(string refreshToken);
+        
+        Task<User?> GetUserByResetToken(string token);
+        
+        Task<bool> DeleteUserAndDependencies(Guid userId);
     }
 }

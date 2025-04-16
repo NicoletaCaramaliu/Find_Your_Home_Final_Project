@@ -16,9 +16,11 @@ namespace Find_Your_Home.Controllers
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
-        public AuthController(IAuthService authService, IUserService userService, IMapper mapper)
+        public AuthController(IAuthService authService, IUserService userService, IMapper mapper, IEmailService emailService)
         {
+            _emailService = emailService;
             _authService = authService;
             _userService = userService;
             _mapper = mapper;
@@ -99,6 +101,39 @@ namespace Find_Your_Home.Controllers
             {
                 return Unauthorized(new { Message = ex.Message });
             }
+        }
+        
+        //reset pass
+        [HttpPost("request-password-reset")]
+        public async Task<IActionResult> RequestPasswordReset([FromBody] string email)
+        {
+            var user = await _userService.GetUserByEmail(email);
+            if (user == null) return BadRequest("Email inexistent");
+
+            var token = Guid.NewGuid().ToString();
+            user.ResetToken = token;
+            user.ResetTokenExpires = DateTime.UtcNow.AddHours(1);
+            await _userService.UpdateUser(user);
+
+            var resetLink = $"http://localhost:5173/reset-password?token={token}";
+            await _emailService.SendPasswordResetEmailAsync(email, resetLink);
+
+            return Ok("Email de resetare trimis.");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var user = await _userService.GetUserByResetToken(request.Token);
+            if (user == null || user.ResetTokenExpires < DateTime.UtcNow)
+                return BadRequest("Token invalid sau expirat");
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            user.ResetToken = null;
+            user.ResetTokenExpires = null;
+            await _userService.UpdateUser(user);
+
+            return Ok("Parola a fost resetată cu succes.");
         }
     }
 }
