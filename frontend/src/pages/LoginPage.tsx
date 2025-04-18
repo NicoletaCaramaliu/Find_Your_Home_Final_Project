@@ -7,10 +7,12 @@ import { login } from "../services/authService";
 import Navbar from "../components/NavBar";
 import { motion } from "framer-motion";
 
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [, setIsLoading] = useState<boolean>(false);
+
 
   const handleLogin = async (email: string, password: string) => {
     setErrorMessage("");

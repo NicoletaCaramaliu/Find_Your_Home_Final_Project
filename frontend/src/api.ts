@@ -24,11 +24,11 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptează 401 si incearcă refresh
+// Intercepteaza 401 si incearcă refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log("🔥 Interceptor intrat");
+    console.log("Interceptor intrat");
     const originalRequest = error.config as RetryAxiosRequestConfig;
 
     if (error.response?.status === 401 && !originalRequest._retry) {

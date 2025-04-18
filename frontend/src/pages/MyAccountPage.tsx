@@ -1,4 +1,3 @@
-// ✅ MyAccountPage.tsx (refactorizat cu componente)
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
@@ -8,6 +7,7 @@ import AddPropertyForm from "../components/properties/AddPropertyForm";
 import UserProfileCard from "../components/UserProfileCard";
 import MyPropertiesCard from "../components/MyPropertiesCard";
 import FavoritePropertiesCard from "../components/FavoritePropertiesCard";
+import { logout } from "../services/authService";
 
 interface LoggedUser {
   id: string;
@@ -28,6 +28,7 @@ const MyAccountPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [favoritesLoading, setFavoritesLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navigate = useNavigate();
 
   const fetchLoggedUser = async () => {
@@ -72,6 +73,11 @@ const MyAccountPage: React.FC = () => {
     }
   };
 
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
   useEffect(() => {
     fetchLoggedUser();
     fetchMyProperties();
@@ -93,12 +99,42 @@ const MyAccountPage: React.FC = () => {
           <>
             <UserProfileCard user={user} refreshUser={fetchLoggedUser} />
 
+            {/* Confirmare logout */}
+            <div className="mt-4 space-y-2">
+              {!showLogoutConfirm ? (
+                <button
+                  onClick={() => setShowLogoutConfirm(true)}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                >
+                  Deconectează-te
+                </button>
+              ) : (
+                <div className="flex gap-2 items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">
+                    Ești sigur că vrei să te deconectezi?
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                  >
+                    Da
+                  </button>
+                  <button
+                    onClick={() => setShowLogoutConfirm(false)}
+                    className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600"
+                  >
+                    Nu
+                  </button>
+                </div>
+              )}
+            </div>
+
             {isAllowedToManageProperties(user.role) && (
               <>
                 {!showAddForm && (
                   <button
                     onClick={() => setShowAddForm(true)}
-                    className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                    className="mb-4 mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
                   >
                     + Adaugă Proprietate
                   </button>
