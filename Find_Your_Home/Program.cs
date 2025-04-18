@@ -136,7 +136,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         builder =>
         {
-            builder.WithOrigins("http://localhost:5173") 
+            builder.WithOrigins("https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net") 
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
