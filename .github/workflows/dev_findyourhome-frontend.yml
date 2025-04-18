@@ -34,6 +34,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'findyourhome-frontend'
-          slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           package: build.zip
