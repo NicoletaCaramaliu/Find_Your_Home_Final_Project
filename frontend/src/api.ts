@@ -25,7 +25,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Intercepteaza 401 si incearcă refresh
+// Intercepteaza 401 si incearca refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
