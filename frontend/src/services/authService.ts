@@ -10,6 +10,7 @@ const AUTH_URL = "/Auth";
 
 export const login = async (email: string, password: string) => {
   try {
+    console.log("🔍 ENV URL:", process.env.REACT_APP_API_URL);
     const response = await api.post(`${AUTH_URL}/login`, { email, password });
 
     const token = response.data.token;

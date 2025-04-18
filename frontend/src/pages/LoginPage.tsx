@@ -20,7 +20,6 @@ export default function LoginPage() {
     try {
       setIsLoading(true);
       await login(email, password);
-      console.log("🔍 ENV URL:", process.env.REACT_APP_API_URL);
       navigate("/properties?pageNumber=1&pageSize=10");
     } catch (error: any) {
       setErrorMessage(error.message);
