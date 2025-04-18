@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { refreshToken } from "./services/authService";
 
-const API_URL = "https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net" ;
+const API_URL = "https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net/api" ;
 
 
 interface RetryAxiosRequestConfig extends AxiosRequestConfig {

@@ -105,6 +105,7 @@ namespace Find_Your_Home.Controllers
         
         //reset pass
         [HttpPost("request-password-reset")]
+        [HttpPost("request-password-reset")]
         public async Task<IActionResult> RequestPasswordReset([FromBody] string email)
         {
             var user = await _userService.GetUserByEmail(email);
@@ -115,11 +116,11 @@ namespace Find_Your_Home.Controllers
             user.ResetTokenExpires = DateTime.UtcNow.AddHours(1);
             await _userService.UpdateUser(user);
 
-            var resetLink = $"http://localhost:5173/reset-password?token={token}";
-            await _emailService.SendPasswordResetEmailAsync(email, resetLink);
+            await _emailService.SendPasswordResetEmailAsync(email, token);
 
             return Ok("Email de resetare trimis.");
         }
+
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
