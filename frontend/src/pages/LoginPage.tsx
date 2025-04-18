@@ -7,16 +7,20 @@ import { login } from "../services/authService";
 import Navbar from "../components/NavBar";
 import { motion } from "framer-motion";
 
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [, setIsLoading] = useState<boolean>(false);
 
+
   const handleLogin = async (email: string, password: string) => {
+    setErrorMessage("");
+    
     try {
       setIsLoading(true);
       await login(email, password);
-      navigate("/properties");
+      navigate("/properties?pageNumber=1&pageSize=10");
     } catch (error: any) {
       setErrorMessage(error.message);
     } finally {
@@ -64,6 +68,12 @@ export default function LoginPage() {
             </h2>
 
             <LoginForm onLogin={handleLogin} errorMessage={errorMessage} />
+
+            <Link
+              to="/forgot-password"
+              className="text-blue-600 dark:text-blue-400 hover:underline text-sm block text-center mt-3">
+              Ai uitat parola?
+            </Link>
 
             <p className="mt-6 text-gray-600 dark:text-gray-400 text-center">
               Nu ai cont?{" "}

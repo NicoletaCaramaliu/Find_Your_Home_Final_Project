@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PropertyCard } from '../ui/PropertyCard';
+import api from '../../api'; // Import API pentru apeluri HTTP
 
 interface Property {
     id: string;
@@ -33,6 +34,18 @@ interface PropertiesListProps {
 }
 
 const PropertiesList: React.FC<PropertiesListProps> = ({ properties, noResults }) => {
+    const navigate = useNavigate();
+
+    const handlePropertyClick = async (propertyId: string) => {
+        try {
+            await api.post(`/Properties/increaseViews?propertyId=${propertyId}`);
+        } catch (err) {
+            console.error('Eroare la creșterea numărului de vizualizări:', err);
+        } finally {
+            navigate(`/properties/${propertyId}`);
+        }
+    };
+
     return (
         <div className="w-full lg:w-3/4 p-6 bg-gray-100 dark:bg-gray-500 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Proprietăți</h2>
@@ -43,9 +56,13 @@ const PropertiesList: React.FC<PropertiesListProps> = ({ properties, noResults }
                     </p>
                 ) : (
                     properties.map(property => (
-                        <Link key={property.id} to={`/properties/${property.id}`}>
+                        <div
+                            key={property.id}
+                            onClick={() => handlePropertyClick(property.id)}
+                            className="cursor-pointer"
+                        >
                             <PropertyCard property={property} />
-                        </Link>
+                        </div>
                     ))
                 )}
             </div>

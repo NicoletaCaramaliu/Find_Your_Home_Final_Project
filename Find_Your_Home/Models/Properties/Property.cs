@@ -1,4 +1,5 @@
 ﻿using Find_Your_Home.Models.Base;
+using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Users;
 
 namespace Find_Your_Home.Models.Properties
@@ -25,13 +26,15 @@ namespace Find_Your_Home.Models.Properties
         public int NumberOfBalconies { get; set; }
         public bool HasGarden { get; set; }
         public bool ForRent { get; set; }
-        public int Views { get; set; }
+        public int Views { get; set; } = 0;
         public int YearOfConstruction { get; set; }
         public bool Furnished { get; set; }
+        public bool PetFriendly { get; set; }
 
         public Guid OwnerId { get; set;  }
         public User Owner { get; set; }
         public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
+        public ICollection<Favorite> FavoritedBy { get; set; } = new List<Favorite>();
 
     }
 }

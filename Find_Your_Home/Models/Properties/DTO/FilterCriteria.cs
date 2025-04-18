@@ -20,5 +20,6 @@
         public int? Views { get; set; }
         public int? YearOfConstruction { get; set; }
         public bool? Furnished { get; set; }
+        public bool? PetFriendly { get; set; }
     }
 }

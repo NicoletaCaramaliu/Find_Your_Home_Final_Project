@@ -25,5 +25,31 @@ namespace Find_Your_Home.Services.PropertyImagesService
             await _propertyImgRepository.CreateAsync(propertyImage);
             await _unitOfWork.SaveAsync();
         }
+
+
+        public async Task<List<PropertyImage>> GetFirstPropertyImages(List<Guid> propertyId)
+        {
+            return await _propertyImgRepository.GetFirstImages(propertyId);
+        }
+
+        public async Task<PropertyImage> GetImageById(Guid id)
+        {
+            return await _propertyImgRepository.GetByIdAsync(id);
+        }
+
+        public async Task DeleteImage(Guid id)
+        {
+            var image = await _propertyImgRepository.GetByIdAsync(id);
+            
+            await _propertyImgRepository.DeleteImageAsync(id); 
+            await _unitOfWork.SaveAsync();
+        }
+        public async Task<bool> ImageHashExistsAsync(Guid propertyId, string hash)
+        {
+            return await _propertyImgRepository
+                .AnyAsync(img => img.PropertyId == propertyId && img.Hash == hash);
+        }
+
+        
     }
 }

@@ -6,5 +6,12 @@ namespace Find_Your_Home.Services.PropertyImagesService
     {
         Task<IEnumerable<PropertyImage>> GetPropertyImages(Guid propertyId);
         Task AddImageToProperty(PropertyImage propertyImage);
+        
+        Task<List<PropertyImage>> GetFirstPropertyImages(List<Guid> propertyId);
+        
+        Task<PropertyImage> GetImageById(Guid id);
+        Task DeleteImage(Guid id);
+        Task<bool> ImageHashExistsAsync(Guid propertyId, string hash);
+
     }
 }

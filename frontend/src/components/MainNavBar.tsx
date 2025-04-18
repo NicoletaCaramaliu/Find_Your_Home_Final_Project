@@ -3,8 +3,8 @@ import ThemeToggle from "../components/ThemeToggle";
 
 export default function MainNavBar() {
   return (
-    <nav className="bg-gray-300 dark:bg-gray-900 py-2">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className="bg-gray-300 dark:bg-gray-900 py-2 w-full">
+      <div className="w-full px-4 flex justify-between items-center">
         {/* Logo or Title */}
         <Link to="/" className="flex items-center text-2xl font-semibold text-gray-900 dark:text-gray-100">
           <img src="/images/logo.svg" alt="Logo" className="h-8 w-8 mr-2" />
@@ -19,7 +19,7 @@ export default function MainNavBar() {
           <Link to="/properties" className="text-gray-900 hover:text-blue-400 dark:text-gray-100 dark:hover:text-blue-400">
             Proprietăți
           </Link>
-          <Link to="/login" className="text-gray-900 hover:text-blue-400 dark:text-gray-100 dark:hover:text-blue-400">
+          <Link to="/myAccount" className="text-gray-900 hover:text-blue-400 dark:text-gray-100 dark:hover:text-blue-400">
             Contul Meu
           </Link>
         </div>
@@ -31,10 +31,7 @@ export default function MainNavBar() {
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
-          <button
-            className="text-white"
-            aria-label="Open menu"
-          >
+          <button className="text-white" aria-label="Open menu">
             <i className="fas fa-bars"></i>
           </button>
         </div>

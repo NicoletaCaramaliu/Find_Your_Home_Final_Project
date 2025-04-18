@@ -22,6 +22,34 @@ namespace Find_Your_Home.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Find_Your_Home.Models.Favorites.Favorite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("UserId", "PropertyId")
+                        .IsUnique();
+
+                    b.ToTable("Favorites", (string)null);
+                });
+
             modelBuilder.Entity("Find_Your_Home.Models.Properties.Property", b =>
                 {
                     b.Property<Guid>("Id")
@@ -81,6 +109,9 @@ namespace Find_Your_Home.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("PetFriendly")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -111,7 +142,7 @@ namespace Find_Your_Home.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Properties");
+                    b.ToTable("Properties", (string)null);
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Properties.PropertyImage", b =>
@@ -122,6 +153,9 @@ namespace Find_Your_Home.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Hash")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -140,7 +174,7 @@ namespace Find_Your_Home.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("PropertyImages");
+                    b.ToTable("PropertyImages", (string)null);
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Users.User", b =>
@@ -160,9 +194,19 @@ namespace Find_Your_Home.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ProfilePicture")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RefreshToken")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResetToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ResetTokenExpires")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
@@ -188,12 +232,31 @@ namespace Find_Your_Home.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("Find_Your_Home.Models.Favorites.Favorite", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Properties.Property", "Property")
+                        .WithMany("FavoritedBy")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Find_Your_Home.Models.Users.User", "User")
+                        .WithMany("Favorites")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Find_Your_Home.Models.Properties.Property", b =>
                 {
                     b.HasOne("Find_Your_Home.Models.Users.User", "Owner")
                         .WithMany("Properties")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -212,11 +275,15 @@ namespace Find_Your_Home.Migrations
 
             modelBuilder.Entity("Find_Your_Home.Models.Properties.Property", b =>
                 {
+                    b.Navigation("FavoritedBy");
+
                     b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Users.User", b =>
                 {
+                    b.Navigation("Favorites");
+
                     b.Navigation("Properties");
                 });
 #pragma warning restore 612, 618
