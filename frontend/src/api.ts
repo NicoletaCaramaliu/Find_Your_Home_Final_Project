@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { refreshToken } from "./services/authService";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL ;
 
 
 interface RetryAxiosRequestConfig extends AxiosRequestConfig {
