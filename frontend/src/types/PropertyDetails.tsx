@@ -1,0 +1,28 @@
+export interface Property {
+    id: string;
+    category: string;
+    name: string;
+    description: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    price: number;
+    rooms: number;
+    bathrooms: number;
+    garage: boolean;
+    squareFeet: number;
+    level: number;
+    numberOfKitchen: number;
+    numberOfBalconies: number;
+    hasGarden: boolean;
+    forRent: boolean;
+    views: number;
+    yearOfConstruction: number;
+    furnished: boolean;
+    createdAt: string;
+    updatedAt: string;
+    isAvailable: boolean;
+    ownerId: string;
+    imageUrls: string[];
+}

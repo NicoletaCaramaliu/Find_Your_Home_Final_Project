@@ -26,6 +26,11 @@ namespace Find_Your_Home.Repositories.GenericRepository
         {
             return await _table.AsNoTracking().ToListAsync();
         }
+        
+        public async Task<IQueryable<TEntity>> GetAllQueryableAsync()
+        {
+            return _table.AsNoTracking();
+        }
 
         // Create
         public void Create(TEntity entity)
@@ -51,9 +56,10 @@ namespace Find_Your_Home.Repositories.GenericRepository
 
         // Update
 
-        public void Update(TEntity entity)
+        public TEntity Update(TEntity entity)
         {
-            _table.Update(entity);
+            _table.Update(entity); // _table e un DbSet<TEntity>
+            return entity;
         }
 
         public void UpdateRange(IEnumerable<TEntity> entities)

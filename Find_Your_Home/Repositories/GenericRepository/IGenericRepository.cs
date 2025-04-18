@@ -7,6 +7,7 @@ namespace Find_Your_Home.Repositories.GenericRepository
     {
         // Get all data
         Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IQueryable<TEntity>> GetAllQueryableAsync();
 
 
         // Create
@@ -17,7 +18,7 @@ namespace Find_Your_Home.Repositories.GenericRepository
 
 
         // Update
-        void Update(TEntity entity);
+        TEntity Update(TEntity entity);
         void UpdateRange(IEnumerable<TEntity> entities);
 
         // Delete 
