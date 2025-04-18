@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { refreshToken } from "./services/authService";
 
-const API_URL = "http://localhost:5266/api";
+const API_URL = process.env.REACT_APP_API_URL;
+
 
 interface RetryAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;

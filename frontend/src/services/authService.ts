@@ -1,10 +1,8 @@
 import api from "../api";
-
-// Folosit DOAR pentru refresh, dacă vrei să separi cookies etc.
 import axios from "axios";
 
 const refreshApi = axios.create({
-  baseURL: "http://localhost:5266/api",
+  baseURL: process.env.REACT_APP_API_URL,
   withCredentials: true,
 });
 
