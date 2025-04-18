@@ -10,8 +10,13 @@ import MyAccountPage from './pages/MyAccountPage';
 import EditPropertyPage from "./pages/EditPropertyPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    console.log("🧪 ENV URL din Vercel:", process.env.REACT_APP_API_URL);
+  }, []);
+
   return (
     <ThemeProvider>
     <Routes>

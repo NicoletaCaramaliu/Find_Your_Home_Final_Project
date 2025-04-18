@@ -6,9 +6,6 @@ import api from "../api";
 import { Property } from '../types/PropertyDetails';
 import { Heart } from 'lucide-react';
 
-const API_URL = "http://localhost:5266/api/Properties";
-const USER_API_URL = "http://localhost:5266/api/User";
-
 interface Owner {
   id: string;
   email: string;
@@ -38,9 +35,11 @@ const PropertyDetailsPage: React.FC = () => {
       return;
     }
 
-    api.get(`${API_URL}/${id}`)
-      .then(response => {
-        const data = response.data;
+    const fetchPropertyDetails = async () => {
+      try {
+        const res = await api.get(`/Properties/${id}`);
+        const data = res.data;
+
         if (!data) throw new Error("Property not found.");
 
         setProperty({
@@ -72,25 +71,32 @@ const PropertyDetailsPage: React.FC = () => {
           updatedAt: data.updatedAt,
         });
 
-        return Promise.all([
-          api.get(`${API_URL}/getAllPropertyImages?propertyId=${data.id}`),
-          api.get(`/Favorites/isAlreadyFavorited?propertyId=${data.id}`)
+        const [imagesRes, favoriteRes] = await Promise.all([
+          api.get(`/Properties/getAllPropertyImages`, {
+            params: { propertyId: data.id },
+          }),
+          api.get(`/Favorites/isAlreadyFavorited`, {
+            params: { propertyId: data.id },
+          }),
         ]);
-      })
-      .then(([imagesRes, favoriteRes]) => {
+
         setImages(imagesRes.data);
         setIsFavorited(favoriteRes.data === true);
-      })
-      .catch(err => {
+
+      } catch (err: any) {
         console.error("Error fetching property details:", err);
         setError(err.message);
-      })
-      .finally(() => setLoading(false));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPropertyDetails();
   }, [id]);
 
   useEffect(() => {
     if (property?.ownerId) {
-      api.get(`${USER_API_URL}/getUser`, {
+      api.get(`/User/getUser`, {
         params: { id: property.ownerId },
       })
         .then(response => setOwner(response.data))
@@ -119,7 +125,9 @@ const PropertyDetailsPage: React.FC = () => {
         });
         setIsFavorited(false);
       } else {
-        await api.post(`/Favorites/addToMyFavorites?propertyId=${property.id}`);
+        await api.post(`/Favorites/addToMyFavorites`, null, {
+          params: { propertyId: property.id },
+        });
         setIsFavorited(true);
       }
     } catch (err) {
@@ -186,7 +194,6 @@ const PropertyDetailsPage: React.FC = () => {
               <p className="text-gray-700 dark:text-gray-300">Mobilat: {property.furnished ? "Da" : "Nu"}</p>
             </div>
 
-            {/* Property images */}
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {images.length > 0 ? (
                 images.map((img, index) => (
@@ -209,7 +216,6 @@ const PropertyDetailsPage: React.FC = () => {
           </div>
         )}
 
-        {/* Owner info */}
         <div className="mt-6">
           {owner && (
             <OwnerProfileCard
@@ -221,7 +227,6 @@ const PropertyDetailsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Lightbox */}
       {currentIndex !== null && (
         <div
           className="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50"
