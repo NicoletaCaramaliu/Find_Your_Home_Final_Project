@@ -105,7 +105,6 @@ namespace Find_Your_Home.Controllers
         
         //reset pass
         [HttpPost("request-password-reset")]
-        [HttpPost("request-password-reset")]
         public async Task<IActionResult> RequestPasswordReset([FromBody] string email)
         {
             var user = await _userService.GetUserByEmail(email);
