@@ -10,18 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyImagesService/ImageHashService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/PropertiesController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/PropertiesController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Models/Properties/PropertyImage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Properties/PropertyImage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyImgRepository/IPropertyImgRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyImgRepository/IPropertyImgRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyImgRepository/PropertyImgRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/PropertyImgRepository/PropertyImgRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyImagesService/IPropertyImgService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyImagesService/IPropertyImgService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyImagesService/PropertyImgService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/PropertyImagesService/PropertyImgService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/properties/AddPropertyForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/properties/AddPropertyForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/login/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/login/LoginForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/ui/Input.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ui/Input.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/LoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/LoginPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MyAccountPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MyAccountPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/services/authService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/authService.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,6 +213,7 @@
       <workItem from="1744038210517" duration="13393000" />
       <workItem from="1744666106757" duration="4536000" />
       <workItem from="1744750018416" duration="10638000" />
+      <workItem from="1744832325033" duration="10461000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />
