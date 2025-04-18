@@ -100,20 +100,16 @@ namespace Find_Your_Home.Services.UserService
             if (user == null)
                 return false;
 
-            // Șterge imaginile proprietăților
             var allImages = user.Properties
                 .SelectMany(p => p.Images)
                 .ToList();
 
             _context.PropertyImages.RemoveRange(allImages);
 
-            // Șterge proprietățile
             _context.Properties.RemoveRange(user.Properties);
 
-            // Șterge favoritele
             _context.Favorites.RemoveRange(user.Favorites);
 
-            // Șterge userul
             _userRepository.Delete(user);
 
             await _context.SaveChangesAsync();

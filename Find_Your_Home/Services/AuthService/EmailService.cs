@@ -12,9 +12,13 @@ public class EmailService : IEmailService
         _config = config;
     }
 
-    public async Task SendPasswordResetEmailAsync(string toEmail, string resetLink)
+    public async Task SendPasswordResetEmailAsync(string toEmail, string token)
     {
         var fromEmail = _config["EmailSettings:From"];
+
+        var frontendUrl = _config["AppSettings:FrontendUrl"] ?? "http://localhost:5173";
+        var resetLink = $"{frontendUrl}/reset-password?token={token}";
+
         var smtpClient = new SmtpClient(_config["EmailSettings:Smtp"])
         {
             Port = int.Parse(_config["EmailSettings:Port"]!),
@@ -34,4 +38,5 @@ public class EmailService : IEmailService
 
         await smtpClient.SendMailAsync(mailMessage);
     }
+
 }
