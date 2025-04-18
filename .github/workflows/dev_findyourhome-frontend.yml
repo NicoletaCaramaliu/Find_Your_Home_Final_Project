@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Deploy Vite Frontend to Azure Web App
 
 on:
@@ -36,9 +33,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_... }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_... }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_... }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5D9D622B393F487FB4ECCC545C5A4D60 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3BB57A22CB0A4C28A92F8B1A22127DF9 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F13AA567894C4998A803BABB68D7B1FD }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
