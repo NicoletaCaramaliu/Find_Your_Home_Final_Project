@@ -136,10 +136,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         builder =>
         {
-            builder.WithOrigins("https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net") 
+            builder.WithOrigins("https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net",
+                    "http://localhost:5173") 
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
+            
         });
 });
 
@@ -152,8 +154,12 @@ app.UseCors("AllowFrontend");
 
 // Configure the HTTP request pipeline.
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Find Your Home API v1");
+    options.RoutePrefix = "swagger";
+});
 
 
 app.UseHttpsRedirection();
