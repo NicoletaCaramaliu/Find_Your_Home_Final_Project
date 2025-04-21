@@ -1,8 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { refreshToken } from "./services/authService";
 
-const API_URL = "https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net/api" ;
-
+const API_URL = process.env.NODE_ENV === "production"
+  ? "https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net/api"
+  : "http://localhost:5266/api";
 
 interface RetryAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
@@ -13,7 +14,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// Adauga token la fiecare request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -25,16 +25,14 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Intercepteaza 401 si incearca refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log("Interceptor intrat");
     const originalRequest = error.config as RetryAxiosRequestConfig;
+    const status = error.response?.status;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
       try {
         const newToken = await refreshToken();
         localStorage.setItem("token", newToken);
@@ -43,17 +41,13 @@ api.interceptors.response.use(
           Authorization: `Bearer ${newToken}`,
         };
         return api(originalRequest);
-      } catch (refreshError) {
-        console.error("Refresh token invalid sau expirat");
+      } catch {
         localStorage.removeItem("token");
-        window.location.href = "/login";
       }
     }
 
     return Promise.reject(error);
   }
 );
-
-
 
 export default api;

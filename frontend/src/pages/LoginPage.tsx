@@ -7,22 +7,23 @@ import { login } from "../services/authService";
 import Navbar from "../components/NavBar";
 import { motion } from "framer-motion";
 
-
 export default function LoginPage() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [, setIsLoading] = useState<boolean>(false);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleLogin = async (email: string, password: string) => {
-    setErrorMessage("");
-    
+    setIsLoading(true);
+    setErrorMessage(""); 
+
     try {
-      setIsLoading(true);
       await login(email, password);
       navigate("/properties?pageNumber=1&pageSize=10");
     } catch (error: any) {
-      setErrorMessage(error.message);
+      if (import.meta.env.MODE === "development") {
+        console.error("Eroare la login:", error);
+      }
+      setErrorMessage(error.message || "Login eșuat");
     } finally {
       setIsLoading(false);
     }
@@ -31,7 +32,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-blue-100 to-blue-50 dark:from-gray-600 dark:to-black transition-colors duration-500">
       
-      {/*imaginea*/}
+      {/* Imaginea din stânga */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -42,16 +43,16 @@ export default function LoginPage() {
         <div className="h-full bg-black/40 dark:bg-black/60"></div>
       </motion.div>
 
-      {/*autentificarea*/}
+      {/* Autentificarea */}
       <div className="flex flex-col items-center justify-center w-full lg:w-1/4 p-8 relative">
         
-        {/* Navbar doar pe partea dreapta */}
+        {/* Navbar doar pe partea dreaptă */}
         <div className="absolute top-0 left-0 w-full bg-blue-500 dark:bg-gray-800/90">
           <Navbar />
         </div>
 
         <div className="w-full max-w-md mt-20">
-          {/* Toggle dark mode*/}
+          {/* Toggle dark mode */}
           <div className="flex justify-end mb-4">
             <ThemeToggle />
           </div>
@@ -67,7 +68,11 @@ export default function LoginPage() {
               Autentificare
             </h2>
 
-            <LoginForm onLogin={handleLogin} errorMessage={errorMessage} />
+            <LoginForm
+              onLogin={handleLogin}
+              errorMessage={errorMessage}
+              isLoading={isLoading}
+            />
 
             <Link
               to="/forgot-password"

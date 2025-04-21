@@ -10,12 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/src/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/login/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/login/LoginForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ui/Input.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ui/Input.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/LoginPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/LoginPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MyAccountPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MyAccountPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/services/authService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/authService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,27 +56,59 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.Find_Your_Home: IIS Express.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/UserProfile&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.microsoft.azure.toolkit.intellij.identity.IdentityConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.Find_Your_Home: IIS Express.executor": "Run",
+    "Azure - Web App.Publish Find_Your_Home to Azure (1).executor": "Run",
+    "Azure - Web App.Publish Find_Your_Home to Azure.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "dev",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.microsoft.azure.toolkit.intellij.identity.IdentityConfigurable",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlserver.localdb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlserver.localdb"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Find_Your_Home: IIS Express">
+    <configuration name="Publish Find_Your_Home to Azure (1)" type="AzureWebAppDeploy">
+      <option name="appServicePlanName" value="ASP-realestaterg-9d7e" />
+      <option name="appServicePlanResourceGroupName" value="real_estate_rg" />
+      <option name="operatingSystem" value="Windows" />
+      <option name="pricingSize" value="F1" />
+      <option name="pricingTier" value="Free" />
+      <option name="projectConfiguration" value="Release" />
+      <option name="projectPlatform" value="Any CPU" />
+      <option name="publishableProjectPath" value="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" />
+      <option name="region" value="westeurope" />
+      <option name="resourceGroupName" value="real_estate_rg" />
+      <option name="subscriptionId" value="fb7efa92-97f8-40e1-9f41-2e0dce768e0f" />
+      <option name="webAppName" value="FindYourHomeAPP" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Publish Find_Your_Home to Azure" type="AzureWebAppDeploy">
+      <option name="appServicePlanName" value="ASP-realestaterg-9d7e" />
+      <option name="appServicePlanResourceGroupName" value="real_estate_rg" />
+      <option name="operatingSystem" value="Windows" />
+      <option name="pricingSize" value="F1" />
+      <option name="pricingTier" value="Free" />
+      <option name="projectConfiguration" value="Release" />
+      <option name="projectPlatform" value="Any CPU" />
+      <option name="publishableProjectPath" value="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" />
+      <option name="region" value="westeurope" />
+      <option name="resourceGroupName" value="real_estate_rg" />
+      <option name="subscriptionId" value="fb7efa92-97f8-40e1-9f41-2e0dce768e0f" />
+      <option name="webAppName" value="FindYourHomeAPP" />
+      <method v="2" />
+    </configuration>
     <configuration name="Find_Your_Home: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
@@ -214,6 +241,7 @@
       <workItem from="1744666106757" duration="4536000" />
       <workItem from="1744750018416" duration="10638000" />
       <workItem from="1744832325033" duration="10461000" />
+      <workItem from="1744988623921" duration="14317000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />
