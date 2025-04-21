@@ -1,9 +1,10 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { refreshToken } from "./services/authService";
 
-const API_URL = process.env.NODE_ENV === "production"
+const API_URL = import.meta.env.MODE === "production"
   ? "https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net/api"
   : "http://localhost:5266/api";
+
 
 interface RetryAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
