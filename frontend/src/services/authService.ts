@@ -2,9 +2,12 @@ import api from "../api";
 import axios from "axios";
 import { parseError } from "../utils/parseError";
 
-const REFRESH_API_URL = import.meta.env.MODE === "production"
-  ? "https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net/api"
-  : "http://localhost:5266/api";
+
+  const REFRESH_API_URL =
+  import.meta.env.MODE === "production"
+    ? `${import.meta.env.VITE_API_URL}/api`
+    : "http://localhost:5266/api";
+
 
 const refreshApi = axios.create({
   baseURL: REFRESH_API_URL,
