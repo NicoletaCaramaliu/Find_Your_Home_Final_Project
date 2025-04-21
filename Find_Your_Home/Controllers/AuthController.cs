@@ -58,9 +58,22 @@ namespace Find_Your_Home.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login(UserLoginDto request)
         {
-            var token = await _authService.Login(request);
-            return Ok(new { token });
+            try
+            {
+                var token = await _authService.Login(request);
+                return Ok(new { token });
+            }
+            catch (AppException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[SERVER ERROR] {ex.Message}");
+                return StatusCode(500, new { message = "SERVER_ERROR" });
+            }
         }
+
 
         [HttpPost("refresh-token")]
         public async Task<ActionResult> RefreshToken()

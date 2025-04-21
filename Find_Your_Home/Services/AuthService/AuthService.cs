@@ -46,7 +46,7 @@ namespace Find_Your_Home.Services.AuthService
         {
             var user = await _userService.GetUserByEmail(request.Email);
 
-            if ( !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 throw new AppException("INVALID_CREDENTIALS");
             }
