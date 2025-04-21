@@ -11,6 +11,7 @@ interface Owner {
   email: string;
   username: string;
   profilePicture: string;
+  createdAt: string;
 }
 
 interface PropertyImage {
@@ -219,10 +220,11 @@ const PropertyDetailsPage: React.FC = () => {
         <div className="mt-6">
           {owner && (
             <OwnerProfileCard
-              name={owner.username}
-              profileImageUrl={owner.profilePicture}
-              ownerId={owner.id}
-            />
+            name={owner.username}
+            profileImageUrl={owner.profilePicture}
+            ownerId={owner.id}
+            createdAt={owner.createdAt}
+          />
           )}
         </div>
       </div>
