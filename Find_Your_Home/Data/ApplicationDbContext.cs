@@ -1,4 +1,5 @@
-﻿using Find_Your_Home.Models.Favorites;
+﻿using Find_Your_Home.Models.Bookings;
+using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Users;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,8 @@ namespace Find_Your_Home.Data
         public DbSet<Property> Properties { get; set; }
         public DbSet<PropertyImage> PropertyImages { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<AvailabilitySlot> AvailabilitySlots { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -64,6 +67,34 @@ namespace Find_Your_Home.Data
             modelBuilder.Entity<Property>()
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,2)");
+            
+            modelBuilder.Entity<AvailabilitySlot>()
+                .HasKey(a => a.Id);
+            
+            modelBuilder.Entity<AvailabilitySlot>()
+                .HasOne(a => a.Property)
+                .WithMany(p => p.AvailabilitySlots)
+                .HasForeignKey(a => a.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<Booking>()
+                .HasKey(b => b.Id);
+            
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Property)
+                .WithMany(p => p.Bookings)
+                .HasForeignKey(b => b.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.User)
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<Booking>()
+                .Property(b => b.Status)
+                .HasConversion<string>();
 
             base.OnModelCreating(modelBuilder);
         }

@@ -1,4 +1,5 @@
 ﻿using Find_Your_Home.Models.Base;
+using Find_Your_Home.Models.Bookings;
 using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Users;
 
@@ -36,5 +37,8 @@ namespace Find_Your_Home.Models.Properties
         public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
         public ICollection<Favorite> FavoritedBy { get; set; } = new List<Favorite>();
 
+        //for bookings
+        public ICollection<AvailabilitySlot> AvailabilitySlots { get; set; } = new List<AvailabilitySlot>();
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }
