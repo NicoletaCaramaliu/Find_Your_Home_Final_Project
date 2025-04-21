@@ -139,7 +139,8 @@ builder.Services.AddCors(options =>
             builder.WithOrigins("https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net",
                     "http://localhost:5173",
                     "https://find-your-home-final-project.vercel.app",
-                    "https://find-your-home-final-pro-git-main-yourname-projects.vercel.app" ) 
+                    "https://find-your-home-final-pro-git-main-yourname-projects.vercel.app",
+                    "http://localhost:4173") 
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
