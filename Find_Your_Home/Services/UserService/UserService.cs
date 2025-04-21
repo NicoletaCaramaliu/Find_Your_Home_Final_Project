@@ -1,6 +1,7 @@
 ﻿using Find_Your_Home.Services.UserService;
 using System.Security.Claims;
 using Find_Your_Home.Data;
+using Find_Your_Home.Exceptions;
 using Find_Your_Home.Models.Users;
 using Find_Your_Home.Repositories.UserRepository;
 
@@ -63,8 +64,14 @@ namespace Find_Your_Home.Services.UserService
         
         public async Task<User> GetUserByEmail(string email)
         {
-            return await _userRepository.GetByEmail(email);
+            var user = await _userRepository.GetByEmail(email);
+
+            if (user == null)
+                throw new AppException("USER_NOT_FOUND");
+
+            return user;
         }
+
         
         public async Task CreateUser(User user)
         {
