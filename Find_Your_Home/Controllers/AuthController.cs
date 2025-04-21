@@ -65,14 +65,15 @@ namespace Find_Your_Home.Controllers
             }
             catch (AppException ex)
             {
-                return Unauthorized(new { message = ex.Message });
+                return Unauthorized(new { errorCode = ex.ErrorCode });
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[SERVER ERROR] {ex.Message}");
-                return StatusCode(500, new { message = "SERVER_ERROR" });
+                return StatusCode(500, new { errorCode = "INTERNAL_SERVER_ERROR" });
             }
         }
+
 
 
         [HttpPost("refresh-token")]

@@ -64,12 +64,7 @@ namespace Find_Your_Home.Services.UserService
         
         public async Task<User> GetUserByEmail(string email)
         {
-            var user = await _userRepository.GetByEmail(email);
-
-            if (user == null)
-                throw new AppException("USER_NOT_FOUND");
-
-            return user;
+            return await _userRepository.GetByEmail(email); 
         }
 
         
