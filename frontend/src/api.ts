@@ -6,6 +6,10 @@ const API_URL = import.meta.env.MODE === "production"
   : "http://localhost:5266/api";
 
 
+  //debug
+console.log("🧪 MODE:", import.meta.env.MODE);
+console.log("🧪 API_URL:", API_URL);
+
 interface RetryAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
