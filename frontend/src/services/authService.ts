@@ -1,5 +1,6 @@
 import api from "../api";
 import axios from "axios";
+import { parseError } from "../utils/parseError";
 
 const REFRESH_API_URL = import.meta.env.MODE === "production"
   ? "https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net/api"
@@ -10,31 +11,7 @@ const refreshApi = axios.create({
   withCredentials: true,
 });
 
-const AUTH_URL = "/Auth" ;
-
-const parseError = (error: any): string => {
-  if (axios.isAxiosError(error)) {
-    const status = error.response?.status;
-    const message = error.response?.data?.message || error.response?.data?.Message;
-
-    switch (status) {
-      case 400:
-        return message || "Date invalide.";
-      case 401:
-        return message || "Email sau parolă incorecte.";
-      case 403:
-        return "Acces interzis.";
-      case 404:
-        return "Resursa nu a fost găsită.";
-      case 500:
-        return "Eroare de server. Încearcă din nou.";
-      default:
-        return message || "A apărut o eroare necunoscută.";
-    }
-  }
-
-  return "Eroare de rețea sau server indisponibil.";
-};
+const AUTH_URL = "/Auth";
 
 export const login = async (email: string, password: string) => {
   try {
@@ -43,6 +20,9 @@ export const login = async (email: string, password: string) => {
     localStorage.setItem("token", token);
     return response.data;
   } catch (error: any) {
+    if (import.meta.env.MODE === "development") {
+      console.error("Login error:", error);
+    }
     throw new Error(parseError(error));
   }
 };
@@ -62,6 +42,9 @@ export const register = async (
     });
     return response.data;
   } catch (error: any) {
+    if (import.meta.env.MODE === "development") {
+      console.error("Register error:", error);
+    }
     throw new Error(parseError(error));
   }
 };
@@ -71,6 +54,9 @@ export const logout = async () => {
     await api.post(`${AUTH_URL}/logout`);
     localStorage.removeItem("token");
   } catch (error: any) {
+    if (import.meta.env.MODE === "development") {
+      console.error("Logout error:", error);
+    }
     throw new Error(parseError(error));
   }
 };
@@ -80,6 +66,9 @@ export const refreshToken = async (): Promise<string> => {
     const response = await refreshApi.post("/Auth/refresh-token");
     return response.data.token;
   } catch (error: any) {
-    throw new Error("Tokenul a expirat sau este invalid.");
+    if (import.meta.env.MODE === "development") {
+      console.error("Refresh token error:", error);
+    }
+    throw new Error(parseError(error));
   }
 };

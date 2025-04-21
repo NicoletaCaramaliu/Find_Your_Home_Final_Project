@@ -7,6 +7,7 @@ using Find_Your_Home.Helpers.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Find_Your_Home.Exceptions;
 using Swashbuckle.AspNetCore.Filters;
 using Find_Your_Home.Helpers;
 using Find_Your_Home.Models.Users;
@@ -19,6 +20,7 @@ using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
 using Find_Your_Home.Services.UserService;
 using Find_Your_Home.Services.UserService;
+using Microsoft.AspNetCore.Diagnostics;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -148,7 +150,34 @@ builder.Services.AddCors(options =>
         });
 });
 
+
+
+
 var app = builder.Build();
+
+
+//error handling
+app.UseExceptionHandler(config =>
+{
+    config.Run(async context =>
+    {
+        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+
+        context.Response.ContentType = "application/json";
+
+        if (exception is AppException appEx)
+        {
+            context.Response.StatusCode = 400;
+            await context.Response.WriteAsJsonAsync(new { errorCode = appEx.ErrorCode });
+        }
+        else
+        {
+            context.Response.StatusCode = 500;
+            await context.Response.WriteAsJsonAsync(new { errorCode = "INTERNAL_SERVER_ERROR" });
+        }
+    });
+});
+
 
 //app.UseCors("AllowAll");
 app.UseCors("AllowFrontend");

@@ -8,12 +8,13 @@ using AutoMapper;
 using Find_Your_Home.Models.Users.DTO;
 using Find_Your_Home.Services.UserService;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
+using Find_Your_Home.Exceptions;
 
 namespace Find_Your_Home.Services.AuthService
 {
     public class AuthService : IAuthService
     {
-        
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
@@ -29,17 +30,13 @@ namespace Find_Your_Home.Services.AuthService
 
         public async Task<User> Register(UserRegisterDto request)
         {
-            var user = _mapper.Map<User>(request);
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            user.Email = request.Email;
-            user.Username = request.Username;
-            user.Password = passwordHash;
-            user.Role = request.Role;
-
             if (await _userService.GetUserByEmail(request.Email) != null)
             {
-                throw new UnauthorizedAccessException("User already exists.");
+                throw new AppException("USER_ALREADY_EXISTS");
             }
+
+            var user = _mapper.Map<User>(request);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
             await _userService.CreateUser(user);
             return user;
@@ -49,9 +46,9 @@ namespace Find_Your_Home.Services.AuthService
         {
             var user = await _userService.GetUserByEmail(request.Email);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if ( !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
-                throw new UnauthorizedAccessException("Email sau parolă incorectă.");
+                throw new AppException("INVALID_CREDENTIALS");
             }
 
             string token = CreateToken(user);
@@ -67,10 +64,55 @@ namespace Find_Your_Home.Services.AuthService
             return token;
         }
 
+        public async Task<object> RefreshToken()
+        {
+            var refreshToken = _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                throw new AppException("REFRESH_TOKEN_NOT_FOUND");
+            }
+
+            var user = await _userService.GetUserByRefreshToken(refreshToken);
+
+            if (user == null || user.RefreshToken != refreshToken || user.TokenExpires < DateTime.UtcNow)
+            {
+                throw new AppException("INVALID_REFRESH_TOKEN");
+            }
+
+            string newToken = CreateToken(user);
+            var newRefreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken.Token;
+            user.TokenCreated = newRefreshToken.Created;
+            user.TokenExpires = newRefreshToken.Expires;
+
+            await _userService.UpdateUser(user);
+            SetRefreshTokenInCookie(newRefreshToken);
+
+            return newToken;
+        }
+
+        public async Task<string> Logout()
+        {
+            var email = _userService.GetMyEmail();
+            var user = await _userService.GetUserByEmail(email);
+            if (user == null)
+            {
+                throw new AppException("USER_NOT_FOUND");
+            }
+
+            user.RefreshToken = "";
+            user.TokenCreated = DateTime.MinValue;
+            user.TokenExpires = DateTime.MinValue;
+            await _userService.UpdateUser(user);
+
+            _httpContextAccessor.HttpContext?.Response.Cookies.Delete("refreshToken");
+
+            return "LOGOUT_SUCCESS";
+        }
+
         private string CreateToken(User user)
         {
-            Console.WriteLine("[DEBUG] Creez token JWT cu expirare 30 sec...");
-            
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
@@ -78,11 +120,7 @@ namespace Find_Your_Home.Services.AuthService
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             };
-            
-            var expires = DateTime.UtcNow.AddSeconds(30);
-            Console.WriteLine("[DEBUG] Expiră la: " + expires.ToString("O"));
-            
-            
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Token"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
@@ -92,7 +130,6 @@ namespace Find_Your_Home.Services.AuthService
                 expires: DateTime.UtcNow.AddMinutes(30),
                 signingCredentials: creds
             );
-
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -118,54 +155,8 @@ namespace Find_Your_Home.Services.AuthService
                 SameSite = SameSiteMode.None,
                 Path = "/"
             };
+
             _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
-        }
-
-        public async Task<object> RefreshToken()
-        {
-            Console.WriteLine("[DEBUG] RefreshToken controller called");
-
-            var refreshToken = _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"];
-            if (string.IsNullOrEmpty(refreshToken))
-            {
-                throw new UnauthorizedAccessException("Nu s-a găsit refreshToken în cookie.");
-            }
-
-            var user = await _userService.GetUserByRefreshToken(refreshToken);
-
-            if (user == null || user.RefreshToken != refreshToken || user.TokenExpires < DateTime.UtcNow)
-            {
-                throw new UnauthorizedAccessException("Token invalid sau expirat.");
-            }
-
-            string newToken = CreateToken(user);
-            var newRefreshToken = GenerateRefreshToken();
-
-            user.RefreshToken = newRefreshToken.Token;
-            user.TokenCreated = newRefreshToken.Created;
-            user.TokenExpires = newRefreshToken.Expires;
-
-            await _userService.UpdateUser(user);
-            SetRefreshTokenInCookie(newRefreshToken);
-
-            return newToken ;
-        }
-
-
-        public async Task<string> Logout()
-        {
-            var email = _userService.GetMyEmail();
-            var user = await _userService.GetUserByEmail(email);
-            if (user == null) throw new UnauthorizedAccessException("User not found.");
-
-            user.RefreshToken = "";
-            user.TokenCreated = DateTime.MinValue;
-            user.TokenExpires = DateTime.MinValue;
-            await _userService.UpdateUser(user);
-
-            _httpContextAccessor.HttpContext?.Response.Cookies.Delete("refreshToken");
-
-            return "User logged out successfully.";
         }
     }
 }

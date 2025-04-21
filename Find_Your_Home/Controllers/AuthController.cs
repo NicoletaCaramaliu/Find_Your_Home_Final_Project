@@ -6,6 +6,7 @@ using Find_Your_Home.Services.AuthService;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Find_Your_Home.Exceptions;
 
 namespace Find_Your_Home.Controllers
 {
@@ -27,88 +28,62 @@ namespace Find_Your_Home.Controllers
         }
 
         [HttpGet("me"), Authorize(Roles = "Admin")]
-        public ActionResult<string> GetMyName()
+        public ActionResult GetMyName()
         {
             var myName = _userService.GetMyName();
             return Ok(new { Username = myName });
         }
 
         [HttpGet("id"), Authorize]
-        public ActionResult<string> GetMyId()
+        public ActionResult GetMyId()
         {
             var myId = _userService.GetMyId();
             return Ok(new { Id = myId });
         }
 
         [HttpGet("email"), Authorize(Roles = "Admin")]
-        public ActionResult<string> GetMyEmail()
+        public ActionResult GetMyEmail()
         {
             var myEmail = _userService.GetMyEmail();
             return Ok(new { Email = myEmail });
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserRegisterDto request)
+        public async Task<ActionResult> Register(UserRegisterDto request)
         {
-            try
-            {
-                var user = await _authService.Register(request);
-                return Ok(user);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
+            var user = await _authService.Register(request);
+            return Ok(user);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult> Login(UserLoginDto request)
         {
-            try
-            {
-                var token = await _authService.Login(request);
-                return Ok(new { token });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { Message = ex.Message });
-            }
+            var token = await _authService.Login(request);
+            return Ok(new { token });
         }
 
         [HttpPost("refresh-token")]
         public async Task<ActionResult> RefreshToken()
         {
-            try
-            {
-                var token = await _authService.RefreshToken();
-                return Ok(new { token });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { Message = ex.Message });
-            }
+            var token = await _authService.RefreshToken();
+            return Ok(new { token });
         }
 
         [HttpPost("logout"), Authorize]
         public async Task<ActionResult> Logout()
         {
-            try
-            {
-                await _authService.Logout();
-                return Ok(new { Message = "Logged out successfully." });
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(new { Message = ex.Message });
-            }
+            var result = await _authService.Logout();
+            return Ok(new { message = result }); 
         }
-        
-        //reset pass
+
         [HttpPost("request-password-reset")]
         public async Task<IActionResult> RequestPasswordReset([FromBody] string email)
         {
             var user = await _userService.GetUserByEmail(email);
-            if (user == null) return BadRequest("Email inexistent");
+            if (user == null)
+            {
+                throw new AppException("EMAIL_NOT_FOUND");
+            }
 
             var token = Guid.NewGuid().ToString();
             user.ResetToken = token;
@@ -117,23 +92,24 @@ namespace Find_Your_Home.Controllers
 
             await _emailService.SendPasswordResetEmailAsync(email, token);
 
-            return Ok("Email de resetare trimis.");
+            return Ok(new { message = "RESET_EMAIL_SENT" });
         }
-
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
             var user = await _userService.GetUserByResetToken(request.Token);
             if (user == null || user.ResetTokenExpires < DateTime.UtcNow)
-                return BadRequest("Token invalid sau expirat");
+            {
+                throw new AppException("RESET_TOKEN_INVALID");
+            }
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
             user.ResetToken = null;
             user.ResetTokenExpires = null;
             await _userService.UpdateUser(user);
 
-            return Ok("Parola a fost resetată cu succes.");
+            return Ok(new { message = "PASSWORD_RESET_SUCCESS" });
         }
     }
 }

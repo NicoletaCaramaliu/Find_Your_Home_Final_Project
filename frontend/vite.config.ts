@@ -8,4 +8,7 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
   },
+  define: {
+    __DEV__: process.env.NODE_ENV !== 'production',
+  },
 });

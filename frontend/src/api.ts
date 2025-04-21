@@ -5,11 +5,6 @@ const API_URL = import.meta.env.MODE === "production"
   ? "https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net/api"
   : "http://localhost:5266/api";
 
-
-  //debug
-console.log("🧪 MODE:", import.meta.env.MODE);
-console.log("🧪 API_URL:", API_URL);
-
 interface RetryAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
@@ -36,7 +31,10 @@ api.interceptors.response.use(
     const originalRequest = error.config as RetryAxiosRequestConfig;
     const status = error.response?.status;
 
-    if (status === 401 && !originalRequest._retry) {
+    
+    const shouldSkipRetry = error.config.url?.includes("/Auth/login");
+
+    if (status === 401 && !originalRequest._retry && !shouldSkipRetry) {
       originalRequest._retry = true;
       try {
         const newToken = await refreshToken();

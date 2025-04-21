@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
+
 
 const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -17,14 +18,21 @@ const roles = [
 
 interface RegisterFormProps {
   onRegister: (email: string, password: string, username: string, role: number) => void;
+  errorMessage?: string; 
 }
 
-export default function RegisterForm({ onRegister }: RegisterFormProps) {
+export default function RegisterForm({ onRegister, errorMessage }: RegisterFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setName] = useState("");
-  const [role, setRole] = useState(3); // Default: User
+  const [role, setRole] = useState(3); // Default: Agent
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (errorMessage) {
+      setError(errorMessage);
+    }
+  }, [errorMessage]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +54,9 @@ export default function RegisterForm({ onRegister }: RegisterFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {/* Afișare eroare validare / backend */}
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
       <Input
         type="email"
         placeholder="Email"
@@ -69,7 +79,7 @@ export default function RegisterForm({ onRegister }: RegisterFormProps) {
       <select
         className="w-full p-2 border rounded-lg"
         value={role}
-        onChange={(e) => setRole(Number(e.target.value))} // Convertim in numar
+        onChange={(e) => setRole(Number(e.target.value))}
       >
         {roles.map((r) => (
           <option key={r.value} value={r.value}>{r.label}</option>
