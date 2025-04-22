@@ -15,5 +15,7 @@
         public int VisitDurationInMinutes { get; set; }
 
         public DateTime CreatedAt { get; set; }
+        
+        public List<BookingResponseDto>? Bookings { get; set; }
     }
 }

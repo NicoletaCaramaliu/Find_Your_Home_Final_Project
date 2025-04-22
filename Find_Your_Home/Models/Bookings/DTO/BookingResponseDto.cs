@@ -23,5 +23,7 @@ namespace Find_Your_Home.Models.Bookings.DTO
         public BookingStatus Status { get; set; }
 
         public DateTime CreatedAt { get; set; }
+        
+        public AvailabilitySlotResponseDto? AvailabilitySlot { get; set; }
     }
 }

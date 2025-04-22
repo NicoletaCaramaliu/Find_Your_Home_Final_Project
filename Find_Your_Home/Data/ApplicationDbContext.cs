@@ -79,23 +79,29 @@ namespace Find_Your_Home.Data
             
             modelBuilder.Entity<Booking>()
                 .HasKey(b => b.Id);
-            
+
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Property)
                 .WithMany(p => p.Bookings)
                 .HasForeignKey(b => b.PropertyId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.User)
                 .WithMany(u => u.Bookings)
                 .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.AvailabilitySlot)
+                .WithMany(s => s.Bookings)
+                .HasForeignKey(b => b.AvailabilitySlotId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Booking>()
                 .Property(b => b.Status)
                 .HasConversion<string>();
-
+            
             base.OnModelCreating(modelBuilder);
         }
     }

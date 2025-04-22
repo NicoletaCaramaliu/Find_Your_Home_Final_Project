@@ -10,7 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Program.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/AvailabilityController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/BookingsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/AvailabilitySlotService/IAvailabilitySlotService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/AvailabilitySlotService/IAvailabilitySlotService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +65,7 @@
     "Azure - Web App.Publish Find_Your_Home to Azure.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "dev",
+    "git-widget-placeholder": "feature/bookings",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -242,6 +244,7 @@
       <workItem from="1744750018416" duration="10638000" />
       <workItem from="1744832325033" duration="10461000" />
       <workItem from="1744988623921" duration="14317000" />
+      <workItem from="1745248230702" duration="15566000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />
@@ -381,6 +384,25 @@
     <MESSAGE value="Fix Logout Controller - add getMyEmail function + authorization" />
     <MESSAGE value=" partial Auth" />
     <option name="LAST_COMMIT_MESSAGE" value=" partial Auth" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Find_Your_Home/Program.cs</url>
+          <line>160</line>
+          <properties documentPath="F:\licenta\Find_Your_Home_Final_Project\Find_Your_Home\Program.cs" containingFunctionPresentation="">
+            <startOffsets>
+              <option value="4976" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4977" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -7,7 +7,6 @@ using Find_Your_Home.Models.Users;
 
 namespace Find_Your_Home.Models.Bookings
 {
-
     public class Booking : BaseEntity
     {
         [Required]
@@ -23,7 +22,13 @@ namespace Find_Your_Home.Models.Bookings
         public User User { get; set; }
 
         [Required]
-        public DateTime SlotDate { get; set; }
+        public Guid AvailabilitySlotId { get; set; }
+
+        [ForeignKey("AvailabilitySlotId")]
+        public AvailabilitySlot AvailabilitySlot { get; set; }
+
+        [Required]
+        public DateTime SlotDate { get; set; } 
 
         [Required]
         public TimeSpan StartTime { get; set; }
@@ -34,5 +39,4 @@ namespace Find_Your_Home.Models.Bookings
         [Required]
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
     }
-
 }

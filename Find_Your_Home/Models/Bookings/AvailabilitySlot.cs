@@ -14,7 +14,7 @@ namespace Find_Your_Home.Models.Bookings
         public Property Property { get; set; }
 
         [Required]
-        public DateTime Date { get; set; } // doar data
+        public DateTime Date { get; set; }
 
         [Required]
         public TimeSpan StartTime { get; set; }
@@ -24,5 +24,7 @@ namespace Find_Your_Home.Models.Bookings
 
         [Required]
         public int VisitDurationInMinutes { get; set; }
+
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

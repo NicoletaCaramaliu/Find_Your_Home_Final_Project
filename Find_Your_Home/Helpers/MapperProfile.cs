@@ -14,31 +14,42 @@ namespace Find_Your_Home.Helpers
     {
         public MapperProfile()
         {
-            // CreateMap<Source, Destination>();
-            //Mapper for user
+            // User
             CreateMap<User, UserLoginDto>();
             CreateMap<User, UserRegisterDto>();
             CreateMap<UserRegisterDto, User>();
             CreateMap<UserLoginDto, User>();
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
-            
+
+            // Property
             CreateMap<Property, PropertyRequest>();
             CreateMap<PropertyRequest, Property>();
             CreateMap<Property, PropertyResponse>();
             CreateMap<PropertyResponse, Property>();
-            
+
+            // Favorite
             CreateMap<Favorite, FavoriteResponse>();
             CreateMap<FavoriteResponse, Favorite>();
-            
+
+            // AvailabilitySlot
             CreateMap<AvailabilitySlot, AvailabilitySlotDto>();
             CreateMap<AvailabilitySlotDto, AvailabilitySlot>();
-            CreateMap<AvailabilitySlot, AvailabilitySlotResponseDto>();
-            CreateMap<AvailabilitySlotResponseDto, AvailabilitySlot>();
             
+            CreateMap<AvailabilitySlot, AvailabilitySlotResponseDto>()
+                .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings));
+
+            CreateMap<AvailabilitySlotResponseDto, AvailabilitySlot>();
+
+            // Booking
             CreateMap<Booking, BookingRequestDto>();
             CreateMap<BookingRequestDto, Booking>();
-            CreateMap<Booking, BookingResponseDto>();
+            
+            CreateMap<Booking, BookingResponseDto>()
+                .ForMember(dest => dest.PropertyName, opt => opt.MapFrom(src => src.Property.Name))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username))
+                .ForMember(dest => dest.AvailabilitySlot, opt => opt.MapFrom(src => src.AvailabilitySlot));
+
             CreateMap<BookingResponseDto, Booking>();
         }
     }
