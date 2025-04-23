@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api";
-import { Property } from "../types/Property";
-import MainNavBar from "../components/MainNavBar";
-import AddPropertyForm from "../components/properties/AddPropertyForm";
-import UserProfileCard from "../components/UserProfileCard";
-import MyPropertiesCard from "../components/MyPropertiesCard";
-import FavoritePropertiesCard from "../components/FavoritePropertiesCard";
-import { logout } from "../services/authService";
+import api from "../../api";
+import { Property } from "../../types/Property";
+import MainNavBar from "../../components/MainNavBar";
+import AddPropertyForm from "../../components/properties/AddPropertyForm";
+import UserProfileCard from "../../components/UserProfileCard";
+import MyPropertiesCard from "../../components/MyPropertiesCard";
+import FavoritePropertiesCard from "../../components/FavoritePropertiesCard";
+import { logout } from "../../services/authService";
 
 interface LoggedUser {
   id: string;

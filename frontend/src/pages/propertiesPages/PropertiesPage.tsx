@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import MainNavBar from '../components/MainNavBar';
-import FiltersForm from '../components/properties/FiltersForm';
-import PropertiesList from '../components/properties/PropertiesList';
-import { Property } from '../types/Property';
-import { usePropertiesState } from '../hooks/usePropertiesState';
-import { getQueryStateFromSearchParams, buildQueryParamsFromState } from '../utils/queryHelpers';
-import { defaultFilters } from '../constants/defaultFilters';
-import api from "../api";
+import MainNavBar from '../../components/MainNavBar';
+import FiltersForm from '../../components/properties/FiltersForm';
+import PropertiesList from '../../components/properties/PropertiesList';
+import { Property } from '../../types/Property';
+import { usePropertiesState } from '../../hooks/usePropertiesState';
+import { getQueryStateFromSearchParams, buildQueryParamsFromState } from '../../utils/queryHelpers';
+import { defaultFilters } from '../../constants/defaultFilters';
+import api from "../../api";
 
 const PropertiesPage: React.FC = () => {
     const [properties, setProperties] = useState<Property[]>([]);

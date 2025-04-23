@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import LoginForm from "../components/login/LoginForm";
+import LoginForm from "../../components/login/LoginForm";
 import { Link } from "react-router-dom";
-import ThemeToggle from "../components/ThemeToggle";
-import { login } from "../services/authService";
-import Navbar from "../components/NavBar";
+import ThemeToggle from "../../components/ThemeToggle";
+import { login } from "../../services/authService";
+import Navbar from "../../components/NavBar";
 import { motion } from "framer-motion";
 
 export default function LoginPage() {

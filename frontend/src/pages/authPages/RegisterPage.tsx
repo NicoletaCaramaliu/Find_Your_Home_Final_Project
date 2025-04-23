@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import RegisterForm from "../components/login/RegisterForm";
-import { Card, CardContent } from "../components/ui/Card";
-import { register } from "../services/authService"; // functia care face request la backend
-import ThemeToggle from "../components/ThemeToggle";
-import Navbar from "../components/NavBar";
+import RegisterForm from "../../components/login/RegisterForm";
+import { Card, CardContent } from "../../components/ui/Card";
+import { register } from "../../services/authService"; // functia care face request la backend
+import ThemeToggle from "../../components/ThemeToggle";
+import Navbar from "../../components/NavBar";
 import { motion } from "framer-motion";
 import { useState } from "react";
 

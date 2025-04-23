@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import MainNavBar from '../components/MainNavBar';
-import OwnerProfileCard from '../components/properties/OwnerProfileCard';
-import api from "../api";
-import { Property } from '../types/PropertyDetails';
+import MainNavBar from '../../components/MainNavBar';
+import OwnerProfileCard from '../../components/properties/OwnerProfileCard';
+import api from "../../api";
+import { Property } from '../../types/PropertyDetails';
 import { Heart } from 'lucide-react';
 
 interface Owner {

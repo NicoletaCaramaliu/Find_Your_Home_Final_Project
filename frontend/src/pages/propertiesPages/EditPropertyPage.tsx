@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import api from "../api";
-import AddPropertyForm from "../components/properties/AddPropertyForm";
-import MainNavBar from "../components/MainNavBar";
-import { Property } from "../types/Property";
+import api from "../../api";
+import AddPropertyForm from "../../components/properties/AddPropertyForm";
+import MainNavBar from "../../components/MainNavBar";
+import { Property } from "../../types/Property";
 
 const EditPropertyPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

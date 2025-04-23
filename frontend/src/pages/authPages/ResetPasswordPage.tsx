@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import api from "../api";
+import api from "../../api";
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()+={}[\]:;"'<>,.?/~`|\\_-])[A-Za-z\d@$!%*?&#^()+={}[\]:;"'<>,.?/~`|\\_-]{8,}$/;
 
