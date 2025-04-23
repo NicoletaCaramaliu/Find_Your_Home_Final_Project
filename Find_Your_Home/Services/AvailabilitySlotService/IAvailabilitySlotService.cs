@@ -9,6 +9,6 @@ namespace Find_Your_Home.Services.AvailabilitySlotService
         Task<AvailabilitySlot> AddAvailabilitySlot(AvailabilitySlot availabilitySlot);
         Task<IEnumerable<AvailabilitySlot>>  GetAvailabilitySlotsForPropertyId(Guid propertyId);
         Task<AvailabilitySlot> GetAvailabilitySlotById(Guid availabilitySlotId);
-        Task<bool> DeleteAvailabilitySlot(Guid availabilitySlotId);
+        Task DeleteAvailabilitySlot(Guid availabilitySlotId);
     }
 }

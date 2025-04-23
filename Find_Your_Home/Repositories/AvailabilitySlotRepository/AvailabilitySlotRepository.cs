@@ -32,5 +32,12 @@ namespace Find_Your_Home.Repositories.AvailabilitySlotRepository
             return await _context.AvailabilitySlots
                 .FirstOrDefaultAsync(slot => slot.Id == availabilitySlotId);
         }
+        
+        public async Task<AvailabilitySlot> GetAvailabilitySlotWithBookingsByIdAsync(Guid availabilitySlotId)
+        {
+            return await _context.AvailabilitySlots
+                .Include(slot => slot.Bookings)
+                .FirstOrDefaultAsync(slot => slot.Id == availabilitySlotId);
+        }
     }
 }

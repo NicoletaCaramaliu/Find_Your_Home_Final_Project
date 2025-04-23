@@ -14,6 +14,8 @@ namespace Find_Your_Home.Data
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<AvailabilitySlot> AvailabilitySlots { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<BlockedInterval> BlockedIntervals { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -101,6 +103,16 @@ namespace Find_Your_Home.Data
             modelBuilder.Entity<Booking>()
                 .Property(b => b.Status)
                 .HasConversion<string>();
+            
+            modelBuilder.Entity<BlockedInterval>()
+                .HasKey(bi => bi.Id);
+
+            modelBuilder.Entity<BlockedInterval>()
+                .HasOne(bi => bi.AvailabilitySlot)
+                .WithMany(slot => slot.BlockedIntervals)
+                .HasForeignKey(bi => bi.AvailabilitySlotId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             
             base.OnModelCreating(modelBuilder);
         }

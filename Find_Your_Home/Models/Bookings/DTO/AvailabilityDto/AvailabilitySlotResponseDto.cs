@@ -17,5 +17,6 @@
         public DateTime CreatedAt { get; set; }
         
         public List<BookingResponseDto>? Bookings { get; set; }
+        public List<BlockedIntervalResponse>? BlockedIntervals { get; set; }
     }
 }

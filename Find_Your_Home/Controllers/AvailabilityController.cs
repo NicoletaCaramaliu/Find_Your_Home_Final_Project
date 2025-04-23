@@ -65,7 +65,7 @@ namespace Find_Your_Home.Controllers
             return Ok(addedSlotDto);
         }
 
-        [HttpGet("getSlots/{propertyId}"), Authorize(Roles = "Admin, PropertyOwner, Agent")]
+        [HttpGet("getSlots/{propertyId}")]
         public async Task<IActionResult> GetSlots(Guid propertyId)
         {
             var slots = await _availabilitySlotService.GetAvailabilitySlotsForPropertyId(propertyId);
@@ -92,6 +92,20 @@ namespace Find_Your_Home.Controllers
             await _availabilitySlotService.DeleteAvailabilitySlot(slotId);
             return Ok(new { message = "Slot deleted successfully" });
         }
+
+        [HttpGet("getSlot/{slotId}"), Authorize]
+        public async Task<IActionResult> GetSlot(Guid slotId)
+        {
+            var slot = await _availabilitySlotService.GetAvailabilitySlotById(slotId);
+            if (slot == null)
+            {
+                throw new AppException("SLOT_NOT_FOUND");
+            }
+
+            var slotDto = _mapper.Map<AvailabilitySlotResponseDto>(slot);
+            return Ok(slotDto);
+        }
+        
         
     }
 }

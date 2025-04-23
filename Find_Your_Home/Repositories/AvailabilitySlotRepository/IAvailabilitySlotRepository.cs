@@ -8,5 +8,6 @@ namespace Find_Your_Home.Repositories.AvailabilitySlotRepository
         Task<IEnumerable<AvailabilitySlot>> GetAvailabilitySlotsByPropertyId(Guid propertyId);
         Task<AvailabilitySlot> AddAvailabilitySlotAsync(AvailabilitySlot availabilitySlot);
         Task<AvailabilitySlot> GetAvailabilitySlotByIdAsync(Guid availabilitySlotId);
+        Task<AvailabilitySlot> GetAvailabilitySlotWithBookingsByIdAsync(Guid availabilitySlotId);
     }
 }

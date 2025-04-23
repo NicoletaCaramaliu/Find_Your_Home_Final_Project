@@ -10,9 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/AvailabilityController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/BookingsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/AvailabilitySlotService/IAvailabilitySlotService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/AvailabilitySlotService/IAvailabilitySlotService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Bookings/BlockedInterval.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/AvailabilityController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/AvailabilityController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/AvailabilitySlotRepository/AvailabilitySlotRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/AvailabilitySlotRepository/AvailabilitySlotRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/AvailabilitySlotRepository/IAvailabilitySlotRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/AvailabilitySlotRepository/IAvailabilitySlotRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/AvailabilitySlotService/AvailabilitySlotService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/AvailabilitySlotService/AvailabilitySlotService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,28 +60,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.Find_Your_Home: IIS Express.executor": "Run",
-    "Azure - Web App.Publish Find_Your_Home to Azure (1).executor": "Run",
-    "Azure - Web App.Publish Find_Your_Home to Azure.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/bookings",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.microsoft.azure.toolkit.intellij.identity.IdentityConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.Find_Your_Home: IIS Express.executor&quot;: &quot;Run&quot;,
+    &quot;Azure - Web App.Publish Find_Your_Home to Azure (1).executor&quot;: &quot;Run&quot;,
+    &quot;Azure - Web App.Publish Find_Your_Home to Azure.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/bookings&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.microsoft.azure.toolkit.intellij.identity.IdentityConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "sqlserver.localdb"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlserver.localdb&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Find_Your_Home: IIS Express">
     <configuration name="Publish Find_Your_Home to Azure (1)" type="AzureWebAppDeploy">
       <option name="appServicePlanName" value="ASP-realestaterg-9d7e" />
@@ -245,6 +247,7 @@
       <workItem from="1744832325033" duration="10461000" />
       <workItem from="1744988623921" duration="14317000" />
       <workItem from="1745248230702" duration="15566000" />
+      <workItem from="1745348430665" duration="12709000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />
@@ -390,13 +393,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Find_Your_Home/Program.cs</url>
-          <line>160</line>
+          <line>176</line>
           <properties documentPath="F:\licenta\Find_Your_Home_Final_Project\Find_Your_Home\Program.cs" containingFunctionPresentation="">
             <startOffsets>
-              <option value="4976" />
+              <option value="5862" />
             </startOffsets>
             <endOffsets>
-              <option value="4977" />
+              <option value="5863" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="1" />

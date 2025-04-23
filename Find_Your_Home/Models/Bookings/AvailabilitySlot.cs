@@ -26,5 +26,7 @@ namespace Find_Your_Home.Models.Bookings
         public int VisitDurationInMinutes { get; set; }
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public ICollection<BlockedInterval> BlockedIntervals { get; set; } = new List<BlockedInterval>();
+
     }
 }
