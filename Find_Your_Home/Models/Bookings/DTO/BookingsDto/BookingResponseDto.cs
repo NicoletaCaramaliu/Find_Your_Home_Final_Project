@@ -24,6 +24,6 @@ namespace Find_Your_Home.Models.Bookings.DTO
 
         public DateTime CreatedAt { get; set; }
         
-        public AvailabilitySlotResponseDto? AvailabilitySlot { get; set; }
+        //public AvailabilitySlotResponseDto? AvailabilitySlot { get; set; }
     }
 }

@@ -37,19 +37,26 @@ namespace Find_Your_Home.Helpers
             CreateMap<AvailabilitySlotDto, AvailabilitySlot>();
             
             CreateMap<AvailabilitySlot, AvailabilitySlotResponseDto>()
-                .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings));
+                .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings))
+                .ForMember(dest => dest.BlockedIntervals, opt => opt.MapFrom(src => src.BlockedIntervals));
 
             CreateMap<AvailabilitySlotResponseDto, AvailabilitySlot>();
 
             // Booking
             CreateMap<Booking, BookingRequestDto>();
             CreateMap<BookingRequestDto, Booking>();
-            
+
             CreateMap<Booking, BookingResponseDto>()
                 .ForMember(dest => dest.PropertyName, opt => opt.MapFrom(src => src.Property.Name))
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username))
-                .ForMember(dest => dest.AvailabilitySlot, opt => opt.MapFrom(src => src.AvailabilitySlot));
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username));
+                //.ForMember(dest => dest.AvailabilitySlot, opt => opt.MapFrom(src => src.AvailabilitySlot));
 
+            
+            //BlockedInterval
+            CreateMap<BlockedInterval, BlockedIntervalResponse>();
+            CreateMap<BlockedIntervalResponse, BlockedInterval>();
+            CreateMap<BlockedInterval, BlockedIntervalRequest>();
+            CreateMap<BlockedIntervalRequest, BlockedInterval>();
             CreateMap<BookingResponseDto, Booking>();
         }
     }

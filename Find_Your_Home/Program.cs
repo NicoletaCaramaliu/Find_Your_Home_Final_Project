@@ -172,7 +172,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 
-//error handling
+/*
 app.UseExceptionHandler(config =>
 {
     config.Run(async context =>
@@ -184,15 +184,25 @@ app.UseExceptionHandler(config =>
         if (exception is AppException appEx)
         {
             context.Response.StatusCode = 400;
-            await context.Response.WriteAsJsonAsync(new { errorCode = appEx.ErrorCode });
+            await context.Response.WriteAsJsonAsync(new
+            {
+                errorCode = appEx.ErrorCode,
+                message = appEx.Message
+            });
         }
         else
         {
             context.Response.StatusCode = 500;
-            await context.Response.WriteAsJsonAsync(new { errorCode = "INTERNAL_SERVER_ERROR" });
+            await context.Response.WriteAsJsonAsync(new
+            {
+                errorCode = "INTERNAL_SERVER_ERROR",
+                message = exception?.Message ?? "A apărut o eroare necunoscută.",
+                // Pentru debugging local, poți include stack-ul:
+                stackTrace = exception?.StackTrace
+            });
         }
     });
-});
+});*/
 
 
 //app.UseCors("AllowAll");

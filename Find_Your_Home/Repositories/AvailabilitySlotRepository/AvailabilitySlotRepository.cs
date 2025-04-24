@@ -39,5 +39,15 @@ namespace Find_Your_Home.Repositories.AvailabilitySlotRepository
                 .Include(slot => slot.Bookings)
                 .FirstOrDefaultAsync(slot => slot.Id == availabilitySlotId);
         }
+
+        public async Task<bool> slotExits(Guid propertyId, DateTime date, TimeSpan start, TimeSpan end)
+        {
+            return await _context.AvailabilitySlots.AnyAsync(slot =>
+                slot.PropertyId == propertyId &&
+                slot.Date.Date == date.Date &&
+                slot.StartTime <= start &&
+                slot.EndTime >= end);
+            
+        }
     }
 }

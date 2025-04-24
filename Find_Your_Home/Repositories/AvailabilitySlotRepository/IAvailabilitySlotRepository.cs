@@ -9,5 +9,6 @@ namespace Find_Your_Home.Repositories.AvailabilitySlotRepository
         Task<AvailabilitySlot> AddAvailabilitySlotAsync(AvailabilitySlot availabilitySlot);
         Task<AvailabilitySlot> GetAvailabilitySlotByIdAsync(Guid availabilitySlotId);
         Task<AvailabilitySlot> GetAvailabilitySlotWithBookingsByIdAsync(Guid availabilitySlotId);
+        Task<bool> slotExits(Guid propertyId, DateTime date, TimeSpan start, TimeSpan end);
     }
 }

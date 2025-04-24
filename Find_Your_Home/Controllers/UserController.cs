@@ -6,6 +6,8 @@ using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Find_Your_Home.Exceptions;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Find_Your_Home.Controllers
 {
@@ -51,10 +53,14 @@ namespace Find_Your_Home.Controllers
         public async Task<ActionResult<IEnumerable<PropertyResponse>>> GetAllMyProperties()
         {
             var userId = _userService.GetMyId();
-            var properties = await _propertyService.GetAllPropertiesByUserId(userId);
-            var propertiesDto = _mapper.Map<IEnumerable<PropertyResponse>>(properties);
+
+            var propertiesQuery = await _propertyService.GetAllPropertiesByUserId(userId);
+            var propertiesList = await propertiesQuery.ToListAsync(); 
+            var propertiesDto = await _propertyService.MapPropertiesWithImagesAsync(propertiesList);
             return Ok(propertiesDto);
+            
         }
+
 
         [HttpPut("updateMyInfo"), Authorize]
         public async Task<ActionResult<UserDto>> UpdateMyInfo([FromBody] UpdateUserRequest request)

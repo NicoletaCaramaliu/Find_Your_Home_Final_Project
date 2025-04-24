@@ -3,6 +3,7 @@
     public class BookingRequestDto
     {
         public Guid PropertyId { get; set; }
+        public Guid AvailabilitySlotId { get; set; } 
 
         public DateTime SlotDate { get; set; }
 
