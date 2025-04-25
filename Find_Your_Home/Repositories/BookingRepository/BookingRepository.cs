@@ -1,4 +1,5 @@
 ﻿using Find_Your_Home.Data;
+using Find_Your_Home.Exceptions;
 using Find_Your_Home.Models.Bookings;
 using Find_Your_Home.Repositories.GenericRepository;
 using Microsoft.EntityFrameworkCore;
