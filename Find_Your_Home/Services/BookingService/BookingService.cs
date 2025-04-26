@@ -31,24 +31,24 @@ namespace Find_Your_Home.Services.BookingService
 
         public async Task<Booking> CreateBooking(Booking booking, Guid userId)
         {
-            var overlap = await _bookingRepository.IsSlotAlreadyBooked(
+            var existingBookings = await _bookingRepository.GetBookingsForSlot(
                 booking.PropertyId, booking.SlotDate, booking.StartTime, booking.EndTime);
 
-            if (overlap)
-                throw new AppException("The selected time interval is already booked.");
+            if (existingBookings.Any(b => b.Status == BookingStatus.Confirmed))
+                throw new AppException("TIME_SLOT_ALREADY_BOOKED");
 
             var isSlotAvailable = await _availabilitySlotRepository.slotExits(
                 booking.PropertyId, booking.SlotDate, booking.StartTime, booking.EndTime);
 
             if (!isSlotAvailable)
-                throw new AppException("The selected time interval is not available.");
+                throw new AppException("TIME_SLOT_NOT_AVAILABLE");
 
             var property = await _propertyService.GetPropertyByID(booking.PropertyId);
             if (property == null)
-                throw new AppException("The property does not exist.");
+                throw new AppException("PROPERTY_NOT_FOUND");
 
             if (property.OwnerId == userId)
-                throw new AppException("You cannot book your own property.");
+                throw new AppException("CANNOT_BOOK_OWN_PROPERTY");
 
             booking.UserId = userId;
             booking.Status = BookingStatus.Pending;
@@ -59,7 +59,7 @@ namespace Find_Your_Home.Services.BookingService
 
             await _notificationService.SendNotificationAsync(
                 property.OwnerId.ToString(),
-                NotificationMessage.CreateBookingRequest(booking, userId) 
+                NotificationMessage.CreateBookingRequest(booking, userId)
             );
 
             return booking;

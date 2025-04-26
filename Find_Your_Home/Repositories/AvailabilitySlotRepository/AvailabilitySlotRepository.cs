@@ -16,6 +16,7 @@ namespace Find_Your_Home.Repositories.AvailabilitySlotRepository
         public async Task<IEnumerable<AvailabilitySlot>> GetAvailabilitySlotsByPropertyId(Guid propertyId)
         {
             return await _context.AvailabilitySlots
+                .Include(slot => slot.Bookings)
                 .Where(slot => slot.PropertyId == propertyId)
                 .ToListAsync();
         }

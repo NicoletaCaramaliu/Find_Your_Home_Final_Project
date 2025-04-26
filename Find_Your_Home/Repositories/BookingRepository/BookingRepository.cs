@@ -35,8 +35,17 @@ namespace Find_Your_Home.Repositories.BookingRepository
                 )
             );
         }
-
         
+        public async Task<List<Booking>> GetBookingsForSlot(Guid propertyId, DateTime date, TimeSpan start, TimeSpan end)
+        {
+            return await _context.Bookings
+                .Where(b => b.PropertyId == propertyId
+                            && b.SlotDate.Date == date.Date
+                            && b.StartTime == start
+                            && b.EndTime == end)
+                .ToListAsync();
+        }
+
 
     }
 }

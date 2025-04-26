@@ -70,7 +70,7 @@ namespace Find_Your_Home.Services.AvailabilitySlotService
 
         public async Task<AvailabilitySlot> GetAvailabilitySlotById(Guid availabilitySlotId)
         {
-            var slot = await _availabilitySlotRepository.GetAvailabilitySlotByIdAsync(availabilitySlotId);
+            var slot = await _availabilitySlotRepository.GetAvailabilitySlotWithBookingsByIdAsync(availabilitySlotId);
             if (slot == null)
                 throw new AppException("SLOT_NOT_FOUND");
 

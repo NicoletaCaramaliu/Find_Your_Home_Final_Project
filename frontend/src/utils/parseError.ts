@@ -1,5 +1,4 @@
 const errorTranslations: Record<string, string> = {
-  //user
   USER_ALREADY_EXISTS: "Utilizatorul există deja.",
   INVALID_CREDENTIALS: "Email sau parolă incorecte.",
   USER_NOT_FOUND: "Utilizatorul nu a fost găsit.",
@@ -12,9 +11,14 @@ const errorTranslations: Record<string, string> = {
   USER_DELETED_SUCCESSFULLY: "Contul a fost șters.",
   LOGOUT_SUCCESS: "Ai fost delogat cu succes.",
 
-  //sloturi 
+  // Booking
+  TIME_SLOT_ALREADY_BOOKED: "Intervalul de timp selectat este deja rezervat.",
+  TIME_SLOT_NOT_AVAILABLE: "Intervalul de timp selectat nu mai este disponibil.",
+  PROPERTY_NOT_FOUND: "Proprietatea nu a fost găsită.",
+  CANNOT_BOOK_OWN_PROPERTY: "Nu poți rezerva propria ta proprietate.",
+ 
+  //Availability 
   SLOT_NOT_FOUND: "Perioada nu a fost găsită.",
-  NO_SLOTS_FOUND_FOR_PROPERTY: "Nu există sloturi disponibile pentru această proprietate.",
   NOT_OWNER_OF_PROPERTY: "Nu ești proprietarul acestei proprietăți.",
   SLOT_OVERLAP_EXISTS: "Există deja o perioadă disponibilă care se suprapune.",
   INVALID_TIME_RANGE: "Ora de început trebuie să fie înainte de ora de sfârșit.",
