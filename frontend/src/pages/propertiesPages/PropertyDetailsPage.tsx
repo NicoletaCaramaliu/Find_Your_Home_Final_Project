@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import MainNavBar from '../components/MainNavBar';
-import OwnerProfileCard from '../components/properties/OwnerProfileCard';
-import api from "../api";
-import { Property } from '../types/PropertyDetails';
+import MainNavBar from '../../components/MainNavBar';
+import OwnerProfileCard from '../../components/properties/OwnerProfileCard';
+import api from "../../api";
+import { Property } from '../../types/PropertyDetails';
 import { Heart } from 'lucide-react';
+import AvailableVisits from '../../components/bookings/AvailableVisits';
 
 interface Owner {
   id: string;
@@ -226,6 +227,7 @@ const PropertyDetailsPage: React.FC = () => {
             createdAt={owner.createdAt}
           />
           )}
+          {property && <AvailableVisits propertyId={property.id} />}
         </div>
       </div>
 

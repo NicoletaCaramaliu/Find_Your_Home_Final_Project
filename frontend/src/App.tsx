@@ -1,15 +1,15 @@
 import { Routes, Route } from "react-router-dom"; 
-import LoginPage from "./pages/LoginPage"; 
-import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/authPages/LoginPage"; 
+import RegisterPage from "./pages/authPages/RegisterPage";
 import AboutUsPage from "./pages/AboutUsPage";
-import PropertiesPage from "./pages/PropertiesPage";
+import PropertiesPage from "./pages/propertiesPages/PropertiesPage";
 import { ThemeProvider } from "./context/ThemeContext"; 
-import PropertyDetailsPage from './pages/PropertyDetailsPage';
-import OwnerPageDetails from './pages/OwnerPageDetails';
-import MyAccountPage from './pages/MyAccountPage';
-import EditPropertyPage from "./pages/EditPropertyPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
+import PropertyDetailsPage from './pages/propertiesPages/PropertyDetailsPage';
+import OwnerPageDetails from './pages/usersPages/OwnerPageDetails';
+import MyAccountPage from './pages/usersPages/MyAccountPage';
+import EditPropertyPage from "./pages/propertiesPages/EditPropertyPage";
+import ForgotPasswordPage from "./pages/authPages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/authPages/ResetPasswordPage";
 
 function App() {
 

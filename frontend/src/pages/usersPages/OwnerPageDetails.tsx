@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import MainNavBar from '../components/MainNavBar';
-import PropertiesList from '../components/properties/PropertiesList';
-import { Property } from '../types/Property';
-import { rolesMap } from "../constants/roles";
-import api from "../api"; 
+import MainNavBar from '../../components/MainNavBar';
+import PropertiesList from '../../components/properties/PropertiesList';
+import { Property } from '../../types/Property';
+import { rolesMap } from "../../constants/roles";
+import api from "../../api"; 
 
 interface UserProfile {
   email: string;

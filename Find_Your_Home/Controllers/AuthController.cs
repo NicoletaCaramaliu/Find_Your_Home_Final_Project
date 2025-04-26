@@ -58,23 +58,9 @@ namespace Find_Your_Home.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login(UserLoginDto request)
         {
-            try
-            {
-                var token = await _authService.Login(request);
-                return Ok(new { token });
-            }
-            catch (AppException ex)
-            {
-                return Unauthorized(new { errorCode = ex.ErrorCode });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[SERVER ERROR] {ex.Message}");
-                return StatusCode(500, new { errorCode = "INTERNAL_SERVER_ERROR" });
-            }
+            var token = await _authService.Login(request);
+            return Ok(new { token });
         }
-
-
 
         [HttpPost("refresh-token")]
         public async Task<ActionResult> RefreshToken()
@@ -87,7 +73,7 @@ namespace Find_Your_Home.Controllers
         public async Task<ActionResult> Logout()
         {
             var result = await _authService.Logout();
-            return Ok(new { message = result }); 
+            return Ok(new { message = result });
         }
 
         [HttpPost("request-password-reset")]
@@ -95,9 +81,7 @@ namespace Find_Your_Home.Controllers
         {
             var user = await _userService.GetUserByEmail(email);
             if (user == null)
-            {
                 throw new AppException("EMAIL_NOT_FOUND");
-            }
 
             var token = Guid.NewGuid().ToString();
             user.ResetToken = token;
@@ -114,9 +98,7 @@ namespace Find_Your_Home.Controllers
         {
             var user = await _userService.GetUserByResetToken(request.Token);
             if (user == null || user.ResetTokenExpires < DateTime.UtcNow)
-            {
                 throw new AppException("RESET_TOKEN_INVALID");
-            }
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
             user.ResetToken = null;

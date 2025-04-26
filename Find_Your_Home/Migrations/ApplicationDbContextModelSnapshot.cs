@@ -22,6 +22,117 @@ namespace Find_Your_Home.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Find_Your_Home.Models.Bookings.AvailabilitySlot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("VisitDurationInMinutes")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyId");
+
+                    b.ToTable("AvailabilitySlots");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Bookings.BlockedInterval", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AvailabilitySlotId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AvailabilitySlotId");
+
+                    b.ToTable("BlockedIntervals");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Bookings.Booking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AvailabilitySlotId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SlotDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AvailabilitySlotId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bookings");
+                });
+
             modelBuilder.Entity("Find_Your_Home.Models.Favorites.Favorite", b =>
                 {
                     b.Property<Guid>("Id")
@@ -47,7 +158,52 @@ namespace Find_Your_Home.Migrations
                     b.HasIndex("UserId", "PropertyId")
                         .IsUnique();
 
-                    b.ToTable("Favorites", (string)null);
+                    b.ToTable("Favorites");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Notifications.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Properties.Property", b =>
@@ -142,7 +298,7 @@ namespace Find_Your_Home.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Properties", (string)null);
+                    b.ToTable("Properties");
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Properties.PropertyImage", b =>
@@ -174,7 +330,7 @@ namespace Find_Your_Home.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("PropertyImages", (string)null);
+                    b.ToTable("PropertyImages");
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Users.User", b =>
@@ -232,6 +388,55 @@ namespace Find_Your_Home.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("Find_Your_Home.Models.Bookings.AvailabilitySlot", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Properties.Property", "Property")
+                        .WithMany("AvailabilitySlots")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Bookings.BlockedInterval", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Bookings.AvailabilitySlot", "AvailabilitySlot")
+                        .WithMany("BlockedIntervals")
+                        .HasForeignKey("AvailabilitySlotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AvailabilitySlot");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Bookings.Booking", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Bookings.AvailabilitySlot", "AvailabilitySlot")
+                        .WithMany("Bookings")
+                        .HasForeignKey("AvailabilitySlotId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Find_Your_Home.Models.Properties.Property", "Property")
+                        .WithMany("Bookings")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Find_Your_Home.Models.Users.User", "User")
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AvailabilitySlot");
+
+                    b.Navigation("Property");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Find_Your_Home.Models.Favorites.Favorite", b =>
                 {
                     b.HasOne("Find_Your_Home.Models.Properties.Property", "Property")
@@ -247,6 +452,24 @@ namespace Find_Your_Home.Migrations
                         .IsRequired();
 
                     b.Navigation("Property");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Notifications.Notification", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Users.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Find_Your_Home.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
 
                     b.Navigation("User");
                 });
@@ -273,8 +496,19 @@ namespace Find_Your_Home.Migrations
                     b.Navigation("Property");
                 });
 
+            modelBuilder.Entity("Find_Your_Home.Models.Bookings.AvailabilitySlot", b =>
+                {
+                    b.Navigation("BlockedIntervals");
+
+                    b.Navigation("Bookings");
+                });
+
             modelBuilder.Entity("Find_Your_Home.Models.Properties.Property", b =>
                 {
+                    b.Navigation("AvailabilitySlots");
+
+                    b.Navigation("Bookings");
+
                     b.Navigation("FavoritedBy");
 
                     b.Navigation("Images");
@@ -282,6 +516,8 @@ namespace Find_Your_Home.Migrations
 
             modelBuilder.Entity("Find_Your_Home.Models.Users.User", b =>
                 {
+                    b.Navigation("Bookings");
+
                     b.Navigation("Favorites");
 
                     b.Navigation("Properties");
