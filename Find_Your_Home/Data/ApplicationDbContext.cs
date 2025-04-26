@@ -1,5 +1,6 @@
 ﻿using Find_Your_Home.Models.Bookings;
 using Find_Your_Home.Models.Favorites;
+using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Users;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ namespace Find_Your_Home.Data
         public DbSet<AvailabilitySlot> AvailabilitySlots { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BlockedInterval> BlockedIntervals { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
@@ -113,7 +116,22 @@ namespace Find_Your_Home.Data
                 .HasForeignKey(bi => bi.AvailabilitySlotId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            
+            //NOTIF
+            modelBuilder.Entity<Notification>()
+                .HasKey(n => n.Id);
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.User)
+                .WithMany()
+                .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.Sender)
+                .WithMany()
+                .HasForeignKey(n => n.SenderId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -10,24 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/AvailabilityController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/AvailabilityController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/BookingsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/BookingsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/UserController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Exceptions/GlobalExceptionHandlerMiddleware.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Exceptions/GlobalExceptionHandlerMiddleware.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Helpers/MapperProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Helpers/MapperProfile.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Models/Bookings/DTO/BookingsDto/BookingRequestDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Bookings/DTO/BookingsDto/BookingRequestDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Models/Bookings/DTO/BookingsDto/BookingResponseDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Bookings/DTO/BookingsDto/BookingResponseDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Hubs/NotificationHub.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Notifications/NotificationMessage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Find_Your_Home/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/AvailabilitySlotRepository/AvailabilitySlotRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/AvailabilitySlotRepository/AvailabilitySlotRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/AvailabilitySlotRepository/IAvailabilitySlotRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/AvailabilitySlotRepository/IAvailabilitySlotRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/BookingRepository/BookingRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/BookingRepository/BookingRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Repositories/BookingRepository/IBookingRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/BookingRepository/IBookingRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/BookingService/BookingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/BookingService/BookingService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/BookingService/IBookingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/BookingService/IBookingService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/MyPropertiesCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/MyPropertiesCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/propertiesPages/PropertyDetailsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/propertiesPages/PropertyDetailsPage.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -262,6 +248,7 @@
       <workItem from="1745248230702" duration="15566000" />
       <workItem from="1745348430665" duration="12709000" />
       <workItem from="1745428693558" duration="19972000" />
+      <workItem from="1745616316267" duration="5733000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />

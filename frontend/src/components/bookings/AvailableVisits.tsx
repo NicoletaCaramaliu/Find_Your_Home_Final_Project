@@ -9,8 +9,8 @@ interface Props {
 interface Slot {
   id: string;
   date: string;
-  startTime: string; // "14:00:00"
-  endTime: string;   // "16:00:00"
+  startTime: string; 
+  endTime: string;   
   visitDurationInMinutes: number;
   bookings: Booking[]; 
 }

@@ -10,10 +10,13 @@ using System.Text;
 using Find_Your_Home.Exceptions;
 using Swashbuckle.AspNetCore.Filters;
 using Find_Your_Home.Helpers;
+using Find_Your_Home.Hubs;
+using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Users;
 using Find_Your_Home.Repositories.AvailabilitySlotRepository;
 using Find_Your_Home.Repositories.BookingRepository;
 using Find_Your_Home.Repositories.FavoriteRepository;
+using Find_Your_Home.Repositories.NotificationsRepository;
 using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
 using Find_Your_Home.Repositories.UnitOfWork;
@@ -22,6 +25,7 @@ using Find_Your_Home.Services.AuthService;
 using Find_Your_Home.Services.AvailabilitySlotService;
 using Find_Your_Home.Services.BookingService;
 using Find_Your_Home.Services.FavoriteService;
+using Find_Your_Home.Services.NotificationsService;
 using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
 using Find_Your_Home.Services.UserService;
@@ -73,6 +77,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSingleton<ImageService>();
 builder.Services.AddScoped<ImageHashService>();
 
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<EmailService>(); 
 
@@ -218,6 +224,8 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Find Your Home API v1");
     options.RoutePrefix = "swagger";
 });
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
