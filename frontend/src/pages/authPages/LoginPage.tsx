@@ -32,7 +32,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-blue-100 to-blue-50 dark:from-gray-600 dark:to-black transition-colors duration-500">
       
-      {/* Imaginea din stânga */}
+      {/* Imaginea din stanga */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -46,7 +46,7 @@ export default function LoginPage() {
       {/* Autentificarea */}
       <div className="flex flex-col items-center justify-center w-full lg:w-1/4 p-8 relative">
         
-        {/* Navbar doar pe partea dreaptă */}
+        {/* Navbar doar pe partea dreapta */}
         <div className="absolute top-0 left-0 w-full bg-blue-500 dark:bg-gray-800/90">
           <Navbar />
         </div>

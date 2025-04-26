@@ -27,7 +27,7 @@ namespace Find_Your_Home.Repositories.NotificationsRepository
         {
             await _context.Notifications
                 .Where(n => n.UserId == userId && !n.IsRead)
-                .ExecuteUpdateAsync(s => s.SetProperty(n => n.IsRead, true)); // 🔥 Bulk Update (merge direct în SQL)
+                .ExecuteUpdateAsync(s => s.SetProperty(n => n.IsRead, true)); 
         }
 
         public async Task CreateNotificationAsync(Notification notification)
@@ -35,5 +35,7 @@ namespace Find_Your_Home.Repositories.NotificationsRepository
             await _context.Notifications.AddAsync(notification);
             await _context.SaveChangesAsync();
         }
+        
+        
     }
 }

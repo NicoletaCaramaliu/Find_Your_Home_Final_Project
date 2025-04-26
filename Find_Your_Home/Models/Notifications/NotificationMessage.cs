@@ -18,8 +18,8 @@ namespace Find_Your_Home.Models.Notifications
             return new NotificationMessage
             {
                 Type = "booking-request",
-                Title = "New Booking Request",
-                Message = "You have a new booking to approve.",
+                Title = "Cerere Nouă de Rezervare",
+                Message = "Ai o nouă cerere de rezervare care așteaptă aprobarea.",
                 Timestamp = DateTime.UtcNow,
                 SenderId = senderId,
                 Data = new
@@ -37,8 +37,8 @@ namespace Find_Your_Home.Models.Notifications
             return new NotificationMessage
             {
                 Type = "booking-accepted",
-                Title = "Booking Accepted",
-                Message = "Your booking has been accepted.",
+                Title = "Rezervare Acceptată",
+                Message = "Rezervarea ta a fost acceptată!",
                 Timestamp = DateTime.UtcNow,
                 SenderId = senderId,
                 Data = new
@@ -53,8 +53,8 @@ namespace Find_Your_Home.Models.Notifications
             return new NotificationMessage
             {
                 Type = "booking-rejected",
-                Title = "Booking Rejected",
-                Message = "Your booking has been rejected.",
+                Title = "Rezervare Respinsă",
+                Message = "Rezervarea ta a fost respinsă.",
                 Timestamp = DateTime.UtcNow,
                 SenderId = senderId,
                 Data = new
@@ -63,5 +63,6 @@ namespace Find_Your_Home.Models.Notifications
                 }
             };
         }
+
     }
 }

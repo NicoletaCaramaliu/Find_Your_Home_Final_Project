@@ -68,7 +68,7 @@ namespace Find_Your_Home.Controllers
         {
             var slot = await _availabilitySlotService.GetAvailabilitySlotById(slotId);
             if (slot == null)
-                return NotFound(new { message = "SLOT_NOT_FOUND" });
+                throw new AppException("SLOT_NOT_FOUND");
 
             var slotDto = _mapper.Map<AvailabilitySlotResponseDto>(slot);
             return Ok(slotDto);
@@ -81,13 +81,13 @@ namespace Find_Your_Home.Controllers
             var slot = await _availabilitySlotService.GetAvailabilitySlotById(slotId);
 
             if (slot == null)
-                return NotFound(new { message = "SLOT_NOT_FOUND" });
+                throw new AppException("SLOT_NOT_FOUND");
 
             if (!await _availabilitySlotService.IsUserOwnerOfProperty(slot.PropertyId, userId))
-                return Forbid("NOT_OWNER_OF_PROPERTY");
+                throw new AppException("NOT_OWNER_OF_PROPERTY");
 
             await _availabilitySlotService.DeleteAvailabilitySlot(slotId);
-            return Ok(new { message = "Slot deleted successfully" });
+            return Ok(new { message = "SLOT_DELETED_SUCCESSFULLY" });
         }
     }
 }

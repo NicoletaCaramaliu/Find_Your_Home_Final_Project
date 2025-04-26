@@ -1,6 +1,7 @@
 ﻿using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Notifications.DTO;
 using Find_Your_Home.Repositories.NotificationsRepository;
+using Find_Your_Home.Services.NotificationsService;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,14 +15,16 @@ namespace Find_Your_Home.Controllers
     {
         private readonly INotificationRepository _notificationRepository;
         private readonly IUserService _userService;
+        private readonly INotificationService _notificationService;
 
-        public NotificationsController(INotificationRepository notificationRepository, IUserService userService)
+        public NotificationsController(INotificationRepository notificationRepository, IUserService userService, INotificationService notificationService)
         {
+            _notificationService = notificationService;
             _notificationRepository = notificationRepository;
             _userService = userService;
         }
 
-        [HttpGet]
+        [HttpGet("GetUserNotifications")]
         public async Task<IActionResult> GetNotifications()
         {
             var userId = _userService.GetMyId();
@@ -35,19 +38,28 @@ namespace Find_Your_Home.Controllers
                 Message = n.Message,
                 Timestamp = n.Timestamp,
                 IsRead = n.IsRead,
-                SenderName = n.Sender != null ? $"{n.Sender.Username} " : "System",
-                SenderProfilePictureUrl = n.Sender?.ProfilePicture 
+                SenderName = n.Sender != null ? $"{n.Sender.Username}" : "System",
+                SenderProfilePictureUrl = n.Sender?.ProfilePicture
             }).ToList();
 
             return Ok(notificationDtos);
         }
 
-        [HttpPatch("mark-as-read")]
+        [HttpPatch("mark-as-read", Name = "MarkNotificationsAsRead")]
         public async Task<IActionResult> MarkAsRead()
         {
             var userId = _userService.GetMyId();
             await _notificationRepository.MarkNotificationsAsReadAsync(userId);
             return NoContent();
         }
+        
+        [HttpPatch("mark-as-read/{notificationId}", Name = "MarkNotificationAsRead")]
+        public async Task<IActionResult> MarkAsReadSingle(Guid notificationId)
+        {
+            var userId = _userService.GetMyId();
+            await _notificationService.MarkNotificationAsReadByNotifId(notificationId);
+            return NoContent();
+        }
+
     }
 }

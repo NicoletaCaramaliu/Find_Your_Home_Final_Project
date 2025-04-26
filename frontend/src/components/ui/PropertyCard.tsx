@@ -20,7 +20,6 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const imageUrl = property.firstImageUrl || "default.jpg";
   const [isFavorited, setIsFavorited] = useState(false);
 
-  // Verifică dacă e deja la favorite
   useEffect(() => {
     const checkFavorite = async () => {
       try {
@@ -34,7 +33,6 @@ export function PropertyCard({ property }: PropertyCardProps) {
     checkFavorite();
   }, [property.id]);
 
-  // Adaugă sau scoate din favorite
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
 

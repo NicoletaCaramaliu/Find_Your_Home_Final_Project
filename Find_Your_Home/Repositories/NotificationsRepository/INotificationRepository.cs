@@ -8,5 +8,6 @@ namespace Find_Your_Home.Repositories.NotificationsRepository
         Task<List<Notification>> GetUserNotificationsAsync(Guid userId);
         Task MarkNotificationsAsReadAsync(Guid userId);
         Task CreateNotificationAsync(Notification notification);
+        
     }
 }

@@ -33,5 +33,16 @@ namespace Find_Your_Home.Services.NotificationsService
 
             await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", notificationMessage);
         }
+        
+        public async Task MarkNotificationAsReadByNotifId(Guid notificationId)
+        {
+            var notification = await _notificationRepository.FindByIdAsync(notificationId);
+            if (notification != null)
+            {
+                notification.IsRead = true;
+                _notificationRepository.Update(notification);
+                await _notificationRepository.SaveAsync();
+            }
+        }
     }
 }
