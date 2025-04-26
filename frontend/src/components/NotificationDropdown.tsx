@@ -39,9 +39,9 @@ export default function NotificationDropdown() {
 
   useEffect(() => {
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${API_URL}/notificationhub`, { 
-        accessTokenFactory: () => localStorage.getItem("token") || ""
-      })
+    .withUrl(`${import.meta.env.VITE_API_URL.replace('/api', '')}/notificationhub`, { 
+      accessTokenFactory: () => localStorage.getItem("token") || ""
+    })    
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: () => 3000,
       })
