@@ -8,5 +8,6 @@ namespace Find_Your_Home.Services.BookingService
         Task ConfirmBooking(Guid bookingId, Guid userId);
         Task<IEnumerable<Booking>> GetBookingsByPropertyId(Guid propertyId);
         Task<IEnumerable<Booking>> GetBookingsByOwnerId(Guid ownerId);
+        Task RejectBooking(Guid bookingId, Guid userId);
     }
 }

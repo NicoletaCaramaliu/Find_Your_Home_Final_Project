@@ -125,5 +125,27 @@ namespace Find_Your_Home.Services.BookingService
             return bookings;
         }
         
+        public async Task RejectBooking(Guid bookingId, Guid userId)
+        {
+            var booking = await _bookingRepository.GetBookingByIdAsync(bookingId);
+            if (booking == null)
+                throw new AppException("BOOKING_NOT_FOUND");
+
+            if (booking.Property.OwnerId != userId)
+                throw new AppException("NOT_OWNER_OF_PROPERTY");
+
+            booking.Status = BookingStatus.Cancelled;
+            
+            _bookingRepository.Update(booking);
+            await _bookingRepository.SaveAsync();
+            
+            var owner = await _userService.GetUserById(userId);
+
+            await _notificationService.SendNotificationAsync(
+                booking.UserId.ToString(),
+                NotificationMessage.CreateBookingRejected(booking, userId, owner.Username)
+            );
+        }
+        
     }
 }

@@ -41,12 +41,21 @@ const MyBookingsPage: React.FC = () => {
     try {
       await api.post(`/bookings/confirm/${id}`);
       setBookings((prev) =>
-        prev.map((b) =>
-          b.id === id ? { ...b, status: "Confirmed" } : b
-        )
+        prev.map((b) => (b.id === id ? { ...b, status: "1" } : b))
       );
     } catch (err) {
       console.error("Eroare la confirmare:", err);
+    }
+  };
+
+  const rejectBooking = async (id: string) => {
+    try {
+      await api.get(`/bookings/reject/${id}`);
+      setBookings((prev) =>
+        prev.map((b) => (b.id === id ? { ...b, status: "2" } : b))
+      );
+    } catch (err) {
+      console.error("Eroare la respingere:", err);
     }
   };
 
@@ -57,21 +66,20 @@ const MyBookingsPage: React.FC = () => {
       case 1:
         return "Confirmat";
       case 2:
-        return "Anulat";
+        return "Respins";
       case 3:
         return "Completat";
       default:
         return "Necunoscut";
     }
   };
-  
 
   return (
     <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
       <MainNavBar />
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Rezervări primite</h1>
-  
+
         {loading ? (
           <p>Se încarcă rezervările...</p>
         ) : bookings.length === 0 ? (
@@ -87,7 +95,9 @@ const MyBookingsPage: React.FC = () => {
                   <div>
                     <h2
                       className="text-xl font-semibold cursor-pointer text-blue-600 hover:underline"
-                      onClick={() => navigate(`/properties/${booking.propertyId}`)}
+                      onClick={() =>
+                        navigate(`/properties/${booking.propertyId}`)
+                      }
                     >
                       {booking.propertyName}
                     </h2>
@@ -98,10 +108,14 @@ const MyBookingsPage: React.FC = () => {
                       Utilizator: {booking.userName}
                     </p>
                     <p className="mt-2">
-                      {format(new Date(booking.slotDate), "yyyy-MM-dd")} — {booking.startTime} - {booking.endTime}
+                      {format(new Date(booking.slotDate), "yyyy-MM-dd")} —{" "}
+                      {booking.startTime} - {booking.endTime}
                     </p>
                     <p>
-                      Status: <span className="font-semibold">{getStatusLabel(booking.status)}</span>
+                      Status:{" "}
+                      <span className="font-semibold">
+                        {getStatusLabel(booking.status)}
+                      </span>
                     </p>
                   </div>
                   {Number(booking.status) === 0 && (
@@ -112,6 +126,12 @@ const MyBookingsPage: React.FC = () => {
                       >
                         Acceptă
                       </button>
+                      <button
+                        onClick={() => rejectBooking(booking.id)}
+                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                      >
+                        Respinge
+                      </button>
                     </div>
                   )}
                 </div>
@@ -121,6 +141,7 @@ const MyBookingsPage: React.FC = () => {
         )}
       </div>
     </div>
-  )};
+  );
+};
 
-  export default MyBookingsPage;
+export default MyBookingsPage;
