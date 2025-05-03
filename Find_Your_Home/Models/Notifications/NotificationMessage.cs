@@ -9,19 +9,21 @@ namespace Find_Your_Home.Models.Notifications
         public string Message { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
         public object Data { get; set; }
-        public Guid? SenderId { get; set; } 
+        public Guid? SenderId { get; set; }
+        public string SenderName { get; set; } // Numele expeditorului
 
         // Factory Methods
 
-        public static NotificationMessage CreateBookingRequest(Booking booking, Guid senderId)
+        public static NotificationMessage CreateBookingRequest(Booking booking, Guid senderId, string senderName)
         {
             return new NotificationMessage
             {
                 Type = "booking-request",
                 Title = "Cerere Nouă de Rezervare",
-                Message = "Ai o nouă cerere de rezervare care așteaptă aprobarea.",
+                Message = $"Ai o nouă cerere de rezervare de la {senderName}.",
                 Timestamp = DateTime.UtcNow,
                 SenderId = senderId,
+                SenderName = senderName,
                 Data = new
                 {
                     BookingId = booking.Id,
@@ -32,15 +34,16 @@ namespace Find_Your_Home.Models.Notifications
             };
         }
 
-        public static NotificationMessage CreateBookingAccepted(Booking booking, Guid senderId)
+        public static NotificationMessage CreateBookingAccepted(Booking booking, Guid senderId, string senderName)
         {
             return new NotificationMessage
             {
                 Type = "booking-accepted",
                 Title = "Rezervare Acceptată",
-                Message = "Rezervarea ta a fost acceptată!",
+                Message = $"Rezervarea ta a fost acceptată de {senderName}.",
                 Timestamp = DateTime.UtcNow,
                 SenderId = senderId,
+                SenderName = senderName,
                 Data = new
                 {
                     BookingId = booking.Id
@@ -48,21 +51,21 @@ namespace Find_Your_Home.Models.Notifications
             };
         }
 
-        public static NotificationMessage CreateBookingRejected(Booking booking, Guid senderId)
+        public static NotificationMessage CreateBookingRejected(Booking booking, Guid senderId, string senderName)
         {
             return new NotificationMessage
             {
                 Type = "booking-rejected",
                 Title = "Rezervare Respinsă",
-                Message = "Rezervarea ta a fost respinsă.",
+                Message = $"Rezervarea ta a fost respinsă de {senderName}.",
                 Timestamp = DateTime.UtcNow,
                 SenderId = senderId,
+                SenderName = senderName,
                 Data = new
                 {
                     BookingId = booking.Id
                 }
             };
         }
-
     }
 }

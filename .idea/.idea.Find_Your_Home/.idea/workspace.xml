@@ -9,12 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Hubs/NotificationHub.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Notifications/NotificationMessage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Program.cs" afterDir="false" />
-    </list>
+    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -249,6 +244,7 @@
       <workItem from="1745348430665" duration="12709000" />
       <workItem from="1745428693558" duration="19972000" />
       <workItem from="1745616316267" duration="5733000" />
+      <workItem from="1745677295772" duration="27263000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />

@@ -162,7 +162,7 @@ const PropertyDetailsPage: React.FC = () => {
       <div className="container mx-auto p-6">
         {property && (
           <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            {/* Inimă în colțul dreapta sus */}
+            {/* Inima in coltul dreapta sus */}
             <button
               onClick={handleToggleFavorite}
               className="absolute top-4 right-4 bg-white/80 dark:bg-gray-700/80 p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-200 z-10"

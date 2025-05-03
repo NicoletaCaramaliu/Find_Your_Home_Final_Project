@@ -62,5 +62,14 @@ namespace Find_Your_Home.Controllers
             return Ok(new { message = "BOOKING_CANCELLED" });
         }*/
 
+        [HttpGet("getAllMyPropertiesBookings"), Authorize]
+        public async Task<ActionResult<List<BookingResponseDto>>> GetBookingsForOwner()
+        {
+            var userId = _userService.GetMyId();
+            var bookings = await _bookingService.GetBookingsByOwnerId(userId);
+            var result = _mapper.Map<List<BookingResponseDto>>(bookings);
+            return Ok(result);
+        }
+
     }
 }

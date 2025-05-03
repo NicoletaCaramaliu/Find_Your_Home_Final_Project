@@ -50,5 +50,16 @@ namespace Find_Your_Home.Repositories.AvailabilitySlotRepository
                 slot.EndTime >= end);
             
         }
+        
+        public async Task<AvailabilitySlot?> FindSlotForBooking(Guid propertyId, DateTime date, TimeSpan bookingStart, TimeSpan bookingEnd)
+        {
+            return await _context.AvailabilitySlots.FirstOrDefaultAsync(s =>
+                s.PropertyId == propertyId &&
+                s.Date == date &&
+                s.StartTime <= bookingStart &&
+                s.EndTime >= bookingEnd
+            );
+        }
+
     }
 }

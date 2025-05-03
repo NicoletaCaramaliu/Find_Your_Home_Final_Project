@@ -55,6 +55,7 @@ namespace Find_Your_Home.Services.AvailabilitySlotService
 
         public async Task<AvailabilitySlot> AddAvailabilitySlot(AvailabilitySlot availabilitySlot)
         {
+            availabilitySlot.Date = availabilitySlot.Date.Date;
             var addedSlot = await _availabilitySlotRepository.AddAvailabilitySlotAsync(availabilitySlot);
             return addedSlot;
         }

@@ -43,8 +43,10 @@ namespace Find_Your_Home.Controllers
             if (dto.EndTime <= dto.StartTime)
                 throw new AppException("INVALID_TIME_RANGE");
 
-            var startDateTime = dto.Date.Date + dto.StartTime;
-            var endDateTime = dto.Date.Date + dto.EndTime;
+            dto.Date = dto.Date.Date; 
+
+            var startDateTime = dto.Date + dto.StartTime;
+            var endDateTime = dto.Date + dto.EndTime;
 
             if (await _availabilitySlotService.CheckSlotOverlap(dto.PropertyId, dto.Date, startDateTime, endDateTime))
                 throw new AppException("SLOT_OVERLAP_EXISTS");
@@ -55,6 +57,7 @@ namespace Find_Your_Home.Controllers
 
             return Ok(resultDto);
         }
+
 
         [HttpGet("getSlots/{propertyId}"), Authorize]
         public async Task<ActionResult<List<AvailabilitySlotResponseDto>>> GetSlots(Guid propertyId)
@@ -125,7 +128,8 @@ namespace Find_Your_Home.Controllers
                     {
                         Start = start,
                         End = visitEnd,
-                        Status = status
+                        Status = status,
+                        AvailabilitySlotId = slot.Id
                     });
 
                     start = visitEnd;

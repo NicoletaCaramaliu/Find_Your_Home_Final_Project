@@ -51,6 +51,7 @@ namespace Find_Your_Home.Repositories.BookingRepository
         {
             return await _context.Bookings
                 .Include(b => b.Property)
+                .ThenInclude(p => p.Owner)
                 .Include(b => b.User)
                 .FirstOrDefaultAsync(b => b.Id == bookingId);
         }
@@ -61,6 +62,16 @@ namespace Find_Your_Home.Repositories.BookingRepository
                 .Include(b => b.Property)
                 .Include(b => b.User)
                 .Where(b => b.PropertyId == propertyId)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Booking>> GetBookingsByOwnerIdAsync(Guid userId)
+        {
+            return await _context.Bookings
+                .Include(b => b.Property)
+                .Include(b => b.User)
+                .Where(b => b.Property.OwnerId == userId)
+                .OrderByDescending(b => b.SlotDate).ThenBy(b => b.StartTime)
                 .ToListAsync();
         }
     }
