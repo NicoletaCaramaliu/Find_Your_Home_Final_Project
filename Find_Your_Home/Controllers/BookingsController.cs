@@ -37,5 +37,47 @@ namespace Find_Your_Home.Controllers
             var result = _mapper.Map<BookingResponseDto>(bookedVisit);
             return Ok(result);
         }
+        
+        [HttpGet("getBookings"), Authorize]
+        public async Task<ActionResult<List<BookingResponseDto>>> GetBookingsForProperty(Guid propertyId)
+        {
+            var bookings = await _bookingService.GetBookingsByPropertyId(propertyId);
+            var result = _mapper.Map<List<BookingResponseDto>>(bookings);
+            return Ok(result);
+        }
+        
+        [HttpPost("confirm/{bookingId}"), Authorize(Roles = "Admin, PropertyOwner, Agent")]
+        public async Task<ActionResult> ConfirmBooking(Guid bookingId)
+        {
+            var userId = _userService.GetMyId();
+            await _bookingService.ConfirmBooking(bookingId, userId);
+            return Ok(new { message = "BOOKING_CONFIRMED" });
+        }
+
+        /*
+        [HttpPost("cancel/{bookingId}"), Authorize(Roles = "Admin, PropertyOwner, Agent")]
+        public async Task<ActionResult> CancelBooking(Guid bookingId)
+        {
+            await _bookingService.CancelBooking(bookingId);
+            return Ok(new { message = "BOOKING_CANCELLED" });
+        }*/
+
+        [HttpGet("getAllMyPropertiesBookings"), Authorize]
+        public async Task<ActionResult<List<BookingResponseDto>>> GetBookingsForOwner()
+        {
+            var userId = _userService.GetMyId();
+            var bookings = await _bookingService.GetBookingsByOwnerId(userId);
+            var result = _mapper.Map<List<BookingResponseDto>>(bookings);
+            return Ok(result);
+        }
+        
+        [HttpGet("reject/{bookingId}"), Authorize]
+        public async Task<ActionResult> RejectBooking(Guid bookingId)
+        {
+            var userId = _userService.GetMyId();
+            await _bookingService.RejectBooking(bookingId, userId);
+            return Ok(new { message = "BOOKING_REJECTED" });
+        }
+
     }
 }

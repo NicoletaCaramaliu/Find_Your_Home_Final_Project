@@ -2,6 +2,7 @@
 using Find_Your_Home.Exceptions;
 using Find_Your_Home.Models.Bookings;
 using Find_Your_Home.Models.Bookings.DTO;
+using Find_Your_Home.Models.Models;
 using Find_Your_Home.Services.AvailabilitySlotService;
 using Find_Your_Home.Services.BookingService;
 using Find_Your_Home.Services.UserService;
@@ -42,8 +43,10 @@ namespace Find_Your_Home.Controllers
             if (dto.EndTime <= dto.StartTime)
                 throw new AppException("INVALID_TIME_RANGE");
 
-            var startDateTime = dto.Date.Date + dto.StartTime;
-            var endDateTime = dto.Date.Date + dto.EndTime;
+            dto.Date = dto.Date.Date; 
+
+            var startDateTime = dto.Date + dto.StartTime;
+            var endDateTime = dto.Date + dto.EndTime;
 
             if (await _availabilitySlotService.CheckSlotOverlap(dto.PropertyId, dto.Date, startDateTime, endDateTime))
                 throw new AppException("SLOT_OVERLAP_EXISTS");
@@ -54,6 +57,7 @@ namespace Find_Your_Home.Controllers
 
             return Ok(resultDto);
         }
+
 
         [HttpGet("getSlots/{propertyId}"), Authorize]
         public async Task<ActionResult<List<AvailabilitySlotResponseDto>>> GetSlots(Guid propertyId)
@@ -89,5 +93,51 @@ namespace Find_Your_Home.Controllers
             await _availabilitySlotService.DeleteAvailabilitySlot(slotId);
             return Ok(new { message = "SLOT_DELETED_SUCCESSFULLY" });
         }
+        
+        [HttpGet("getVisits/{propertyId}"), Authorize]
+        public async Task<ActionResult<List<VisitsResponseDto>>> GetVisits(Guid propertyId)
+        {
+            var slots = await _availabilitySlotService.GetAvailabilitySlotsForPropertyId(propertyId);
+
+            var visits = new List<VisitsResponseDto>();
+
+            foreach (var slot in slots)
+            {
+                var baseDate = slot.Date.Date;
+                var start = baseDate + slot.StartTime;
+                var end = baseDate + slot.EndTime;
+
+                while (start < end)
+                {
+                    var visitEnd = start.AddMinutes(slot.VisitDurationInMinutes);
+                    if (visitEnd > end)
+                        break;
+
+                    var booking = slot.Bookings.FirstOrDefault(b =>
+                        (baseDate + b.StartTime) == start &&
+                        (baseDate + b.EndTime) == visitEnd &&
+                        (b.Status == BookingStatus.Pending || b.Status == BookingStatus.Confirmed));
+
+                    string status;
+                    if (booking == null)
+                        status = "Available";
+                    else
+                        status = booking.Status.ToString(); 
+
+                    visits.Add(new VisitsResponseDto
+                    {
+                        Start = start,
+                        End = visitEnd,
+                        Status = status,
+                        AvailabilitySlotId = slot.Id
+                    });
+
+                    start = visitEnd;
+                }
+            }
+
+            return Ok(visits);
+        }
+
     }
 }

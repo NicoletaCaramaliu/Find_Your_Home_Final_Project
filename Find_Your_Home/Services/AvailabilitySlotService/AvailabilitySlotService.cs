@@ -55,6 +55,7 @@ namespace Find_Your_Home.Services.AvailabilitySlotService
 
         public async Task<AvailabilitySlot> AddAvailabilitySlot(AvailabilitySlot availabilitySlot)
         {
+            availabilitySlot.Date = availabilitySlot.Date.Date;
             var addedSlot = await _availabilitySlotRepository.AddAvailabilitySlotAsync(availabilitySlot);
             return addedSlot;
         }
@@ -70,7 +71,7 @@ namespace Find_Your_Home.Services.AvailabilitySlotService
 
         public async Task<AvailabilitySlot> GetAvailabilitySlotById(Guid availabilitySlotId)
         {
-            var slot = await _availabilitySlotRepository.GetAvailabilitySlotByIdAsync(availabilitySlotId);
+            var slot = await _availabilitySlotRepository.GetAvailabilitySlotWithBookingsByIdAsync(availabilitySlotId);
             if (slot == null)
                 throw new AppException("SLOT_NOT_FOUND");
 

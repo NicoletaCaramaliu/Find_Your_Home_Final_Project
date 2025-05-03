@@ -130,6 +130,16 @@ const MyAccountPage: React.FC = () => {
             </div>
 
             {isAllowedToManageProperties(user.role) && (
+              <button
+                onClick={() => navigate("/my-bookings")}
+                className="mb-4 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+              >
+                Vezi rezervările primite
+              </button>
+            )}
+
+
+            {isAllowedToManageProperties(user.role) && (
               <>
                 {!showAddForm && (
                   <button

@@ -48,7 +48,7 @@ export default function NotificationDropdown() {
       .build();
 
     connection.onclose(() => {
-      console.log("Disconnected ❌");
+      console.log("Disconnected");
       setConnectionStatus("disconnected");
     });
 
@@ -58,13 +58,13 @@ export default function NotificationDropdown() {
     });
 
     connection.onreconnected(() => {
-      console.log("Reconnected ✅");
+      console.log("Reconnected");
       setConnectionStatus("connected");
     });
 
     connection.start()
       .then(() => {
-        console.log("Connected to NotificationHub ✅");
+        console.log("Connected to NotificationHub");
         setConnectionStatus("connected");
 
         connection.on("ReceiveNotification", (notificationMessage: any) => {
@@ -114,7 +114,7 @@ export default function NotificationDropdown() {
       );
 
       if (notification.type === "booking-request") {
-        navigate("/properties"); 
+        navigate("/my-bookings"); 
       } else if (notification.type === "booking-accepted") {
         navigate("/properties");
       } else if (notification.type === "booking-rejected") {

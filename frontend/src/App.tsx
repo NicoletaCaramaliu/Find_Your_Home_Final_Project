@@ -10,6 +10,7 @@ import MyAccountPage from './pages/usersPages/MyAccountPage';
 import EditPropertyPage from "./pages/propertiesPages/EditPropertyPage";
 import ForgotPasswordPage from "./pages/authPages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/authPages/ResetPasswordPage";
+import MyBookingsPage from "./pages/usersPages/MyBookingsPage";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
       <Route path="/edit-property/:id" element={<EditPropertyPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/my-bookings" element={<MyBookingsPage />} />
     </Routes>
     </ThemeProvider>
   );
