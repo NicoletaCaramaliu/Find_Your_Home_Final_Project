@@ -116,9 +116,9 @@ export default function NotificationDropdown() {
       if (notification.type === "booking-request") {
         navigate("/my-bookings"); 
       } else if (notification.type === "booking-accepted") {
-        navigate("/properties");
+        navigate("/my-reservations");
       } else if (notification.type === "booking-rejected") {
-        navigate("/properties");
+        navigate("/my-reservations");
       }
     } catch (error) {
       console.error('Failed to mark notification as read:', error);

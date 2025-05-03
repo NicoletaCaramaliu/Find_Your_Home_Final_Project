@@ -146,6 +146,11 @@ namespace Find_Your_Home.Services.BookingService
                 NotificationMessage.CreateBookingRejected(booking, userId, owner.Username)
             );
         }
-        
+
+        public async Task<IEnumerable<Booking>> GetBookingsByUserId(Guid userId)
+        {
+            var bookings = await _bookingRepository.GetBookingsByUserIdAsync(userId);
+            return bookings;
+        }
     }
 }

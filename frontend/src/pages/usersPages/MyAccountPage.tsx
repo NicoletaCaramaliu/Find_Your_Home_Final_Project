@@ -139,6 +139,17 @@ const MyAccountPage: React.FC = () => {
             )}
 
 
+            {user?.role === 4 && (
+            <button
+              onClick={() => navigate("/my-reservations")}
+              className="mb-4 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+            >
+              Vezi rezervările făcute
+            </button>
+          )}
+
+
+
             {isAllowedToManageProperties(user.role) && (
               <>
                 {!showAddForm && (

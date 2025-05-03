@@ -11,6 +11,7 @@ import EditPropertyPage from "./pages/propertiesPages/EditPropertyPage";
 import ForgotPasswordPage from "./pages/authPages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/authPages/ResetPasswordPage";
 import MyBookingsPage from "./pages/usersPages/MyBookingsPage";
+import MyReservationsPage from "./pages/usersPages/MyReservationsPage";
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/my-bookings" element={<MyBookingsPage />} />
+      <Route path="/my-reservations" element={<MyReservationsPage />} />
     </Routes>
     </ThemeProvider>
   );
