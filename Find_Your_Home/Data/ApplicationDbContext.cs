@@ -1,4 +1,5 @@
 ﻿using Find_Your_Home.Models.Bookings;
+using Find_Your_Home.Models.Chat;
 using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Properties;
@@ -17,6 +18,8 @@ namespace Find_Your_Home.Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BlockedInterval> BlockedIntervals { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
 
 
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import SlotCalendar from "./SlotCalendar";
 import api from "../../api";
-import { parseError } from "../../utils/parseError"; // 🔥 Importăm funcția de erori traduse
+import { parseError } from "../../utils/parseError"; 
 
 interface Slot {
   id: string;
