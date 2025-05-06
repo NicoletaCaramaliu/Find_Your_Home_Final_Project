@@ -7,35 +7,41 @@ export const notificationConnection = new signalR.HubConnectionBuilder()
     accessTokenFactory: () => localStorage.getItem("token") || "",
   })
   .withAutomaticReconnect()
+  .configureLogging(signalR.LogLevel.Information)
   .build();
 
 let hasStarted = false;
 
 export async function startNotificationConnection() {
-  if (hasStarted || notificationConnection.state === "Connected") return;
+  if (notificationConnection.state === "Connected" || hasStarted) return;
 
   if (notificationConnection.state === "Disconnected") {
     try {
       await notificationConnection.start();
       hasStarted = true;
-      console.log("✅ NotificationHub connected.");
+      console.log("SignalR connected:", notificationConnection.connectionId);
     } catch (err) {
-      console.error("NotificationHub connection failed:", err);
+      console.error("SignalR connection failed:", err);
+      
+      setTimeout(() => startNotificationConnection(), 2000);
     }
   } else {
-    console.warn("Cannot start, current state:", notificationConnection.state);
+    console.warn("⚠️ Cannot start SignalR. Current state:", notificationConnection.state);
   }
 }
 
 export function onNotification(event: string, callback: (...args: any[]) => void) {
+  console.log(`📡 Listening for event: "${event}"`);
   notificationConnection.on(event, callback);
 }
 
 export function offNotification(event: string, callback?: (...args: any[]) => void) {
   if (callback) {
     notificationConnection.off(event, callback);
+    console.log(`Unsubscribed from: "${event}"`);
   } else {
     notificationConnection.off(event);
+    console.log(`Unsubscribed from ALL handlers for: "${event}"`);
   }
 }
 
@@ -45,8 +51,9 @@ export function getNotificationConnectionState() {
 
 export function sendToHub(method: string, ...args: any[]) {
   if (notificationConnection.state === "Connected") {
+    console.log("➡️ Sending to hub:", method, args);
     return notificationConnection.send(method, ...args);
   } else {
-    console.warn("Cannot send, SignalR not connected:", method);
+    console.warn("Cannot send to hub, not connected. Method:", method);
   }
 }
