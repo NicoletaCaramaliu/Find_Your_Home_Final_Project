@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import MainNavBar from "../../components/MainNavBar";
 import api from "../../api";
-
 import {
   startNotificationConnection,
   onNotification,
@@ -23,18 +22,20 @@ export default function ChatPage() {
   const { id: conversationId } = useParams();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [userId, setUserId] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const userId = localStorage.getItem("userId") ?? "";
+  useEffect(() => {
+    const id = localStorage.getItem("userId");
+    if (id) setUserId(id);
+  }, []);
 
   useEffect(() => {
     if (!conversationId) return;
-
-    api.get(`/message/${conversationId}`)
+    api
+      .get(`/message/${conversationId}`)
       .then((res) => setMessages(res.data))
-      .catch((err) =>
-        console.error("Eroare la mesajele conversației:", err)
-      );
+      .catch((err) => console.error("Eroare la mesajele conversației:", err));
   }, [conversationId]);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function ChatPage() {
         if (notificationConnection.state === "Connected") {
           sendToHub("JoinConversation", conversationId);
         } else {
-          setTimeout(waitAndJoin, 300); 
+          setTimeout(waitAndJoin, 300);
         }
       };
 
@@ -72,7 +73,6 @@ export default function ChatPage() {
     connect();
   }, [conversationId]);
 
-  // ✉️ Send
   const handleSend = async () => {
     if (!newMessage.trim() || !conversationId) return;
 

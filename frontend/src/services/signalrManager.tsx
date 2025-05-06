@@ -14,12 +14,16 @@ let hasStarted = false;
 export async function startNotificationConnection() {
   if (hasStarted || notificationConnection.state === "Connected") return;
 
-  try {
-    await notificationConnection.start();
-    hasStarted = true;
-    console.log("NotificationHub connected.");
-  } catch (err) {
-    console.error("NotificationHub connection failed:", err);
+  if (notificationConnection.state === "Disconnected") {
+    try {
+      await notificationConnection.start();
+      hasStarted = true;
+      console.log("✅ NotificationHub connected.");
+    } catch (err) {
+      console.error("NotificationHub connection failed:", err);
+    }
+  } else {
+    console.warn("Cannot start, current state:", notificationConnection.state);
   }
 }
 
@@ -35,16 +39,14 @@ export function offNotification(event: string, callback?: (...args: any[]) => vo
   }
 }
 
-
 export function getNotificationConnectionState() {
   return notificationConnection.state;
 }
 
 export function sendToHub(method: string, ...args: any[]) {
-    if (notificationConnection.state === "Connected") {
-      return notificationConnection.send(method, ...args);
-    } else {
-      console.warn("❗ Cannot send, SignalR not connected:", method);
-    }
+  if (notificationConnection.state === "Connected") {
+    return notificationConnection.send(method, ...args);
+  } else {
+    console.warn("Cannot send, SignalR not connected:", method);
   }
-  
+}
