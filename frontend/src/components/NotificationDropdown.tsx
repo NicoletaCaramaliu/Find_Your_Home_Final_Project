@@ -1,8 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Bell } from "lucide-react";
-import api from "../api";
-import * as signalR from "@microsoft/signalr";
 import { useNavigate } from "react-router-dom";
+import api from "../api";
+import {
+  startNotificationConnection,
+  onNotification,
+  offNotification,
+  getNotificationConnectionState
+} from "../services/signalrManager";
 
 interface Notification {
   id: string;
@@ -14,8 +19,6 @@ interface Notification {
   senderName?: string;
   senderProfilePictureUrl?: string;
 }
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5266";
 
 export default function NotificationDropdown() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -38,59 +41,44 @@ export default function NotificationDropdown() {
   }, []);
 
   useEffect(() => {
-    const connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${API_URL}/notificationhub`, { 
-        accessTokenFactory: () => localStorage.getItem("token") || ""
-      })
-      .withAutomaticReconnect({
-        nextRetryDelayInMilliseconds: () => 3000,
-      })
-      .build();
+    let mounted = true;
 
-    connection.onclose(() => {
-      console.log("Disconnected");
-      setConnectionStatus("disconnected");
-    });
+    startNotificationConnection().then(() => {
+      if (!mounted) return;
 
-    connection.onreconnecting(() => {
-      console.log("Reconnecting 🔄...");
-      setConnectionStatus("connecting");
-    });
-
-    connection.onreconnected(() => {
-      console.log("Reconnected");
       setConnectionStatus("connected");
-    });
 
-    connection.start()
-      .then(() => {
-        console.log("Connected to NotificationHub");
-        setConnectionStatus("connected");
+      onNotification("ReceiveNotification", (notificationMessage: any) => {
+        const newNotification: Notification = {
+          id: crypto.randomUUID(),
+          type: notificationMessage.type,
+          title: notificationMessage.title,
+          message: notificationMessage.message,
+          timestamp: notificationMessage.timestamp,
+          isRead: false,
+          senderName: "System",
+          senderProfilePictureUrl: ""
+        };
 
-        connection.on("ReceiveNotification", (notificationMessage: any) => {
-          console.log("Received notification:", notificationMessage);
-          const newNotification: Notification = {
-            id: crypto.randomUUID(),
-            type: notificationMessage.type,
-            title: notificationMessage.title,
-            message: notificationMessage.message,
-            timestamp: notificationMessage.timestamp,
-            isRead: false,
-            senderName: "System",
-            senderProfilePictureUrl: ""
-          };
-
-          setNotifications(prev => [newNotification, ...prev]);
-        });
-      })
-      .catch(error => {
-        console.error("Connection failed:", error);
-        setConnectionStatus("disconnected");
+        setNotifications(prev => [newNotification, ...prev]);
       });
+    });
 
     return () => {
-      connection.stop();
+      mounted = false;
+      offNotification("ReceiveNotification");
     };
+  }, []);
+
+  useEffect(() => {
+    const state = getNotificationConnectionState();
+    if (state === "Connected") {
+      setConnectionStatus("connected");
+    } else if (state === "Disconnected") {
+      setConnectionStatus("disconnected");
+    } else {
+      setConnectionStatus("connecting");
+    }
   }, []);
 
   useEffect(() => {
@@ -114,11 +102,9 @@ export default function NotificationDropdown() {
       );
 
       if (notification.type === "booking-request") {
-        navigate("/my-bookings"); 
-      } else if (notification.type === "booking-accepted") {
-        navigate("/properties");
-      } else if (notification.type === "booking-rejected") {
-        navigate("/properties");
+        navigate("/my-bookings");
+      } else if (["booking-accepted", "booking-rejected"].includes(notification.type)) {
+        navigate("/my-reservations");
       }
     } catch (error) {
       console.error('Failed to mark notification as read:', error);
@@ -149,7 +135,7 @@ export default function NotificationDropdown() {
             <>
               {notifications.length === 0 ? (
                 <div className="p-4 text-gray-500 dark:text-gray-400">
-                  No notifications.
+                  Nu ai notificări.
                 </div>
               ) : (
                 notifications.map((notification) => (

@@ -66,7 +66,7 @@ namespace Find_Your_Home.Services.AvailabilitySlotService
             if (slots == null || !slots.Any())
                 throw new AppException("NO_SLOTS_FOUND_FOR_PROPERTY");
 
-            return slots.ToList();
+            return slots;
         }
 
         public async Task<AvailabilitySlot> GetAvailabilitySlotById(Guid availabilitySlotId)

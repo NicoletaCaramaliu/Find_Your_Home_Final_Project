@@ -9,7 +9,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="" />
+    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/ConversationsController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Hubs/ChatHub.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Chat/ChatMessage.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Chat/Conversation.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Chat/DTO/ConversationPreviewDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Chat/DTO/SendMessageRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Chat/DTO/StartConversationRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/ConversationRepository/ConversationRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/ConversationRepository/IConversationRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Services/ConversationService/ConversationService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Services/ConversationService/IConversationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Data/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Data/ApplicationDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Helpers/Extensions/ServiceExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Helpers/Extensions/ServiceExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Helpers/MapperProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Helpers/MapperProfile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Models/Bookings/DTO/BlockingDto/BlockedIntervalRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Bookings/DTO/BlockingDto/BlockedIntervalRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/AvailabilitySlotService/AvailabilitySlotService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/AvailabilitySlotService/AvailabilitySlotService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/slots/SlotManagerModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/slots/SlotManagerModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/utils/parseError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/utils/parseError.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -245,6 +266,8 @@
       <workItem from="1745428693558" duration="19972000" />
       <workItem from="1745616316267" duration="5733000" />
       <workItem from="1745677295772" duration="27263000" />
+      <workItem from="1746290988537" duration="14593000" />
+      <workItem from="1746468525719" duration="8752000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />

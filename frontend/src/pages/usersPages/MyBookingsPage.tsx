@@ -20,6 +20,7 @@ interface Booking {
 const MyBookingsPage: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,19 +75,39 @@ const MyBookingsPage: React.FC = () => {
     }
   };
 
+  const filteredBookings = bookings.filter(
+    (b) => statusFilter === "all" || Number(b.status) === Number(statusFilter)
+  );
+  
+
   return (
     <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
       <MainNavBar />
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Rezervări primite</h1>
 
+        <div className="mb-4">
+          <label className="mr-2 font-medium">Filtrează după status:</label>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="p-2 rounded border dark:bg-gray-700 dark:text-white"
+          >
+            <option value="all">Toate</option>
+            <option value="0">În așteptare</option>
+            <option value="1">Confirmat</option>
+            <option value="2">Respins</option>
+            <option value="3">Completat</option>
+          </select>
+        </div>
+
         {loading ? (
           <p>Se încarcă rezervările...</p>
-        ) : bookings.length === 0 ? (
-          <p>Nu ai nicio rezervare.</p>
+        ) : filteredBookings.length === 0 ? (
+          <p>Nu există rezervări care corespund filtrului selectat.</p>
         ) : (
           <div className="space-y-4">
-            {bookings.map((booking) => (
+            {filteredBookings.map((booking) => (
               <div
                 key={booking.id}
                 className="bg-white dark:bg-gray-800 p-4 rounded shadow"

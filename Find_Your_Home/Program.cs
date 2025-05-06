@@ -15,7 +15,9 @@ using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Users;
 using Find_Your_Home.Repositories.AvailabilitySlotRepository;
 using Find_Your_Home.Repositories.BookingRepository;
+using Find_Your_Home.Repositories.ConversationRepository;
 using Find_Your_Home.Repositories.FavoriteRepository;
+using Find_Your_Home.Repositories.MessageRepository;
 using Find_Your_Home.Repositories.NotificationsRepository;
 using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
@@ -24,7 +26,9 @@ using Find_Your_Home.Repositories.UserRepository;
 using Find_Your_Home.Services.AuthService;
 using Find_Your_Home.Services.AvailabilitySlotService;
 using Find_Your_Home.Services.BookingService;
+using Find_Your_Home.Services.ConversationService;
 using Find_Your_Home.Services.FavoriteService;
+using Find_Your_Home.Services.MessageService;
 using Find_Your_Home.Services.NotificationsService;
 using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
@@ -83,6 +87,12 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<EmailService>(); 
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+builder.Services.AddScoped<IConversationService, ConversationService>();
+
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 
 
 
@@ -226,6 +236,7 @@ app.UseSwaggerUI(options =>
 });
 
 app.MapHub<NotificationHub>("/notificationHub");
+app.MapHub<ChatHub>("/chatHub");
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 

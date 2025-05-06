@@ -50,14 +50,14 @@ namespace Find_Your_Home.Helpers
                 .ForMember(dest => dest.PropertyName, opt => opt.MapFrom(src => src.Property.Name))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username));
                 //.ForMember(dest => dest.AvailabilitySlot, opt => opt.MapFrom(src => src.AvailabilitySlot));
-
+            CreateMap<BookingResponseDto, Booking>();
             
             //BlockedInterval
             CreateMap<BlockedInterval, BlockedIntervalResponse>();
             CreateMap<BlockedIntervalResponse, BlockedInterval>();
             CreateMap<BlockedInterval, BlockedIntervalRequest>();
             CreateMap<BlockedIntervalRequest, BlockedInterval>();
-            CreateMap<BookingResponseDto, Booking>();
+            
         }
     }
 }

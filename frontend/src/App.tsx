@@ -32,6 +32,9 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/my-bookings" element={<MyBookingsPage />} />
+      <Route path="/my-reservations" element={<MyReservationsPage />} />
+      <Route path="/conversations" element={<ConversationsPage />} />
+      <Route path="/chat/:id" element={<ChatPage />} />
     </Routes>
     </ThemeProvider>
   );

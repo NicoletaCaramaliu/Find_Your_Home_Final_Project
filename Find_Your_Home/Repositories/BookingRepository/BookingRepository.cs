@@ -74,5 +74,15 @@ namespace Find_Your_Home.Repositories.BookingRepository
                 .OrderByDescending(b => b.SlotDate).ThenBy(b => b.StartTime)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Booking>> GetBookingsByUserIdAsync(Guid userId)
+        {
+            return await _context.Bookings
+                .Include(b => b.Property)
+                .Include(b => b.User)
+                .Where(b => b.UserId == userId)
+                .OrderByDescending(b => b.SlotDate).ThenBy(b => b.StartTime)
+                .ToListAsync();
+        }
     }
 }
