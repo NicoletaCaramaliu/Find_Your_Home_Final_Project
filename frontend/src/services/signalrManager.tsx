@@ -27,9 +27,14 @@ export function onNotification(event: string, callback: (...args: any[]) => void
   notificationConnection.on(event, callback);
 }
 
-export function offNotification(event: string) {
-  notificationConnection.off(event);
+export function offNotification(event: string, callback?: (...args: any[]) => void) {
+  if (callback) {
+    notificationConnection.off(event, callback);
+  } else {
+    notificationConnection.off(event);
+  }
 }
+
 
 export function getNotificationConnectionState() {
   return notificationConnection.state;
