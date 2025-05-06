@@ -134,6 +134,36 @@ namespace Find_Your_Home.Data
                 .WithMany()
                 .HasForeignKey(n => n.SenderId)
                 .OnDelete(DeleteBehavior.Restrict); 
+            
+            // CHAT
+            modelBuilder.Entity<Conversation>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(c => c.User1Id)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(c => c.User2Id)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChatMessage>()
+                .HasKey(m => m.Id);
+
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ChatMessage>()
+                .Property(m => m.Message)
+                .HasMaxLength(2000);
+
 
             base.OnModelCreating(modelBuilder);
         }

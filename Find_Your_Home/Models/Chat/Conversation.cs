@@ -7,6 +7,6 @@ namespace Find_Your_Home.Models.Chat
         public Guid User1Id { get; set; }
         public Guid User2Id { get; set; }
 
-        public ICollection<ChatMessage> Messages { get; set; }
+        public ICollection<ChatMessage>? Messages { get; set; }
     }
 }

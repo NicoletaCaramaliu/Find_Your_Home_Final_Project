@@ -5,8 +5,8 @@ import { Property } from "../../types/Property";
 import MainNavBar from "../../components/MainNavBar";
 import AddPropertyForm from "../../components/properties/AddPropertyForm";
 import UserProfileCard from "../../components/UserProfileCard";
-import MyPropertiesCard from "../../components/MyPropertiesCard";
-import FavoritePropertiesCard from "../../components/FavoritePropertiesCard";
+import MyPropertiesCard from "../../components/properties/MyPropertiesCard";
+import FavoritePropertiesCard from "../../components/properties/FavoritePropertiesCard";
 import { logout } from "../../services/authService";
 
 interface LoggedUser {

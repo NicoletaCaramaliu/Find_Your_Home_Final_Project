@@ -27,7 +27,7 @@ namespace Find_Your_Home.Controllers
             return Ok(conversationId);
         }
 
-        [HttpGet("my"), Authorize]
+        [HttpGet("myConversations"), Authorize]
         public async Task<ActionResult<List<ConversationPreviewDto>>> GetMyConversations()
         {
             var userId = _userService.GetMyId();

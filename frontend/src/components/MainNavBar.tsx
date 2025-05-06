@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import ThemeToggle from "../components/ThemeToggle";
 import NotificationDropdown from "./NotificationDropdown"; 
+import ChatDropdown from "./chat/ChatDropdown";
 
 export default function MainNavBar() {
   return (
@@ -24,6 +25,8 @@ export default function MainNavBar() {
 
           {/* Notificari */}
           <NotificationDropdown />
+
+          <ChatDropdown />
 
           {/* Toggle dark mode */}
           <div className="hidden md:flex justify-end">

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Property } from "../types/Property";
-import SlotManagerModal from "./slots/SlotManagerModal";
+import { Property } from "../../types/Property";
+import SlotManagerModal from "../slots/SlotManagerModal";
 
 interface Props {
   properties: Property[];
