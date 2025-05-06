@@ -1,4 +1,5 @@
 ﻿using Find_Your_Home.Models.Bookings;
+using Find_Your_Home.Models.Chat;
 using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Properties;
@@ -17,6 +18,8 @@ namespace Find_Your_Home.Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BlockedInterval> BlockedIntervals { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
 
 
 
@@ -131,6 +134,36 @@ namespace Find_Your_Home.Data
                 .WithMany()
                 .HasForeignKey(n => n.SenderId)
                 .OnDelete(DeleteBehavior.Restrict); 
+            
+            // CHAT
+            modelBuilder.Entity<Conversation>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(c => c.User1Id)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(c => c.User2Id)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChatMessage>()
+                .HasKey(m => m.Id);
+
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ChatMessage>()
+                .Property(m => m.Message)
+                .HasMaxLength(2000);
+
 
             base.OnModelCreating(modelBuilder);
         }

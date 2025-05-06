@@ -24,6 +24,7 @@ const errorTranslations: Record<string, string> = {
   INVALID_TIME_RANGE: "Ora de început trebuie să fie înainte de ora de sfârșit.",
   SLOT_DELETED_SUCCESSFULLY: "Slot șters cu succes!",
   CANNOT_DELETE_SLOT_WITH_BOOKINGS: "Nu poți șterge un slot care are rezervări existente.",
+  NO_SLOTS_FOUND_FOR_PROPERTY: "Nu sunt adăugate perioade de vizită pentru această proprietate"
 };
 
 export const parseError = (error: any): string => {

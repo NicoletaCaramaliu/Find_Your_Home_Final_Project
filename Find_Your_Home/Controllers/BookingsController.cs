@@ -79,5 +79,13 @@ namespace Find_Your_Home.Controllers
             return Ok(new { message = "BOOKING_REJECTED" });
         }
 
+        [HttpGet("getMyBookings"), Authorize]
+        public async Task<ActionResult<List<BookingResponseDto>>> GetMyBookings()
+        {
+            var userId = _userService.GetMyId();
+            var bookings = await _bookingService.GetBookingsByUserId(userId);
+            var result = _mapper.Map<List<BookingResponseDto>>(bookings);
+            return Ok(result);
+        }
     }
 }

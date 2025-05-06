@@ -1,5 +1,5 @@
 import React from "react";
-import { Property } from "../types/Property";
+import { Property } from "../../types/Property";
 
 interface Props {
   favorites: Property[];

@@ -11,5 +11,6 @@ namespace Find_Your_Home.Repositories.BookingRepository
         Task<Booking> GetBookingByIdAsync(Guid bookingId);
         Task<IEnumerable<Booking>> GetBookingsByPropertyIdAsync(Guid propertyId);
         Task<IEnumerable<Booking>> GetBookingsByOwnerIdAsync(Guid userId);
+        Task<IEnumerable<Booking>> GetBookingsByUserIdAsync(Guid userId);
     }
 }

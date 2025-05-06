@@ -11,6 +11,9 @@ import EditPropertyPage from "./pages/propertiesPages/EditPropertyPage";
 import ForgotPasswordPage from "./pages/authPages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/authPages/ResetPasswordPage";
 import MyBookingsPage from "./pages/usersPages/MyBookingsPage";
+import MyReservationsPage from "./pages/usersPages/MyReservationsPage";
+import ConversationsPage from "./pages/conversations/ConversationsPage";
+import ChatPage from "./pages/conversations/chatPage";
 
 function App() {
 
@@ -29,6 +32,9 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/my-bookings" element={<MyBookingsPage />} />
+      <Route path="/my-reservations" element={<MyReservationsPage />} />
+      <Route path="/conversations" element={<ConversationsPage />} />
+      <Route path="/chat/:id" element={<ChatPage />} />
     </Routes>
     </ThemeProvider>
   );

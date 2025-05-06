@@ -5,8 +5,8 @@ import { Property } from "../../types/Property";
 import MainNavBar from "../../components/MainNavBar";
 import AddPropertyForm from "../../components/properties/AddPropertyForm";
 import UserProfileCard from "../../components/UserProfileCard";
-import MyPropertiesCard from "../../components/MyPropertiesCard";
-import FavoritePropertiesCard from "../../components/FavoritePropertiesCard";
+import MyPropertiesCard from "../../components/properties/MyPropertiesCard";
+import FavoritePropertiesCard from "../../components/properties/FavoritePropertiesCard";
 import { logout } from "../../services/authService";
 
 interface LoggedUser {
@@ -137,6 +137,17 @@ const MyAccountPage: React.FC = () => {
                 Vezi rezervările primite
               </button>
             )}
+
+
+            {user?.role === 4 && (
+            <button
+              onClick={() => navigate("/my-reservations")}
+              className="mb-4 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+            >
+              Vezi rezervările făcute
+            </button>
+          )}
+
 
 
             {isAllowedToManageProperties(user.role) && (
