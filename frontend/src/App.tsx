@@ -11,6 +11,9 @@ import EditPropertyPage from "./pages/propertiesPages/EditPropertyPage";
 import ForgotPasswordPage from "./pages/authPages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/authPages/ResetPasswordPage";
 import MyBookingsPage from "./pages/usersPages/MyBookingsPage";
+import MyReservationsPage from "./pages/usersPages/MyReservationsPage";
+import ConversationsPage from "./pages/conversations/ConversationsPage";
+import ChatPage from "./pages/conversations/chatPage";
 
 function App() {
 
