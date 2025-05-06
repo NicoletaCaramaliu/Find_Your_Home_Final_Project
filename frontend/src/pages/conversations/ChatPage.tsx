@@ -18,11 +18,17 @@ interface ChatMessage {
   createdAt: string;
 }
 
+interface ConversationInfo {
+  otherUserName: string;
+  otherUserProfilePictureUrl: string;
+}
+
 export default function ChatPage() {
   const { id: conversationId } = useParams();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [userId, setUserId] = useState("");
+  const [conversationInfo, setConversationInfo] = useState<ConversationInfo | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,10 +38,26 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!conversationId) return;
-    api
-      .get(`/message/${conversationId}`)
-      .then((res) => setMessages(res.data))
-      .catch((err) => console.error("Eroare la mesajele conversației:", err));
+
+    api.get(`/message/${conversationId}`)
+      .then(res => setMessages(res.data))
+      .catch(err => console.error("Eroare la mesajele conversației:", err));
+  }, [conversationId]);
+
+  useEffect(() => {
+    if (!conversationId) return;
+
+    api.get("/conversations/myConversations")
+      .then((res) => {
+        const convo = res.data.find((c: any) => c.conversationId === conversationId);
+        if (convo) {
+          setConversationInfo({
+            otherUserName: convo.otherUserName,
+            otherUserProfilePictureUrl: convo.otherUserProfilePictureUrl,
+          });
+        }
+      })
+      .catch((err) => console.error("Eroare la info conversației:", err));
   }, [conversationId]);
 
   useEffect(() => {
@@ -57,7 +79,7 @@ export default function ChatPage() {
 
       const messageHandler = (data: ChatMessage) => {
         if (data.conversationId === conversationId && isMounted) {
-          setMessages((prev) => [...prev, data]);
+          setMessages(prev => [...prev, data]);
         }
       };
 
@@ -107,15 +129,24 @@ export default function ChatPage() {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 flex flex-col">
       <MainNavBar />
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 py-6 flex flex-col">
-        <h2 className="text-xl font-bold mb-4">Conversație</h2>
+        <h2 className="text-xl font-bold mb-2">Conversație</h2>
+
+        {conversationInfo && (
+          <div className="flex items-center mb-4 gap-3">
+            <img
+              src={conversationInfo.otherUserProfilePictureUrl}
+              alt="Profil"
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <h3 className="text-lg font-semibold">{conversationInfo.otherUserName}</h3>
+          </div>
+        )}
 
         <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-800 p-4 rounded shadow space-y-3">
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${
-                msg.senderId === userId ? "justify-end" : "justify-start"
-              }`}
+              className={`flex ${msg.senderId === userId ? "justify-end" : "justify-start"}`}
             >
               <div
                 className={`p-3 rounded max-w-xs break-words ${
