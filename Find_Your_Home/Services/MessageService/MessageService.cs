@@ -34,6 +34,7 @@ namespace Find_Your_Home.Services.MessageService
                 {
                     SenderId = senderId,
                     Message = request.Message,
+                    ConversationId = request.ConversationId,
                     Timestamp = message.CreatedAt
                 });
         }
