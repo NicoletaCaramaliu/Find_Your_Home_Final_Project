@@ -55,12 +55,30 @@ namespace Find_Your_Home.Controllers
             return Ok(user);
         }
 
+        /*
         [HttpPost("login")]
         public async Task<ActionResult> Login(UserLoginDto request)
         {
             var token = await _authService.Login(request);
             return Ok(new { token });
+        }*/
+        
+        [HttpPost("login")]
+        public async Task<ActionResult> Login(UserLoginDto request)
+        {
+            var token = await _authService.Login(request);
+            var user = await _userService.GetUserByEmail(request.Email);
+
+            return Ok(new
+            {
+                token,
+                user = new {
+                    id = user.Id, 
+                    username = user.Username
+                }
+            });
         }
+  
 
         [HttpPost("refresh-token")]
         public async Task<ActionResult> RefreshToken()

@@ -158,5 +158,17 @@ namespace Find_Your_Home.Services.AuthService
 
             _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
         }
+        
+        public async Task<(string token, User user)> LoginWithUser(UserLoginDto request)
+        {
+            var token = await Login(request);
+            var user = await _userService.GetUserByEmail(request.Email);
+    
+            if (user == null)
+                throw new AppException("INVALID_CREDENTIALS");
+
+            return (token, user);
+        }
+
     }
 }
