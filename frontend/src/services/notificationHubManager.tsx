@@ -26,12 +26,12 @@ export async function startNotificationConnection() {
       setTimeout(() => startNotificationConnection(), 2000);
     }
   } else {
-    console.warn("⚠️ Cannot start SignalR. Current state:", notificationConnection.state);
+    console.warn("Cannot start SignalR. Current state:", notificationConnection.state);
   }
 }
 
 export function onNotification(event: string, callback: (...args: any[]) => void) {
-  console.log(`📡 Listening for event: "${event}"`);
+  console.log(`Listening for event: "${event}"`);
   notificationConnection.on(event, callback);
 }
 
@@ -51,7 +51,7 @@ export function getNotificationConnectionState() {
 
 export function sendToHub(method: string, ...args: any[]) {
   if (notificationConnection.state === "Connected") {
-    console.log("➡️ Sending to hub:", method, args);
+    console.log("Sending to hub:", method, args);
     return notificationConnection.send(method, ...args);
   } else {
     console.warn("Cannot send to hub, not connected. Method:", method);

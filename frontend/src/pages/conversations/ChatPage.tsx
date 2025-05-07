@@ -65,11 +65,11 @@ export default function ChatPage() {
     let isMounted = true;
 
     const connect = async () => {
-      await startChatConnection(); 
+      await startChatConnection();
 
       const waitAndJoin = () => {
         if (chatConnection.state === "Connected") {
-          sendChat("JoinConversation", conversationId); 
+          sendChat("JoinConversation", conversationId);
         } else {
           setTimeout(waitAndJoin, 300);
         }
@@ -79,16 +79,16 @@ export default function ChatPage() {
 
       const messageHandler = (data: ChatMessage) => {
         if (data.conversationId === conversationId && isMounted) {
-          setMessages(prev => [...prev, data]); 
+          setMessages(prev => [...prev, data]);
         }
       };
 
-      onChatEvent("ReceiveMessage", messageHandler); 
+      onChatEvent("ReceiveMessage", messageHandler);
 
       return () => {
         isMounted = false;
-        sendChat("LeaveConversation", conversationId); 
-        offChatEvent("ReceiveMessage", messageHandler); 
+        sendChat("LeaveConversation", conversationId);
+        offChatEvent("ReceiveMessage", messageHandler);
       };
     };
 
@@ -104,18 +104,7 @@ export default function ChatPage() {
         message: newMessage,
       });
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: crypto.randomUUID(),
-          conversationId,
-          senderId: userId,
-          message: newMessage,
-          createdAt: new Date().toISOString(),
-        },
-      ]);
-
-      setNewMessage("");
+      setNewMessage(""); 
     } catch (err) {
       console.error("Eroare la trimiterea mesajului:", err);
     }
@@ -157,7 +146,9 @@ export default function ChatPage() {
               >
                 <div>{msg.message}</div>
                 <div className="text-xs mt-1 text-gray-500 dark:text-gray-400 text-right">
-                  {new Date(msg.createdAt).toLocaleTimeString()}
+                  {msg.createdAt && !isNaN(new Date(msg.createdAt).getTime())
+                    ? new Date(msg.createdAt).toLocaleTimeString()
+                    : ""}
                 </div>
               </div>
             </div>
