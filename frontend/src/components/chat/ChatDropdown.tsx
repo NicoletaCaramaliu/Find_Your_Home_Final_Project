@@ -52,10 +52,29 @@ export default function ChatDropdown() {
                   className="flex items-center space-x-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition"
                   onClick={() => setOpen(false)}
                 >
-                  <img src={conv.otherUserProfilePictureUrl} className="w-10 h-10 rounded-full object-cover" />
+                  <img
+                      src={conv.otherUserProfilePictureUrl || "/images/defaultProfilePicture.png"}
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        target.onerror = null; 
+                        target.src = "/images/defaultProfilePicture.png";
+                      }}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+
                   <div className="flex-1">
                     <div className="font-medium text-gray-900 dark:text-white">{conv.otherUserName}</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-300 truncate">{conv.lastMessage}</div>
+                    <div
+                        className="text-sm text-gray-600 dark:text-gray-300 max-w-full overflow-hidden break-all whitespace-normal"
+                        style={{
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical"
+                        }}
+                      >
+                        {conv.lastMessage}
+                      </div>
+
                   </div>
                 </Link>
               ))

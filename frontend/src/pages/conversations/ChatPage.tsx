@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import MainNavBar from "../../components/MainNavBar";
 import api from "../../api";
@@ -23,14 +23,16 @@ export default function ChatPage() {
   const { id: conversationId } = useParams();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const userId = localStorage.getItem("userId") ?? "";
 
   useEffect(() => {
     if (!conversationId) return;
-    api.get(`/message/${conversationId}`)
-      .then(res => setMessages(res.data))
-      .catch(err => console.error("Eroare la mesajele conversației:", err));
+    api
+      .get(`/message/${conversationId}`)
+      .then((res) => setMessages(res.data))
+      .catch((err) => console.error("Eroare la mesajele conversației:", err));
   }, [conversationId]);
 
   useEffect(() => {
@@ -44,11 +46,11 @@ export default function ChatPage() {
           sendToHub("JoinConversation", conversationId);
           onNotification("ReceiveMessage", (data: ChatMessage) => {
             if (data.conversationId === conversationId && isMounted) {
-              setMessages(prev => [...prev, data]);
+              setMessages((prev) => [...prev, data]);
             }
           });
         } else {
-          setTimeout(waitUntilConnected, 500); 
+          setTimeout(waitUntilConnected, 500);
         }
       };
 
@@ -66,7 +68,11 @@ export default function ChatPage() {
     };
   }, [conversationId]);
 
-  // ✉️ Send message
+  // Scroll automat la ultimul mesaj
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const handleSend = async () => {
     if (!newMessage.trim()) return;
 
@@ -76,13 +82,16 @@ export default function ChatPage() {
         message: newMessage,
       });
 
-      setMessages(prev => [...prev, {
-        id: crypto.randomUUID(),
-        conversationId: conversationId!,
-        senderId: userId,
-        message: newMessage,
-        createdAt: new Date().toISOString(),
-      }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          conversationId: conversationId!,
+          senderId: userId,
+          message: newMessage,
+          createdAt: new Date().toISOString(),
+        },
+      ]);
 
       setNewMessage("");
     } catch (error) {
@@ -96,11 +105,16 @@ export default function ChatPage() {
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 py-6 flex flex-col">
         <h2 className="text-xl font-bold mb-4">Conversație</h2>
 
-        <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-800 p-4 rounded shadow space-y-3">
+        <div
+          className="flex-1 overflow-y-auto bg-white dark:bg-gray-800 p-4 rounded shadow space-y-3"
+          style={{ maxHeight: "calc(100vh - 250px)" }}
+        >
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${msg.senderId === userId ? "justify-end" : "justify-start"}`}
+              className={`flex ${
+                msg.senderId === userId ? "justify-end" : "justify-start"
+              }`}
             >
               <div
                 className={`p-3 rounded max-w-xs break-words ${
@@ -116,13 +130,14 @@ export default function ChatPage() {
               </div>
             </div>
           ))}
+          <div ref={messagesEndRef} />
         </div>
 
         <div className="mt-4 flex gap-2">
           <input
             type="text"
             value={newMessage}
-            onChange={e => setNewMessage(e.target.value)}
+            onChange={(e) => setNewMessage(e.target.value)}
             className="flex-1 px-4 py-2 rounded border dark:bg-gray-800 dark:text-white"
             placeholder="Scrie un mesaj..."
             onKeyDown={(e) => e.key === "Enter" && handleSend()}

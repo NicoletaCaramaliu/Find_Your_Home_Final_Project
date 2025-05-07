@@ -147,12 +147,14 @@ namespace Find_Your_Home.Services.AuthService
 
         private void SetRefreshTokenInCookie(RefreshToken refreshToken)
         {
+            var isDev = _configuration["ASPNETCORE_ENVIRONMENT"] == "Development";
+
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
                 Expires = refreshToken.Expires,
-                Secure = true,
-                SameSite = SameSiteMode.None,
+                Secure = !isDev, 
+                SameSite = isDev ? SameSiteMode.Lax : SameSiteMode.None,
                 Path = "/"
             };
 

@@ -9,28 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/ConversationsController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Hubs/ChatHub.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Chat/ChatMessage.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Chat/Conversation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Chat/DTO/ConversationPreviewDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Chat/DTO/SendMessageRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Chat/DTO/StartConversationRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/ConversationRepository/ConversationRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/ConversationRepository/IConversationRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Services/ConversationService/ConversationService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Services/ConversationService/IConversationService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Data/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Data/ApplicationDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Helpers/Extensions/ServiceExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Helpers/Extensions/ServiceExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Helpers/MapperProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Helpers/MapperProfile.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Models/Bookings/DTO/BlockingDto/BlockedIntervalRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Bookings/DTO/BlockingDto/BlockedIntervalRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/AvailabilitySlotService/AvailabilitySlotService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/AvailabilitySlotService/AvailabilitySlotService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/slots/SlotManagerModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/slots/SlotManagerModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/utils/parseError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/utils/parseError.ts" afterDir="false" />
-    </list>
+    <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,28 +54,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.Find_Your_Home: IIS Express.executor&quot;: &quot;Run&quot;,
-    &quot;Azure - Web App.Publish Find_Your_Home to Azure (1).executor&quot;: &quot;Run&quot;,
-    &quot;Azure - Web App.Publish Find_Your_Home to Azure.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/bookings&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.microsoft.azure.toolkit.intellij.identity.IdentityConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.Find_Your_Home: IIS Express.executor": "Run",
+    "Azure - Web App.Publish Find_Your_Home to Azure (1).executor": "Run",
+    "Azure - Web App.Publish Find_Your_Home to Azure.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "dev",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.microsoft.azure.toolkit.intellij.identity.IdentityConfigurable",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlserver.localdb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlserver.localdb"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Find_Your_Home: IIS Express">
     <configuration name="Publish Find_Your_Home to Azure (1)" type="AzureWebAppDeploy">
       <option name="appServicePlanName" value="ASP-realestaterg-9d7e" />
