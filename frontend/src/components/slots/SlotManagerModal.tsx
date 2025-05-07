@@ -19,8 +19,8 @@ interface Props {
 const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null); // 🔥 mesaj in modal
-  const [messageType, setMessageType] = useState<"success" | "error">("success"); // ✅
+  const [message, setMessage] = useState<string | null>(null); 
+  const [messageType, setMessageType] = useState<"success" | "error">("success"); 
 
   useEffect(() => {
     fetchSlots();
@@ -48,7 +48,7 @@ const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
       await fetchSlots();
     } catch (error) {
       console.error("Eroare la ștergerea slotului:", error);
-      setMessage(parseError(error)); // 🔥
+      setMessage(parseError(error)); 
       setMessageType("error");
     }
   };

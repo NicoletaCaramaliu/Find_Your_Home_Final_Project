@@ -5,7 +5,7 @@ interface InputProps {
   placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  className?: string; // 👈 permite className extern
+  className?: string; 
 }
 
 export function Input({

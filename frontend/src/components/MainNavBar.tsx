@@ -23,18 +23,15 @@ export default function MainNavBar() {
             Contul Meu
           </Link>
 
-          {/* Notificari */}
           <NotificationDropdown />
 
           <ChatDropdown />
 
-          {/* Toggle dark mode */}
           <div className="hidden md:flex justify-end">
             <ThemeToggle />
           </div>
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button className="text-white" aria-label="Open menu">
             <i className="fas fa-bars"></i>

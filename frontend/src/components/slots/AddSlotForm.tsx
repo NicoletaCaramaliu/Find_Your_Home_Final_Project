@@ -22,7 +22,6 @@ const AddSlotForm: React.FC<Props> = ({ propertyId, selectedDate, onSuccess, onC
 
     const now = new Date();
 
-    // verificare daca ziua e in trecut
     const selectedDateOnly = new Date(selectedDate.toDateString());
     if (selectedDateOnly < new Date(now.toDateString())) {
       setError("Nu poți adăuga un slot într-o zi din trecut.");
@@ -30,7 +29,6 @@ const AddSlotForm: React.FC<Props> = ({ propertyId, selectedDate, onSuccess, onC
       return;
     }
 
-    // verif daca ora de start este in trecut (daca este pentru azi)
     const [startHour, startMinute] = startTime.split(":").map(Number);
     const slotStart = new Date(selectedDate);
     slotStart.setHours(startHour, startMinute, 0, 0);
@@ -41,7 +39,6 @@ const AddSlotForm: React.FC<Props> = ({ propertyId, selectedDate, onSuccess, onC
       return;
     }
 
-    // verificare ora de sfarsit > ora de inceput
     const [endHour, endMinute] = endTime.split(":").map(Number);
     const slotEnd = new Date(selectedDate);
     slotEnd.setHours(endHour, endMinute, 0, 0);
