@@ -20,7 +20,9 @@ export const login = async (email: string, password: string) => {
   try {
     const response = await api.post(`${AUTH_URL}/login`, { email, password });
     const token = response.data.token;
+    const user = response.data.user;
     localStorage.setItem("token", token);
+    localStorage.setItem("userId", user.id);
     return response.data;
   } catch (error: any) {
     if (import.meta.env.MODE === "development") {

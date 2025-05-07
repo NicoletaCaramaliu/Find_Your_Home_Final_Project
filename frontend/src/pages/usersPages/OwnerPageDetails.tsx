@@ -4,17 +4,11 @@ import MainNavBar from '../../components/MainNavBar';
 import PropertiesList from '../../components/properties/PropertiesList';
 import { Property } from '../../types/Property';
 import api from "../../api"; 
-
-interface UserProfile {
-  email: string;
-  username: string;
-  profilePicture: string;
-  ownerId: string;
-}
+import OwnerProfileCard, { OwnerProfileCardProps } from '../../components/properties/OwnerProfileCard';
 
 const OwnerDetailsPage: React.FC = () => {
   const { ownerId } = useParams<{ ownerId: string }>();
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<OwnerProfileCardProps | null>(null);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,7 +18,19 @@ const OwnerDetailsPage: React.FC = () => {
         const res = await api.get('/User/getUser', {
           params: { id: ownerId },
         });
-        setUser(res.data);
+
+        const userData = res.data;
+
+        const transformedUser: OwnerProfileCardProps = {
+          username: userData.username,
+          profileImageUrl: userData.profilePicture,
+          ownerId: userData.id,
+          createdAt: userData.createdAt,
+          showContactButton: true,
+          disableLink: true,
+        };
+
+        setUser(transformedUser);
       } catch (err) {
         console.error("Error fetching user info:", err);
       }
@@ -47,11 +53,9 @@ const OwnerDetailsPage: React.FC = () => {
     fetchUserProperties();
   }, [ownerId]);
 
-  const defaultProfileImage = "/images/defaultProfPicture.avif";
-
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
         <div className="text-lg">Se încarcă...</div>
       </div>
     );
@@ -62,20 +66,12 @@ const OwnerDetailsPage: React.FC = () => {
       <MainNavBar />
 
       <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* User Info */}
-        <div className="flex items-center space-x-6 bg-white dark:bg-gray-800 rounded-xl shadow p-6 mb-10">
-          <img
-            src={user?.profilePicture || defaultProfileImage}
-            alt="Profile"
-            className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
-          />
-          <div>
-            <h2 className="text-2xl font-bold">{user?.username}</h2>
-            <p className="text-gray-600 dark:text-gray-300">{user?.email}</p>
+        {user && (
+          <div className="mb-10">
+            <OwnerProfileCard {...user} />
           </div>
-        </div>
+        )}
 
-        {/* User Properties */}
         <div className="mb-6">
           <h3 className="text-xl font-semibold mb-4">Proprietățile utilizatorului:</h3>
           {properties.length === 0 ? (

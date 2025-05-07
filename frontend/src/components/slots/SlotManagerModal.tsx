@@ -58,10 +58,8 @@ const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
       <div className="bg-white dark:bg-gray-900 p-6 rounded shadow max-w-2xl mx-auto mt-20">
         <h2 className="text-xl font-semibold mb-4 text-center">Sloturi disponibile</h2>
 
-        {/* Calendarul */}
         <SlotCalendar propertyId={propertyId} />
 
-        {/* Mesaj de succes sau eroare */}
         {message && (
           <div
             className={`mt-4 p-2 rounded text-center ${
@@ -74,7 +72,6 @@ const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
           </div>
         )}
 
-        {/* Lista sloturilor */}
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-2">Lista perioadelor existente</h3>
 
@@ -105,7 +102,6 @@ const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
           )}
         </div>
 
-        {/* Buton închidere */}
         <div className="mt-6 text-right">
           <button
             onClick={onClose}
