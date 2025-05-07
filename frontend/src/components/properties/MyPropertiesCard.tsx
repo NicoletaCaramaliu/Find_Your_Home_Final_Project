@@ -35,21 +35,19 @@ const MyPropertiesCard: React.FC<Props> = ({ properties, loading, onEdit, onNavi
               onClick={() => onNavigate(property.id)}
               className="bg-white dark:bg-gray-800 p-4 rounded shadow flex items-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition"
             >
-              {/* Imaginea proprietatii */}
+              
               <img
                 src={property.firstImageUrl || "/images/default.jpg"}
                 alt={property.name}
                 className="w-24 h-24 object-cover rounded-md border"
               />
 
-              {/* Detalii */}
               <div className="flex-grow">
                 <h2 className="text-xl font-bold">{property.name}</h2>
                 <p>{property.address}</p>
                 <p>Status: {property.isAvailable ? "Disponibil" : "Indisponibil"}</p>
               </div>
 
-              {/* Butoane */}
               <div className="flex flex-col gap-2">
                 <button
                   onClick={(e) => {

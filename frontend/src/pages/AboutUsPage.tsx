@@ -5,7 +5,7 @@ export default function AboutUsPage() {
         <section className="flex min-h-screen py-24 relative w-full items-center justify-center">
             <div className="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto">
                 <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-8 items-center">
-                    {/* Left Content */}
+                    
                     <div className="flex flex-col gap-10">
                         <div className="flex flex-col gap-4">
                             <h2 className="text-gray-900 text-4xl font-bold font-manrope leading-normal lg:text-start text-center">
@@ -34,7 +34,6 @@ export default function AboutUsPage() {
                         </Link>
                     </div>
 
-                    {/* Right Image */}
                     <img
                         className="lg:mx-0 mx-auto h-full rounded-3xl object-cover"
                         src="https://thumbs.dreamstime.com/b/laptop-real-estate-digital-interface-app-to-find-apartments-houses-buy-rent-website-online-searching-buying-selling-346205394.jpg"

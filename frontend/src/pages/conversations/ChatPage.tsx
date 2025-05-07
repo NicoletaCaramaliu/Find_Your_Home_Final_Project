@@ -68,7 +68,6 @@ export default function ChatPage() {
     };
   }, [conversationId]);
 
-  // Scroll automat la ultimul mesaj
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);

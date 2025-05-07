@@ -21,7 +21,6 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ sortBy, sortOrder, onSortCh
                 Sortează după:
             </label>
             <div className="flex space-x-2">
-                {/* Sort By Dropdown */}
                 <select
                     value={sortBy}
                     onChange={handleSortByChange}
@@ -34,7 +33,6 @@ const SortDropdown: React.FC<SortDropdownProps> = ({ sortBy, sortOrder, onSortCh
                     <option value="date">Data Adăugării</option>
                 </select>
 
-                {/* Sort Order Dropdown */}
                 <select
                     value={sortOrder}
                     onChange={handleSortOrderChange}

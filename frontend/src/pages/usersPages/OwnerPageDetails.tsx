@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import MainNavBar from '../../components/MainNavBar';
 import PropertiesList from '../../components/properties/PropertiesList';
 import { Property } from '../../types/Property';
-import { rolesMap } from "../../constants/roles";
 import api from "../../api"; 
 
 interface UserProfile {
@@ -11,7 +10,6 @@ interface UserProfile {
   username: string;
   profilePicture: string;
   ownerId: string;
-  role: string;
 }
 
 const OwnerDetailsPage: React.FC = () => {
@@ -74,9 +72,6 @@ const OwnerDetailsPage: React.FC = () => {
           <div>
             <h2 className="text-2xl font-bold">{user?.username}</h2>
             <p className="text-gray-600 dark:text-gray-300">{user?.email}</p>
-            <p className="text-sm mt-2 text-blue-600 dark:text-blue-400 font-medium">
-              {rolesMap[+user?.role!] ?? "Necunoscut"}
-            </p>
           </div>
         </div>
 
