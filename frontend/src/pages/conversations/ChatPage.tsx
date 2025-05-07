@@ -123,10 +123,15 @@ export default function ChatPage() {
         {conversationInfo && (
           <div className="flex items-center mb-4 gap-3">
             <img
-              src={conversationInfo.otherUserProfilePictureUrl}
+              src={conversationInfo.otherUserProfilePictureUrl || "/images/defaultProfilePicture.png"}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "/images/defaultProfilePicture.png";
+              }}
               alt="Profil"
               className="w-10 h-10 rounded-full object-cover"
             />
+
             <h3 className="text-lg font-semibold">{conversationInfo.otherUserName}</h3>
           </div>
         )}

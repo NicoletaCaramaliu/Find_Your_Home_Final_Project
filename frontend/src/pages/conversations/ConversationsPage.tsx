@@ -40,13 +40,27 @@ export default function ConversationsPage() {
                 className="flex items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition"
               >
                 <img
-                  src={conv.otherUserProfilePictureUrl}
+                  src={conv.otherUserProfilePictureUrl || "/images/defaultProfilePicture.png"}
                   alt={conv.otherUserName}
                   className="w-12 h-12 rounded-full object-cover mr-4"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/images/defaultProfilePicture.png";
+                  }}
                 />
+
                 <div className="flex-1">
                   <div className="font-semibold">{conv.otherUserName}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300 truncate">{conv.lastMessage}</div>
+                  <div
+                        className="text-sm text-gray-600 dark:text-gray-300 max-w-full overflow-hidden break-all whitespace-normal"
+                        style={{
+                          display: "-webkit-box",
+                          WebkitLineClamp: 1,
+                          WebkitBoxOrient: "vertical"
+                        }}
+                      >
+                        {conv.lastMessage}
+                    </div>
                 </div>
                 <div className="text-xs text-gray-500 ml-4 whitespace-nowrap">
                   {new Date(conv.lastMessageDate).toLocaleDateString()}

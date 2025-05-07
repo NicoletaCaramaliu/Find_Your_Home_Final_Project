@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import api from "../../api";
 import { parseError } from "../../utils/parseError";
 
@@ -20,12 +22,19 @@ const AvailableVisits: React.FC<Props> = ({ propertyId }) => {
   const [selectedVisit, setSelectedVisit] = useState<Visit | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [availableDays, setAvailableDays] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchVisits = async () => {
       try {
         const res = await api.get(`/availability/getVisits/${propertyId}`);
         setVisits(res.data);
+
+        const available = res.data
+          .filter((v: Visit) => v.status === "Available")
+          .map((v: Visit) => v.start.split("T")[0]);
+
+          setAvailableDays([...new Set<string>(available)]);
       } catch (err) {
         console.error("Eroare la preluarea vizitelor:", err);
       }
@@ -91,15 +100,29 @@ const AvailableVisits: React.FC<Props> = ({ propertyId }) => {
     }
   };
 
+  const highlightDates = availableDays.map(d => new Date(d));
+
   return (
     <div className="mt-8 bg-white dark:bg-gray-800 p-4 rounded shadow">
       <h2 className="text-xl font-semibold mb-4">Programează o vizită</h2>
 
-      <input
-        type="date"
+      <DatePicker
+        selected={selectedDate}
+        onChange={(date: Date | null) => {
+          if (date) setSelectedDate(date);
+        }}        
+        highlightDates={[
+          {
+            "react-datepicker__day--highlighted-custom-1": highlightDates,
+          },
+        ]}
+        dayClassName={(date) =>
+          availableDays.includes(date.toISOString().split("T")[0])
+            ? "bg-green-200 text-green-800 font-bold rounded"
+            : ""
+        }
         className="mb-4 p-2 rounded border dark:bg-gray-700 dark:text-white"
-        value={format(selectedDate, "yyyy-MM-dd")}
-        onChange={(e) => setSelectedDate(new Date(e.target.value))}
+        dateFormat="yyyy-MM-dd"
       />
 
       <div className="flex flex-wrap gap-4 mb-6">

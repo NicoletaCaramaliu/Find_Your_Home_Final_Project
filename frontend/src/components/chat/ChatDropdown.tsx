@@ -73,7 +73,7 @@ export default function ChatDropdown() {
                         }}
                       >
                         {conv.lastMessage}
-                      </div>
+                    </div>
 
                   </div>
                 </Link>
