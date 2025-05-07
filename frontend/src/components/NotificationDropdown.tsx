@@ -7,7 +7,7 @@ import {
   onNotification,
   offNotification,
   getNotificationConnectionState
-} from "../services/signalrManager";
+} from "../services/notificationHubManager";
 
 interface Notification {
   id: string;

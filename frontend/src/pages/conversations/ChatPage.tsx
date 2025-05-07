@@ -3,12 +3,12 @@ import { useParams } from "react-router-dom";
 import MainNavBar from "../../components/MainNavBar";
 import api from "../../api";
 import {
-  startNotificationConnection,
-  onNotification,
-  offNotification,
-  sendToHub,
-  notificationConnection,
-} from "../../services/signalrManager";
+  startChatConnection,
+  onChatEvent,
+  offChatEvent,
+  sendChat,
+  chatConnection,
+} from "../../services/chatHubManager";
 
 interface ChatMessage {
   id: string;
@@ -65,11 +65,11 @@ export default function ChatPage() {
     let isMounted = true;
 
     const connect = async () => {
-      await startNotificationConnection();
+      await startChatConnection(); 
 
       const waitAndJoin = () => {
-        if (notificationConnection.state === "Connected") {
-          sendToHub("JoinConversation", conversationId);
+        if (chatConnection.state === "Connected") {
+          sendChat("JoinConversation", conversationId); 
         } else {
           setTimeout(waitAndJoin, 300);
         }
@@ -79,16 +79,16 @@ export default function ChatPage() {
 
       const messageHandler = (data: ChatMessage) => {
         if (data.conversationId === conversationId && isMounted) {
-          setMessages(prev => [...prev, data]);
+          setMessages(prev => [...prev, data]); 
         }
       };
 
-      onNotification("ReceiveMessage", messageHandler);
+      onChatEvent("ReceiveMessage", messageHandler); 
 
       return () => {
         isMounted = false;
-        sendToHub("LeaveConversation", conversationId);
-        offNotification("ReceiveMessage", messageHandler);
+        sendChat("LeaveConversation", conversationId); 
+        offChatEvent("ReceiveMessage", messageHandler); 
       };
     };
 
