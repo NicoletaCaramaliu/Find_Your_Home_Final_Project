@@ -131,7 +131,10 @@ export default function ChatPage() {
           </div>
         )}
 
-        <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-800 p-4 rounded shadow space-y-3">
+          <div
+            className="bg-white dark:bg-gray-800 p-4 rounded shadow space-y-3 overflow-y-auto"
+            style={{ height: "calc(100vh - 320px)" }} 
+          >
           {messages.map((msg) => (
             <div
               key={msg.id}
