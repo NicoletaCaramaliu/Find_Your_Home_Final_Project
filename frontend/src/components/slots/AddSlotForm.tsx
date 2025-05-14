@@ -52,14 +52,18 @@ const AddSlotForm: React.FC<Props> = ({ propertyId, selectedDate, onSuccess, onC
     try {
       const payload = {
         propertyId,
-        date: selectedDate.toISOString(),
+        date: selectedDate.toLocaleDateString('en-CA'), 
         startTime,
         endTime,
         visitDurationInMinutes: duration,
       };
+      
 
       await api.post("/availability/addSlot", payload);
-      onSuccess();
+      setTimeout(() => {
+        onSuccess();
+      }, 1000);
+
     } catch (err: any) {
       setError(err.response?.data?.message || "Eroare la adăugarea slotului.");
     } finally {

@@ -107,7 +107,6 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
             <div>
               <h2 className="text-xl font-semibold">{user.username}</h2>
               <p className="text-gray-600 dark:text-gray-300">{user.email}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Rol: {rolesMap[user.role]}</p>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 Înregistrat din:{" "}
                 {new Date(user.createdAt).toLocaleDateString("ro-RO", {

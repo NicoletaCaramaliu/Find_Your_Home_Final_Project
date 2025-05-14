@@ -60,6 +60,20 @@ const MyBookingsPage: React.FC = () => {
     }
   };
 
+  const contactUser = async (userId: string) => {
+  try {
+    const res = await api.post("/Conversations/startOrGet", {
+      otherUserId: userId,
+    });
+    const conversationId = res.data;
+    navigate(`/chat/${conversationId}`);
+  } catch (err) {
+    console.error("Eroare la inițiere conversație:", err);
+    alert("A apărut o eroare la contactarea utilizatorului.");
+  }
+};
+
+
   const getStatusLabel = (status: string | number) => {
     switch (Number(status)) {
       case 0:
@@ -153,8 +167,17 @@ const MyBookingsPage: React.FC = () => {
                       >
                         Respinge
                       </button>
+                      
                     </div>
+
+                    
                   )}
+                  <button
+                  onClick={() => contactUser(booking.userId)}
+                  className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Contactează utilizatorul
+                </button>
                 </div>
               </div>
             ))}
