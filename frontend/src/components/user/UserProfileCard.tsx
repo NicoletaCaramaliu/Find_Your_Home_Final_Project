@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { rolesMap } from "../constants/roles";
-import { LoggedUser } from "../types/User";
-import api from "../api";
+import { rolesMap } from "../../constants/roles";
+import { LoggedUser } from "../../types/User";
+import api from "../../api";
 
 interface Props {
   user: LoggedUser;

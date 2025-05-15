@@ -138,7 +138,7 @@ const MyBookingsPage: React.FC = () => {
                     </h2>
                     <p
                       className="text-sm text-blue-500 cursor-pointer hover:underline"
-                      onClick={() => navigate(`/users/${booking.userId}`)}
+                      onClick={() => navigate(`/user/${booking.userId}`)}
                     >
                       Utilizator: {booking.userName}
                     </p>
