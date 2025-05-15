@@ -67,5 +67,19 @@ namespace Find_Your_Home.Models.Notifications
                 }
             };
         }
+        
+        public static NotificationMessage CreateReviewNotification(Guid reviewerId, string reviewerName, int rating)
+        {
+            return new NotificationMessage
+            {
+                Type = "new-review",
+                Title = "Ai primit un review!",
+                Message = $"{reviewerName} ți-a oferit un review de {rating} stele.",
+                Timestamp = DateTime.UtcNow,
+                SenderId = reviewerId,
+                SenderName = reviewerName
+            };
+        }
+
     }
 }

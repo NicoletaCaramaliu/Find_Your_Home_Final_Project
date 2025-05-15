@@ -21,6 +21,7 @@ using Find_Your_Home.Repositories.MessageRepository;
 using Find_Your_Home.Repositories.NotificationsRepository;
 using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
+using Find_Your_Home.Repositories.ReviewRepository;
 using Find_Your_Home.Repositories.UnitOfWork;
 using Find_Your_Home.Repositories.UserRepository;
 using Find_Your_Home.Services.AuthService;
@@ -32,6 +33,7 @@ using Find_Your_Home.Services.MessageService;
 using Find_Your_Home.Services.NotificationsService;
 using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
+using Find_Your_Home.Services.ReviewService;
 using Find_Your_Home.Services.UserService;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Diagnostics;
@@ -94,6 +96,8 @@ builder.Services.AddScoped<IConversationService, ConversationService>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 
 builder.Services.AddSwaggerGen(options =>

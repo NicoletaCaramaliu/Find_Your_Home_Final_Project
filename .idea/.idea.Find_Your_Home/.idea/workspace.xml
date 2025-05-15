@@ -10,17 +10,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d3684cd7-6dda-406c-b03e-0ff2bafc95ce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Reviews/Review.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Controllers/ReviewsController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Reviews/DTO/ReviewRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Reviews/DTO/ReviewResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/ReviewRepository/IReviewRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Repositories/ReviewRepository/ReviewRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Services/ReviewService/IReviewService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Find_Your_Home/Services/ReviewService/ReviewService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Find_Your_Home/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Data/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Data/ApplicationDbContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Find_Your_Home.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/AuthService/AuthService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/AuthService/AuthService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/UserProfileCard.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/properties/OwnerProfileCard.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/propertiesPages/PropertyDetailsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/propertiesPages/PropertyDetailsPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/usersPages/MyAccountPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/usersPages/MyAccountPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/usersPages/MyBookingsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/usersPages/MyBookingsPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/usersPages/OwnerPageDetails.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Helpers/MapperProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Helpers/MapperProfile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Models/Reviews/Review.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Reviews/Review.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Models/Users/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Models/Users/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/UserService/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/UserService/IUserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/Services/UserService/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/Services/UserService/UserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Find_Your_Home/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/Find_Your_Home/appsettings.Development.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,28 +100,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.Find_Your_Home: IIS Express.executor": "Run",
-    "Azure - Web App.Publish Find_Your_Home to Azure (1).executor": "Run",
-    "Azure - Web App.Publish Find_Your_Home to Azure.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/reviews",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "SolutionBuilderGeneralOptionsPage",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.Find_Your_Home: IIS Express.executor&quot;: &quot;Run&quot;,
+    &quot;Azure - Web App.Publish Find_Your_Home to Azure (1).executor&quot;: &quot;Run&quot;,
+    &quot;Azure - Web App.Publish Find_Your_Home to Azure.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/reviews&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;SolutionBuilderGeneralOptionsPage&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "sqlserver.localdb"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlserver.localdb&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Find_Your_Home: IIS Express">
     <configuration name="Publish Find_Your_Home to Azure (1)" type="AzureWebAppDeploy">
       <option name="appServicePlanName" value="ASP-realestaterg-9d7e" />
@@ -289,7 +295,8 @@
       <workItem from="1746468525719" duration="8752000" />
       <workItem from="1746640908339" duration="5885000" />
       <workItem from="1747247503933" duration="3683000" />
-      <workItem from="1747263666134" duration="3147000" />
+      <workItem from="1747263666134" duration="3865000" />
+      <workItem from="1747337144910" duration="593000" />
     </task>
     <task id="LOCAL-00001" summary="User Creation + Auth first try">
       <option name="closed" value="true" />

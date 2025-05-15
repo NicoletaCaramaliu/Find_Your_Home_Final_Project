@@ -34,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Models\Reviews\DTO\" />
     <Folder Include="Utils\" />
   </ItemGroup>
 

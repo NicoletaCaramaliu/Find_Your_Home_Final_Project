@@ -5,6 +5,8 @@ using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Favorites.DTO;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
+using Find_Your_Home.Models.Reviews;
+using Find_Your_Home.Models.Reviews.DTO;
 using Find_Your_Home.Models.Users;
 using Find_Your_Home.Models.Users.DTO;
 
@@ -58,6 +60,13 @@ namespace Find_Your_Home.Helpers
             CreateMap<BlockedInterval, BlockedIntervalRequest>();
             CreateMap<BlockedIntervalRequest, BlockedInterval>();
             
+            // Review
+            CreateMap<Review, ReviewRequest>();
+            CreateMap<ReviewRequest, Review>();
+            CreateMap<Review, ReviewResponse>()
+                .ForMember(dest => dest.ReviewerUsername, opt => opt.MapFrom(src => src.Reviewer.Username))
+                .ForMember(dest => dest.ReviewerProfilePicture, opt => opt.MapFrom(src => src.Reviewer.ProfilePicture));
+            CreateMap<ReviewResponse, Review>();
         }
     }
 }
