@@ -106,6 +106,12 @@ export default function NotificationDropdown() {
       } else if (["booking-accepted", "booking-rejected"].includes(notification.type)) {
         navigate("/my-reservations");
       }
+      else if (notification.type === "booking-cancelled") {
+        navigate("/my-reservations");
+      } else if (notification.type === "new-review") {
+        navigate(`/user/${localStorage.getItem("userId")}`); 
+      }
+
     } catch (error) {
       console.error('Failed to mark notification as read:', error);
     }
@@ -124,7 +130,7 @@ export default function NotificationDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-md shadow-lg overflow-hidden z-50">
+        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
           {connectionStatus === "connecting" && (
             <div className="p-4 text-yellow-600 text-center">Connecting...</div>
           )}

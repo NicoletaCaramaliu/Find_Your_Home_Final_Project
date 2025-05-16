@@ -86,7 +86,7 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
   const handleDeleteAccount = async () => {
     try {
       await api.delete("/User/deleteMe");
-      alert("Contul a fost șters. Ne pare rău că pleci 😢");
+      alert("Contul a fost șters. Ne pare rău că pleci ");
       window.location.href = "/login";
     } catch (error: any) {
       console.error("Eroare la ștergere cont:", error);

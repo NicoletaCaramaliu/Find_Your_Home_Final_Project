@@ -6,5 +6,7 @@
         public string Comment { get; set; } = string.Empty;
         public string ReviewerUsername { get; set; } = string.Empty;
         public string ReviewerProfilePicture { get; set; } = string.Empty;
+        public Guid ReviewerId { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

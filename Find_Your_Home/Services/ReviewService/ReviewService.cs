@@ -19,32 +19,42 @@ namespace Find_Your_Home.Services.ReviewService
         }
         public async Task<Review> AddReview(Guid reviewerId, Review review)
         {
-            if ( reviewerId == review.TargetUserId)
-            {
+            if (reviewerId == review.TargetUserId)
                 throw new AppException("You cannot review yourself.");
-            }
-            
+
             if (review.Rating < 1 || review.Rating > 5)
-            {
                 throw new AppException("Rating must be between 1 and 5.");
-            }
+
             if (string.IsNullOrWhiteSpace(review.Comment))
-            {
                 throw new AppException("Comment cannot be empty.");
-            }
-            
+
             review.ReviewerId = reviewerId;
-            
+
             await _reviewRepository.CreateAsync(review);
             await _reviewRepository.SaveAsync();
-            
-            var notification = NotificationMessage.CreateReviewNotification(
-                reviewerId, review.Reviewer.Username, review.Rating
-            );
-            await _notificationService.SendNotificationAsync(review.TargetUserId.ToString(), notification);
+
+            var savedReview = await _reviewRepository
+                .GetAllQueryable()
+                .Include(r => r.Reviewer)
+                .FirstOrDefaultAsync(r => r.Id == review.Id);
+
+            if (savedReview != null)
+            {
+                var notification = NotificationMessage.CreateReviewNotification(
+                    savedReview.ReviewerId,
+                    savedReview.Reviewer.Username,
+                    savedReview.Rating
+                );
+
+                await _notificationService.SendNotificationAsync(
+                    savedReview.TargetUserId.ToString(),
+                    notification
+                );
+            }
 
             return review;
         }
+
         
         public async Task<IEnumerable<Review>> GetReviewsByUserId(Guid targetedId)
         {

@@ -18,9 +18,10 @@ export interface UserCardProps {
   role?: number;
   showContactButton?: boolean;
   disableLink?: boolean;
+  averageRating?: number;
 }
 
-const UserProfileCard: React.FC<UserCardProps> = ({
+const UserCard: React.FC<UserCardProps> = ({
   username,
   profileImageUrl,
   userId,
@@ -28,6 +29,7 @@ const UserProfileCard: React.FC<UserCardProps> = ({
   role,
   showContactButton = true,
   disableLink = false,
+  averageRating, // ⭐ nou
 }) => {
   const defaultProfileImage = "/images/defaultProfilePicture.png";
   const formattedDate = new Date(createdAt).toLocaleDateString();
@@ -63,6 +65,13 @@ const UserProfileCard: React.FC<UserCardProps> = ({
         </div>
         <div className="ml-4">
           <p className="text-lg font-semibold text-gray-800 dark:text-white">{username}</p>
+          
+          {averageRating !== undefined && (
+            <p className="text-yellow-500 text-sm font-medium">
+              ⭐ Nota medie: {averageRating.toFixed(2)} / 5
+            </p>
+          )}
+
           {role !== undefined && (
             <p className="text-sm text-gray-500 dark:text-gray-400">{rolesMap[role]}</p>
           )}
@@ -90,4 +99,4 @@ const UserProfileCard: React.FC<UserCardProps> = ({
   );
 };
 
-export default UserProfileCard;
+export default UserCard;

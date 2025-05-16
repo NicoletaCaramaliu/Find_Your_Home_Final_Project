@@ -65,7 +65,9 @@ namespace Find_Your_Home.Helpers
             CreateMap<ReviewRequest, Review>();
             CreateMap<Review, ReviewResponse>()
                 .ForMember(dest => dest.ReviewerUsername, opt => opt.MapFrom(src => src.Reviewer.Username))
-                .ForMember(dest => dest.ReviewerProfilePicture, opt => opt.MapFrom(src => src.Reviewer.ProfilePicture));
+                .ForMember(dest => dest.ReviewerProfilePicture, opt => opt.MapFrom(src => src.Reviewer.ProfilePicture))
+                .ForMember(dest => dest.ReviewerId, opt => opt.MapFrom(src => src.Reviewer.Id));
+            
             CreateMap<ReviewResponse, Review>();
         }
     }

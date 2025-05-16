@@ -68,6 +68,23 @@ namespace Find_Your_Home.Models.Notifications
             };
         }
         
+        public static NotificationMessage CreateBookingCancelled(Booking booking, Guid senderId, string senderName)
+        {
+            return new NotificationMessage
+            {
+                Type = "booking-cancelled",
+                Title = "Rezervare Anulată",
+                Message = $"Rezervarea ta a fost anulată de {senderName}.",
+                Timestamp = DateTime.UtcNow,
+                SenderId = senderId,
+                SenderName = senderName,
+                Data = new
+                {
+                    BookingId = booking.Id
+                }
+            };
+        }
+        
         public static NotificationMessage CreateReviewNotification(Guid reviewerId, string reviewerName, int rating)
         {
             return new NotificationMessage

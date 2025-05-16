@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import MainNavBar from "../../components/MainNavBar";
 import api from "../../api";
 import {
@@ -19,12 +19,15 @@ interface ChatMessage {
 }
 
 interface ConversationInfo {
+  otherUserId: string;
   otherUserName: string;
   otherUserProfilePictureUrl: string;
 }
 
 export default function ChatPage() {
   const { id: conversationId } = useParams();
+  const navigate = useNavigate();
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [userId, setUserId] = useState("");
@@ -52,6 +55,7 @@ export default function ChatPage() {
         const convo = res.data.find((c: any) => c.conversationId === conversationId);
         if (convo) {
           setConversationInfo({
+            otherUserId: convo.otherUserId,
             otherUserName: convo.otherUserName,
             otherUserProfilePictureUrl: convo.otherUserProfilePictureUrl,
           });
@@ -104,7 +108,7 @@ export default function ChatPage() {
         message: newMessage,
       });
 
-      setNewMessage(""); 
+      setNewMessage("");
     } catch (err) {
       console.error("Eroare la trimiterea mesajului:", err);
     }
@@ -129,17 +133,18 @@ export default function ChatPage() {
                 e.currentTarget.src = "/images/defaultProfilePicture.png";
               }}
               alt="Profil"
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover cursor-pointer hover:ring-2 hover:ring-blue-500 transition"
+              title="Vezi profil utilizator"
+              onClick={() => navigate(`/user/${conversationInfo.otherUserId}`)}
             />
-
             <h3 className="text-lg font-semibold">{conversationInfo.otherUserName}</h3>
           </div>
         )}
 
-          <div
-            className="bg-white dark:bg-gray-800 p-4 rounded shadow space-y-3 overflow-y-auto"
-            style={{ height: "calc(100vh - 320px)" }} 
-          >
+        <div
+          className="bg-white dark:bg-gray-800 p-4 rounded shadow space-y-3 overflow-y-auto"
+          style={{ height: "calc(100vh - 320px)" }}
+        >
           {messages.map((msg) => (
             <div
               key={msg.id}
