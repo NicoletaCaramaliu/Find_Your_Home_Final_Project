@@ -1,6 +1,7 @@
 ﻿using Find_Your_Home.Exceptions;
 using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Reviews;
+using Find_Your_Home.Repositories.BookingRepository;
 using Find_Your_Home.Repositories.ReviewRepository;
 using Find_Your_Home.Services.NotificationsService;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,15 @@ namespace Find_Your_Home.Services.ReviewService
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly INotificationService _notificationService;
+        private readonly IBookingRepository _bookingRepository;
         
-        public ReviewService(IReviewRepository reviewRepository, INotificationService notificationService)
+        public ReviewService(IReviewRepository reviewRepository, INotificationService notificationService, IBookingRepository bookingRepository)
         {
+            _bookingRepository = bookingRepository;
             _notificationService = notificationService;
             _reviewRepository = reviewRepository;
         }
+       
         public async Task<Review> AddReview(Guid reviewerId, Review review)
         {
             if (reviewerId == review.TargetUserId)
@@ -27,6 +31,18 @@ namespace Find_Your_Home.Services.ReviewService
 
             if (string.IsNullOrWhiteSpace(review.Comment))
                 throw new AppException("Comment cannot be empty.");
+
+            var hasBooking = await _bookingRepository
+                .GetAllQueryable()
+                .Include(b => b.Property)
+                .AnyAsync(b =>
+                    (b.UserId == reviewerId && b.Property.OwnerId == review.TargetUserId) ||
+                    (b.UserId == review.TargetUserId && b.Property.OwnerId == reviewerId));
+
+            if (!hasBooking)
+                throw new AppException("NO_REVIEW_PERMISSION");
+            
+             
 
             review.ReviewerId = reviewerId;
 
@@ -54,6 +70,7 @@ namespace Find_Your_Home.Services.ReviewService
 
             return review;
         }
+
 
         
         public async Task<IEnumerable<Review>> GetReviewsByUserId(Guid targetedId)

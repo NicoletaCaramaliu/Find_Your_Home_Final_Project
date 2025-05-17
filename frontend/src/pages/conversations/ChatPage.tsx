@@ -118,6 +118,17 @@ export default function ChatPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const formatDateHeader = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    };
+    return new Date(dateString + "Z").toLocaleDateString("ro-RO", options);
+  };
+
+  let lastDate = "";
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 flex flex-col">
       <MainNavBar />
@@ -145,27 +156,38 @@ export default function ChatPage() {
           className="bg-white dark:bg-gray-800 p-4 rounded shadow space-y-3 overflow-y-auto"
           style={{ height: "calc(100vh - 320px)" }}
         >
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex ${msg.senderId === userId ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={`p-3 rounded max-w-xs break-words ${
-                  msg.senderId === userId
-                    ? "bg-blue-600 text-white rounded-br-none"
-                    : "bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-bl-none"
-                }`}
-              >
-                <div>{msg.message}</div>
-                <div className="text-xs mt-1 text-gray-500 dark:text-gray-400 text-right">
-                  {msg.createdAt && !isNaN(new Date(msg.createdAt).getTime())
-                    ? new Date(msg.createdAt).toLocaleTimeString()
-                    : ""}
+          {messages.map((msg, index) => {
+            const currentDate = new Date(msg.createdAt).toLocaleDateString("ro-RO");
+            const showDateHeader = currentDate !== lastDate;
+            if (showDateHeader) lastDate = currentDate;
+
+            return (
+              <div key={msg.id}>
+                {showDateHeader && (
+                  <div className="text-center text-sm text-gray-500 dark:text-gray-400 my-2">
+                    — {formatDateHeader(msg.createdAt)} —
+                  </div>
+                )}
+                <div className={`flex ${msg.senderId === userId ? "justify-end" : "justify-start"}`}>
+                  <div
+                    className={`p-3 rounded max-w-xs break-words ${
+                      msg.senderId === userId
+                        ? "bg-blue-600 text-white rounded-br-none"
+                        : "bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-bl-none"
+                    }`}
+                  >
+                    <div>{msg.message}</div>
+                    <div className="text-xs mt-1 text-gray-200 dark:text-gray-400 text-right">
+                      {new Date(msg.createdAt + "Z").toLocaleTimeString("ro-RO", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
           <div ref={bottomRef} />
         </div>
 

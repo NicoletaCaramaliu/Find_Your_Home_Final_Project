@@ -3,7 +3,7 @@ import api from "../../api";
 
 interface Props {
   targetUserId: string;
-  onReviewAdded: () => void; // pentru refresh listă după trimitere
+  onReviewAdded: () => void;
 }
 
 const AddReviewForm: React.FC<Props> = ({ targetUserId, onReviewAdded }) => {

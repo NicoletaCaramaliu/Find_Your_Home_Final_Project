@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { formatUtcToLocal } from "../../utils/formatDate";
+
 
 export interface ReviewItemProps {
   rating: number;
@@ -50,11 +52,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
           {reviewerUsername}
         </p>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-          {new Date(createdAt).toLocaleDateString("ro-RO", {
-            year: "numeric",
-            month: "long",
-            day: "numeric"
-          })}
+          {formatUtcToLocal(createdAt)}
         </p>
 
         <p className="text-yellow-500 text-sm">{stars}</p>

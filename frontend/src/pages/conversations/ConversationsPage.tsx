@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainNavBar from "../../components/MainNavBar";
 import api from "../../api";
+import { formatUtcToLocal } from "../../utils/formatDate";
 
 interface ConversationPreview {
   conversationId: string;
@@ -63,7 +64,7 @@ export default function ConversationsPage() {
                     </div>
                 </div>
                 <div className="text-xs text-gray-500 ml-4 whitespace-nowrap">
-                  {new Date(conv.lastMessageDate).toLocaleDateString()}
+                  {formatUtcToLocal(conv.lastMessageDate)}
                 </div>
               </li>
             ))}

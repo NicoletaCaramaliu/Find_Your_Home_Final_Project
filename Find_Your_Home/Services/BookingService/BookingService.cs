@@ -67,6 +67,10 @@ namespace Find_Your_Home.Services.BookingService
 
             if (property.OwnerId == userId)
                 throw new AppException("CANNOT_BOOK_OWN_PROPERTY");
+            
+            var timeDifference = booking.SlotDate - DateTime.UtcNow;
+            if (timeDifference.TotalHours < 12)
+                throw new AppException("CANNOT_BOOK_SLOT_WITH_LESS_THAN_12_HOURS");
 
             booking.UserId = userId;
             booking.Status = BookingStatus.Pending;
@@ -173,7 +177,7 @@ namespace Find_Your_Home.Services.BookingService
             var owner = await _userService.GetUserById(userId);
 
             await _notificationService.SendNotificationAsync(
-                booking.Property.OwnerId.ToString(),
+                booking.UserId.ToString(),
                 NotificationMessage.CreateBookingCancelled(booking, userId, owner.Username)
             );
             
