@@ -10,6 +10,7 @@ using Find_Your_Home.Services.NotificationsService;
 using Find_Your_Home.Services.NotificationsService;
 using Find_Your_Home.Services.PropertyService;
 using Find_Your_Home.Services.UserService;
+using Microsoft.EntityFrameworkCore;
 
 namespace Find_Your_Home.Services.BookingService
 {
@@ -201,6 +202,18 @@ namespace Find_Your_Home.Services.BookingService
                 
             }
             
+        }
+
+        public async Task<bool> HasBooking(Guid reviewerId, Guid targetUserId)
+        {
+            var hasBooking = await _bookingRepository
+                .GetAllQueryable()
+                .Include(b => b.Property)
+                .AnyAsync(b =>
+                    (b.UserId == reviewerId && b.Property.OwnerId == targetUserId) ||
+                    (b.UserId == targetUserId && b.Property.OwnerId == reviewerId));
+
+            return hasBooking;
         }
     }
 }

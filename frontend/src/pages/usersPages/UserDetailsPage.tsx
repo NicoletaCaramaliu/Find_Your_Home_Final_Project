@@ -17,6 +17,8 @@ const UserDetailsPage: React.FC = () => {
   const [role, setRole] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [reviewRefreshKey, setReviewRefreshKey] = useState(0);
+  const [canReview, setCanReview] = useState(false);
+  const [canCheckDone, setCanCheckDone] = useState(false);
 
   const currentUserId = localStorage.getItem("userId");
 
@@ -37,7 +39,6 @@ const UserDetailsPage: React.FC = () => {
           createdAt: userData.createdAt,
           showContactButton: true,
           disableLink: true,
-          role: userData.role,
         };
 
         setUser(transformedUser);
@@ -61,26 +62,40 @@ const UserDetailsPage: React.FC = () => {
   }, [userId]);
 
   useEffect(() => {
-  const fetchReviews = async () => {
-    try {
-      if (userId) {
-        const reviewRes = await api.get(`/reviews/getReviews/${userId}`);
-
-        const sorted = reviewRes.data.sort(
-          (a: ReviewItemProps, b: ReviewItemProps) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        
-        setReviews(sorted);
+    const fetchReviews = async () => {
+      try {
+        if (userId) {
+          const reviewRes = await api.get(`/reviews/getReviews/${userId}`);
+          const sorted = reviewRes.data.sort(
+            (a: ReviewItemProps, b: ReviewItemProps) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          setReviews(sorted);
+        }
+      } catch (err) {
+        console.error("Eroare la încărcarea recenziilor:", err);
       }
-    } catch (err) {
-      console.error("Eroare la încărcarea recenziilor:", err);
-    }
-  };
+    };
 
-  fetchReviews();
-}, [userId, reviewRefreshKey]);
+    fetchReviews();
+  }, [userId, reviewRefreshKey]);
 
+  useEffect(() => {
+    const checkCanReview = async () => {
+      if (!userId || !currentUserId || userId === currentUserId) return;
+
+      try {
+        const res = await api.get(`/reviews/canReview/${userId}`);
+        setCanReview(res.data === true);
+      } catch (err) {
+        setCanReview(false);
+      } finally {
+        setCanCheckDone(true);
+      }
+    };
+
+    checkCanReview();
+  }, [userId, currentUserId]);
 
   const averageRating = reviews.length
     ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
@@ -101,7 +116,7 @@ const UserDetailsPage: React.FC = () => {
       <div className="max-w-5xl mx-auto px-4 py-8">
         {user && (
           <div className="mb-10">
-            <UserCard {...user} averageRating={averageRating} /> {/* ✅ */}
+            <UserCard {...user} averageRating={averageRating} />
           </div>
         )}
 
@@ -115,22 +130,30 @@ const UserDetailsPage: React.FC = () => {
             )}
           </div>
 
-          {userId && currentUserId && userId !== currentUserId && (
-            <AddReviewForm
-              targetUserId={userId}
-              onReviewAdded={() => setReviewRefreshKey(prev => prev + 1)}
-            />
+          {userId && currentUserId && userId !== currentUserId && canCheckDone && (
+            canReview ? (
+              <AddReviewForm
+                targetUserId={userId}
+                onReviewAdded={() => setReviewRefreshKey(prev => prev + 1)}
+              />
+            ) : (
+              <p className="mt-4 text-sm text-gray-500 italic">
+                Poți lăsa o recenzie doar dacă ai avut contact(rezervări comune) cu acest utilizator.
+              </p>
+            )
           )}
         </div>
 
         {[0, 2, 3].includes(role ?? -1) && (
           <div className="mb-6">
             <h3 className="text-xl font-semibold mb-4">Proprietățile utilizatorului:</h3>
+            <div className="bg-white dark:bg-gray-700 rounded shadow p-4 max-h-[500px] overflow-y-auto">
             {properties.length === 0 ? (
               <p>Nu a adăugat nicio proprietate încă.</p>
             ) : (
               <PropertiesList properties={properties} noResults={false} />
             )}
+            </div>
           </div>
         )}
       </div>

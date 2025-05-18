@@ -99,7 +99,6 @@ const MyAccountPage: React.FC = () => {
           <>
             <UserProfileCard user={user} refreshUser={fetchLoggedUser} />
 
-            {/* Confirmare logout */}
             <div className="mt-4 space-y-2">
               {!showLogoutConfirm ? (
                 <button
@@ -146,7 +145,16 @@ const MyAccountPage: React.FC = () => {
             >
               Vezi rezervările făcute
             </button>
-          )}
+            )}
+
+            {user && (
+              <button
+                onClick={() => navigate(`/user/${user.id}`)}
+                className="mb-4 mt-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700"
+              >
+                Vezi recenziile primite
+              </button>
+            )}
 
 
 
@@ -171,12 +179,14 @@ const MyAccountPage: React.FC = () => {
                   />
                 )}
 
-                <MyPropertiesCard
-                  properties={properties}
-                  loading={loading}
-                  onEdit={(id) => navigate(`/edit-property/${id}`)}
-                  onNavigate={(id) => navigate(`/properties/${id}`)}
-                />
+                <div className="bg-white dark:bg-gray-700 rounded shadow p-4 max-h-[500px] overflow-y-auto">
+                  <MyPropertiesCard
+                    properties={properties}
+                    loading={loading}
+                    onEdit={(id) => navigate(`/edit-property/${id}`)}
+                    onNavigate={(id) => navigate(`/properties/${id}`)}
+                  />
+                </div>
               </>
             )}
 
