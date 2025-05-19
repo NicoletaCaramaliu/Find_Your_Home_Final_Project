@@ -153,13 +153,14 @@ namespace Find_Your_Home.Services.AuthService
             {
                 HttpOnly = true,
                 Expires = refreshToken.Expires,
-                Secure = !isDev, 
+                Secure = !isDev,
                 SameSite = isDev ? SameSiteMode.Lax : SameSiteMode.None,
                 Path = "/"
             };
 
             _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
         }
+
         
         public async Task<(string token, User user)> LoginWithUser(UserLoginDto request)
         {

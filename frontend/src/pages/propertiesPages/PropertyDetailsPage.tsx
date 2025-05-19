@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import MainNavBar from '../../components/MainNavBar';
-import OwnerProfileCard from '../../components/properties/OwnerProfileCard';
+import OwnerProfileCard from '../../components/user/UserCard';
 import api from "../../api";
 import { Property } from '../../types/PropertyDetails';
 import { Heart } from 'lucide-react';
@@ -223,7 +223,7 @@ const PropertyDetailsPage: React.FC = () => {
             <OwnerProfileCard
             username={owner.username}
             profileImageUrl={owner.profilePicture}
-            ownerId={owner.id}
+            userId={owner.id}
             createdAt={owner.createdAt}
           />
           )}
