@@ -23,7 +23,8 @@ namespace Find_Your_Home.Services.MessageService
             {
                 ConversationId = request.ConversationId,
                 SenderId = senderId,
-                Message = request.Message
+                Message = request.Message,
+                CreatedAt = DateTime.UtcNow
             };
 
             await _messageRepository.CreateAsync(message);
