@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import SlotCalendar from "./SlotCalendar";
 import api from "../../api";
-import { parseError } from "../../utils/parseError"; 
+import { parseError } from "../../utils/parseError";
 
 interface Slot {
   id: string;
@@ -19,8 +19,8 @@ interface Props {
 const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null); 
-  const [messageType, setMessageType] = useState<"success" | "error">("success"); 
+  const [message, setMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<"success" | "error">("success");
 
   useEffect(() => {
     fetchSlots();
@@ -32,7 +32,6 @@ const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
       const response = await api.get<Slot[]>(`/availability/getSlots/${propertyId}`);
       setSlots(response.data);
     } catch (error) {
-      console.error("Eroare la încărcarea sloturilor:", error);
       setMessage(parseError(error));
       setMessageType("error");
     } finally {
@@ -47,15 +46,23 @@ const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
       setMessageType("success");
       await fetchSlots();
     } catch (error) {
-      console.error("Eroare la ștergerea slotului:", error);
-      setMessage(parseError(error)); 
+      setMessage(parseError(error));
       setMessageType("error");
     }
   };
 
   return (
     <Dialog open={true} onClose={onClose} className="fixed inset-0 z-50 p-4 bg-black bg-opacity-50 overflow-y-auto">
-      <div className="bg-white dark:bg-gray-900 p-6 rounded shadow max-w-2xl mx-auto mt-20">
+      <div className="relative bg-white dark:bg-gray-900 p-6 rounded shadow max-w-2xl mx-auto mt-20">
+
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-2xl font-bold focus:outline-none"
+          aria-label="Închide"
+        >
+          ×
+        </button>
+
         <h2 className="text-xl font-semibold mb-4 text-center">Sloturi disponibile</h2>
 
         <SlotCalendar propertyId={propertyId} />
@@ -81,34 +88,37 @@ const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
             <div className="text-center text-gray-500 dark:text-gray-400">Nu există perioade setate.</div>
           ) : (
             <div className="space-y-4">
-              {slots.map((slot) => (
-                <div
-                  key={slot.id}
-                  className="flex justify-between items-center p-2 border rounded dark:border-gray-700"
-                >
-                  <div className="text-sm text-gray-700 dark:text-gray-200">
-                    <div>{new Date(slot.date).toLocaleDateString()}</div>
-                    <div>{slot.startTime} - {slot.endTime}</div>
+              {slots
+                .filter(slot => new Date(slot.date) >= new Date(new Date().toDateString()))
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .length === 0 ? (
+                  <div className="text-center text-gray-500 dark:text-gray-400">Nu există perioade viitoare.</div>
+                ) : (
+                  <div className="space-y-4 max-h-64 overflow-y-auto border rounded p-2 dark:border-gray-700">
+                    {slots
+                      .filter(slot => new Date(slot.date) >= new Date(new Date().toDateString()))
+                      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                      .map((slot) => (
+                        <div
+                          key={slot.id}
+                          className="flex justify-between items-center p-2 border rounded dark:border-gray-700"
+                        >
+                          <div className="text-sm text-gray-700 dark:text-gray-200">
+                            <div>{new Date(slot.date).toLocaleDateString()}</div>
+                            <div>{slot.startTime} - {slot.endTime}</div>
+                          </div>
+                          <button
+                            onClick={() => handleDeleteSlot(slot.id)}
+                            className="text-red-600 hover:underline dark:text-red-400 text-sm"
+                          >
+                            Șterge
+                          </button>
+                        </div>
+                      ))}
                   </div>
-                  <button
-                    onClick={() => handleDeleteSlot(slot.id)}
-                    className="text-red-600 hover:underline dark:text-red-400 text-sm"
-                  >
-                    Șterge
-                  </button>
-                </div>
-              ))}
+              )}
             </div>
           )}
-        </div>
-
-        <div className="mt-6 text-right">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-          >
-            Închide
-          </button>
         </div>
       </div>
     </Dialog>

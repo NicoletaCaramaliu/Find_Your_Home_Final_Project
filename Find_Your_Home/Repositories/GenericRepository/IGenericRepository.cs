@@ -8,6 +8,7 @@ namespace Find_Your_Home.Repositories.GenericRepository
         // Get all data
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<IQueryable<TEntity>> GetAllQueryableAsync();
+        IQueryable<TEntity> GetAllQueryable();
 
 
         // Create

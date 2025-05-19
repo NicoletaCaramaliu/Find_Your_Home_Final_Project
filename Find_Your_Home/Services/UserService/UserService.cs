@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Find_Your_Home.Data;
 using Find_Your_Home.Exceptions;
+using Find_Your_Home.Models.Reviews;
 using Find_Your_Home.Models.Users;
 using Find_Your_Home.Repositories.UserRepository;
 
@@ -118,7 +119,7 @@ namespace Find_Your_Home.Services.UserService
 
             return true;
         }
-
+        
 
         
     }

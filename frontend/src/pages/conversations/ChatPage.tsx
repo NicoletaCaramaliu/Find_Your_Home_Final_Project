@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import MainNavBar from "../../components/MainNavBar";
 import api from "../../api";
 import {
@@ -19,12 +19,15 @@ interface ChatMessage {
 }
 
 interface ConversationInfo {
+  otherUserId: string;
   otherUserName: string;
   otherUserProfilePictureUrl: string;
 }
 
 export default function ChatPage() {
   const { id: conversationId } = useParams();
+  const navigate = useNavigate();
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [userId, setUserId] = useState("");
@@ -52,6 +55,7 @@ export default function ChatPage() {
         const convo = res.data.find((c: any) => c.conversationId === conversationId);
         if (convo) {
           setConversationInfo({
+            otherUserId: convo.otherUserId,
             otherUserName: convo.otherUserName,
             otherUserProfilePictureUrl: convo.otherUserProfilePictureUrl,
           });
@@ -104,7 +108,7 @@ export default function ChatPage() {
         message: newMessage,
       });
 
-      setNewMessage(""); 
+      setNewMessage("");
     } catch (err) {
       console.error("Eroare la trimiterea mesajului:", err);
     }
@@ -113,6 +117,17 @@ export default function ChatPage() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const formatDateHeader = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    };
+    return new Date(dateString + "Z").toLocaleDateString("ro-RO", options);
+  };
+
+  let lastDate = "";
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 flex flex-col">
@@ -129,38 +144,50 @@ export default function ChatPage() {
                 e.currentTarget.src = "/images/defaultProfilePicture.png";
               }}
               alt="Profil"
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover cursor-pointer hover:ring-2 hover:ring-blue-500 transition"
+              title="Vezi profil utilizator"
+              onClick={() => navigate(`/user/${conversationInfo.otherUserId}`)}
             />
-
             <h3 className="text-lg font-semibold">{conversationInfo.otherUserName}</h3>
           </div>
         )}
 
-          <div
-            className="bg-white dark:bg-gray-800 p-4 rounded shadow space-y-3 overflow-y-auto"
-            style={{ height: "calc(100vh - 320px)" }} 
-          >
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex ${msg.senderId === userId ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={`p-3 rounded max-w-xs break-words ${
-                  msg.senderId === userId
-                    ? "bg-blue-600 text-white rounded-br-none"
-                    : "bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-bl-none"
-                }`}
-              >
-                <div>{msg.message}</div>
-                <div className="text-xs mt-1 text-gray-500 dark:text-gray-400 text-right">
-                  {msg.createdAt && !isNaN(new Date(msg.createdAt).getTime())
-                    ? new Date(msg.createdAt).toLocaleTimeString()
-                    : ""}
+        <div
+          className="bg-white dark:bg-gray-800 p-4 rounded shadow space-y-3 overflow-y-auto"
+          style={{ height: "calc(100vh - 320px)" }}
+        >
+          {messages.map((msg, index) => {
+            const currentDate = new Date(msg.createdAt).toLocaleDateString("ro-RO");
+            const showDateHeader = currentDate !== lastDate;
+            if (showDateHeader) lastDate = currentDate;
+
+            return (
+              <div key={msg.id}>
+                {showDateHeader && (
+                  <div className="text-center text-sm text-gray-500 dark:text-gray-400 my-2">
+                    — {formatDateHeader(msg.createdAt)} —
+                  </div>
+                )}
+                <div className={`flex ${msg.senderId === userId ? "justify-end" : "justify-start"}`}>
+                  <div
+                    className={`p-3 rounded max-w-xs break-words ${
+                      msg.senderId === userId
+                        ? "bg-blue-600 text-white rounded-br-none"
+                        : "bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-bl-none"
+                    }`}
+                  >
+                    <div>{msg.message}</div>
+                    <div className="text-xs mt-1 text-gray-200 dark:text-gray-400 text-right">
+                      {new Date(msg.createdAt + "Z").toLocaleTimeString("ro-RO", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
           <div ref={bottomRef} />
         </div>
 

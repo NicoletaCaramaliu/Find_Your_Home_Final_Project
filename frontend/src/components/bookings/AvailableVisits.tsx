@@ -110,7 +110,7 @@ const AvailableVisits: React.FC<Props> = ({ propertyId }) => {
         selected={selectedDate}
         onChange={(date: Date | null) => {
           if (date) setSelectedDate(date);
-        }}        
+        }}
         highlightDates={[
           {
             "react-datepicker__day--highlighted-custom-1": highlightDates,
@@ -123,6 +123,7 @@ const AvailableVisits: React.FC<Props> = ({ propertyId }) => {
         }
         className="mb-4 p-2 rounded border dark:bg-gray-700 dark:text-white"
         dateFormat="yyyy-MM-dd"
+        minDate={new Date()} 
       />
 
       <div className="flex flex-wrap gap-4 mb-6">

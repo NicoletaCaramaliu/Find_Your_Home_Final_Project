@@ -1,4 +1,5 @@
-﻿using Find_Your_Home.Models.Users;
+﻿using Find_Your_Home.Models.Reviews;
+using Find_Your_Home.Models.Users;
 
 namespace Find_Your_Home.Services.UserService
 {
@@ -19,5 +20,6 @@ namespace Find_Your_Home.Services.UserService
         Task<User?> GetUserByResetToken(string token);
         
         Task<bool> DeleteUserAndDependencies(Guid userId);
+        
     }
 }

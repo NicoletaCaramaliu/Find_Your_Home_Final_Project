@@ -36,6 +36,17 @@ const MyReservationsPage: React.FC = () => {
     fetchBookings();
   }, []);
 
+  const cancelBooking = async (id: string) => {
+    try {
+      await api.post(`/bookings/cancel/${id}`);
+      setBookings((prev) =>
+        prev.map((b) => (b.id === id ? { ...b, status: "3" } : b))
+      );
+    } catch (err) {
+      console.error("Eroare la anulare rezervare:", err);
+    }
+  };
+
   const getStatusLabel = (status: string | number) => {
     switch (Number(status)) {
       case 0:
@@ -45,6 +56,8 @@ const MyReservationsPage: React.FC = () => {
       case 2:
         return "Respinsă";
       case 3:
+        return "Anulată";
+      case 4:
         return "Completată";
       default:
         return "Necunoscut";
@@ -54,7 +67,6 @@ const MyReservationsPage: React.FC = () => {
   const filteredBookings = bookings.filter(
     (b) => statusFilter === "all" || Number(b.status) === Number(statusFilter)
   );
-  
 
   return (
     <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
@@ -73,7 +85,8 @@ const MyReservationsPage: React.FC = () => {
             <option value="0">În așteptare</option>
             <option value="1">Confirmată</option>
             <option value="2">Respinsă</option>
-            <option value="3">Completată</option>
+            <option value="3">Anulată</option>
+            <option value="4">Completată</option>
           </select>
         </div>
 
@@ -88,22 +101,36 @@ const MyReservationsPage: React.FC = () => {
                 key={booking.id}
                 className="bg-white dark:bg-gray-800 p-4 rounded shadow"
               >
-                <div>
-                  <h2
-                    className="text-xl font-semibold text-blue-600 hover:underline cursor-pointer"
-                    onClick={() => navigate(`/properties/${booking.propertyId}`)}
-                  >
-                    {booking.propertyName}
-                  </h2>
-                  <p className="mt-2">
-                    {format(new Date(booking.slotDate), "yyyy-MM-dd")} — {booking.startTime} - {booking.endTime}
-                  </p>
-                  <p>
-                    Status:{" "}
-                    <span className="font-semibold">
-                      {getStatusLabel(booking.status)}
-                    </span>
-                  </p>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h2
+                      className="text-xl font-semibold text-blue-600 hover:underline cursor-pointer"
+                      onClick={() =>
+                        navigate(`/properties/${booking.propertyId}`)
+                      }
+                    >
+                      {booking.propertyName}
+                    </h2>
+                    <p className="mt-2">
+                      {format(new Date(booking.slotDate), "yyyy-MM-dd")} —{" "}
+                      {booking.startTime} - {booking.endTime}
+                    </p>
+                    <p>
+                      Status:{" "}
+                      <span className="font-semibold">
+                        {getStatusLabel(booking.status)}
+                      </span>
+                    </p>
+                  </div>
+
+                  {Number(booking.status) === 1 && (
+                    <button
+                      onClick={() => cancelBooking(booking.id)}
+                      className="px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700"
+                    >
+                      Anulează
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

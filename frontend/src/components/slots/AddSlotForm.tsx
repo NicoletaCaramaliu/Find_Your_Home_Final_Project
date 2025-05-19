@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import api from "../../api";
+import { parseError } from "../../utils/parseError";
 
 interface Props {
   propertyId: string;
@@ -65,7 +66,7 @@ const AddSlotForm: React.FC<Props> = ({ propertyId, selectedDate, onSuccess, onC
       }, 1000);
 
     } catch (err: any) {
-      setError(err.response?.data?.message || "Eroare la adăugarea slotului.");
+      setError(parseError(err));
     } finally {
       setLoading(false);
     }

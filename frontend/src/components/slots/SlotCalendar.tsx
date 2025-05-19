@@ -4,6 +4,7 @@ import "react-calendar/dist/Calendar.css";
 import { format } from "date-fns";
 import api from "../../api";
 import AddSlotForm from "./AddSlotForm";
+import { parseError } from "../../utils/parseError";
 
 interface Props {
   propertyId: string;

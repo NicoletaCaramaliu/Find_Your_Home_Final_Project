@@ -3,6 +3,7 @@ using Find_Your_Home.Models.Chat;
 using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Properties;
+using Find_Your_Home.Models.Reviews;
 using Find_Your_Home.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,7 @@ namespace Find_Your_Home.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
 
 
@@ -163,6 +165,21 @@ namespace Find_Your_Home.Data
             modelBuilder.Entity<ChatMessage>()
                 .Property(m => m.Message)
                 .HasMaxLength(2000);
+            
+            modelBuilder.Entity<Review>()
+                .HasKey(r => r.Id);
+            
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Reviewer)
+                .WithMany(u => u.ReviewsGiven)
+                .HasForeignKey(r => r.ReviewerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.TargetUser)
+                .WithMany(u => u.ReviewsReceived)
+                .HasForeignKey(r => r.TargetUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             base.OnModelCreating(modelBuilder);

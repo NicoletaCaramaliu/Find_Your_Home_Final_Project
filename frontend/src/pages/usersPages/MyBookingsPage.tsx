@@ -60,19 +60,29 @@ const MyBookingsPage: React.FC = () => {
     }
   };
 
-  const contactUser = async (userId: string) => {
-  try {
-    const res = await api.post("/Conversations/startOrGet", {
-      otherUserId: userId,
-    });
-    const conversationId = res.data;
-    navigate(`/chat/${conversationId}`);
-  } catch (err) {
-    console.error("Eroare la inițiere conversație:", err);
-    alert("A apărut o eroare la contactarea utilizatorului.");
-  }
-};
+  const cancelBooking = async (id: string) => {
+    try {
+      await api.post(`/bookings/cancel/${id}`);
+      setBookings((prev) =>
+        prev.map((b) => (b.id === id ? { ...b, status: "3" } : b))
+      );
+    } catch (err) {
+      console.error("Eroare la anulare:", err);
+    }
+  };
 
+  const contactUser = async (userId: string) => {
+    try {
+      const res = await api.post("/Conversations/startOrGet", {
+        otherUserId: userId,
+      });
+      const conversationId = res.data;
+      navigate(`/chat/${conversationId}`);
+    } catch (err) {
+      console.error("Eroare la inițiere conversație:", err);
+      alert("A apărut o eroare la contactarea utilizatorului.");
+    }
+  };
 
   const getStatusLabel = (status: string | number) => {
     switch (Number(status)) {
@@ -83,6 +93,8 @@ const MyBookingsPage: React.FC = () => {
       case 2:
         return "Respins";
       case 3:
+        return "Anulat";
+      case 4:
         return "Completat";
       default:
         return "Necunoscut";
@@ -92,7 +104,6 @@ const MyBookingsPage: React.FC = () => {
   const filteredBookings = bookings.filter(
     (b) => statusFilter === "all" || Number(b.status) === Number(statusFilter)
   );
-  
 
   return (
     <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
@@ -111,7 +122,8 @@ const MyBookingsPage: React.FC = () => {
             <option value="0">În așteptare</option>
             <option value="1">Confirmat</option>
             <option value="2">Respins</option>
-            <option value="3">Completat</option>
+            <option value="3">Anulat</option>
+            <option value="4">Completat</option>
           </select>
         </div>
 
@@ -138,7 +150,7 @@ const MyBookingsPage: React.FC = () => {
                     </h2>
                     <p
                       className="text-sm text-blue-500 cursor-pointer hover:underline"
-                      onClick={() => navigate(`/users/${booking.userId}`)}
+                      onClick={() => navigate(`/user/${booking.userId}`)}
                     >
                       Utilizator: {booking.userName}
                     </p>
@@ -153,31 +165,40 @@ const MyBookingsPage: React.FC = () => {
                       </span>
                     </p>
                   </div>
-                  {Number(booking.status) === 0 && (
-                    <div className="flex flex-col gap-2 items-end">
-                      <button
-                        onClick={() => confirmBooking(booking.id)}
-                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                      >
-                        Acceptă
-                      </button>
-                      <button
-                        onClick={() => rejectBooking(booking.id)}
-                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                      >
-                        Respinge
-                      </button>
-                      
-                    </div>
+                  <div className="flex flex-col items-end gap-2">
+                    {Number(booking.status) === 0 && (
+                      <>
+                        <button
+                          onClick={() => confirmBooking(booking.id)}
+                          className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                        >
+                          Acceptă
+                        </button>
+                        <button
+                          onClick={() => rejectBooking(booking.id)}
+                          className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                        >
+                          Respinge
+                        </button>
+                      </>
+                    )}
 
-                    
-                  )}
-                  <button
-                  onClick={() => contactUser(booking.userId)}
-                  className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                  Contactează utilizatorul
-                </button>
+                    {Number(booking.status) === 1 && (
+                      <button
+                        onClick={() => cancelBooking(booking.id)}
+                        className="px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700"
+                      >
+                        Anulează
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => contactUser(booking.userId)}
+                      className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                      Contactează utilizatorul
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
