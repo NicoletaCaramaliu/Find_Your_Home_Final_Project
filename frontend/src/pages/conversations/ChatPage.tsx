@@ -83,7 +83,12 @@ export default function ChatPage() {
 
       const messageHandler = (data: ChatMessage) => {
         if (data.conversationId === conversationId && isMounted) {
-          setMessages(prev => [...prev, data]);
+          const fallbackCreatedAt = new Date().toISOString();
+          const completeMessage = {
+            ...data,
+            createdAt: data.createdAt || fallbackCreatedAt,
+          };
+          setMessages(prev => [...prev, completeMessage]);
         }
       };
 
@@ -118,13 +123,26 @@ export default function ChatPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const isValidDate = (value: any) => {
+    const d = new Date(value);
+    return value && !isNaN(d.getTime());
+  };
+
   const formatDateHeader = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
+    if (!isValidDate(dateString)) return "";
+    return new Date(dateString).toLocaleDateString("ro-RO", {
       day: "2-digit",
       month: "long",
       year: "numeric",
-    };
-    return new Date(dateString + "Z").toLocaleDateString("ro-RO", options);
+    });
+  };
+
+  const formatTime = (dateString: string) => {
+    if (!isValidDate(dateString)) return "...";
+    return new Date(dateString).toLocaleTimeString("ro-RO", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   let lastDate = "";
@@ -157,8 +175,10 @@ export default function ChatPage() {
           style={{ height: "calc(100vh - 320px)" }}
         >
           {messages.map((msg, index) => {
-            const currentDate = new Date(msg.createdAt).toLocaleDateString("ro-RO");
-            const showDateHeader = currentDate !== lastDate;
+            const currentDate = isValidDate(msg.createdAt)
+              ? new Date(msg.createdAt).toLocaleDateString("ro-RO")
+              : "";
+            const showDateHeader = currentDate && currentDate !== lastDate;
             if (showDateHeader) lastDate = currentDate;
 
             return (
@@ -178,10 +198,7 @@ export default function ChatPage() {
                   >
                     <div>{msg.message}</div>
                     <div className="text-xs mt-1 text-gray-200 dark:text-gray-400 text-right">
-                      {new Date(msg.createdAt + "Z").toLocaleTimeString("ro-RO", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {formatTime(msg.createdAt)}
                     </div>
                   </div>
                 </div>
