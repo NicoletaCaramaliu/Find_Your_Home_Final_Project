@@ -29,7 +29,7 @@ const UserCard: React.FC<UserCardProps> = ({
   role,
   showContactButton = true,
   disableLink = false,
-  averageRating, // ⭐ nou
+  averageRating, 
 }) => {
   const defaultProfileImage = "/images/defaultProfilePicture.png";
   const formattedDate = new Date(createdAt).toLocaleDateString();
@@ -42,7 +42,9 @@ const UserCard: React.FC<UserCardProps> = ({
         otherUserId: userId,
       });
       const conversationId = res.data;
-      navigate(`/chat/${conversationId}`);
+      setTimeout(() => {
+        navigate(`/chat/${conversationId}`);
+      }, 300);
     } catch (err) {
       console.error("Eroare la inițiere conversație:", err);
       alert("A apărut o eroare la contactarea utilizatorului.");
