@@ -9,6 +9,7 @@ import {
   sendChat,
   chatConnection,
 } from "../../services/chatHubManager";
+import { formatUtcToLocal } from "../../utils/formatDate"; 
 
 interface ChatMessage {
   id: string;
@@ -130,18 +131,20 @@ export default function ChatPage() {
 
   const formatDateHeader = (dateString: string) => {
     if (!isValidDate(dateString)) return "";
-    return new Date(dateString).toLocaleDateString("ro-RO", {
+    return formatUtcToLocal(dateString, {
       day: "2-digit",
       month: "long",
       year: "numeric",
+      timeZone: "Europe/Bucharest",
     });
   };
 
   const formatTime = (dateString: string) => {
     if (!isValidDate(dateString)) return "...";
-    return new Date(dateString).toLocaleTimeString("ro-RO", {
+    return formatUtcToLocal(dateString, {
       hour: "2-digit",
       minute: "2-digit",
+      timeZone: "Europe/Bucharest",
     });
   };
 

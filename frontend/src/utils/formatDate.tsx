@@ -10,8 +10,13 @@ export const formatUtcToLocal = (
   locale = "ro-RO"
 ): string => {
   try {
-    const date = new Date(utcDateString.endsWith("Z") ? utcDateString : utcDateString + "Z");
-    return date.toLocaleString(locale, options);
+    const date = new Date(utcDateString); 
+    if (isNaN(date.getTime())) return "Data invalidă";
+
+    return date.toLocaleString(locale, {
+      ...options,
+      timeZone: "Europe/Bucharest", 
+    });
   } catch (e) {
     return "Data invalidă";
   }
