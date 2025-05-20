@@ -34,5 +34,42 @@ namespace Find_Your_Home.Controllers
             return Ok(newRentalResponse);
         }
         
+        [HttpGet("getUserRentals/{userId}")]
+        public async Task<ActionResult<List<RentalResponse>>> GetUserRentals()
+        {
+            var userId = _userService.GetMyId();
+            var rentals = await _rentalService.GetRentalsByUserId(userId);
+            var rentalResponse = _mapper.Map<List<RentalResponse>>(rentals); 
+            return Ok(rentalResponse);
+        }
+        
+        [HttpPost("endRental/{rentalId}"), Authorize]
+        public async Task<IActionResult> EndRental(Guid rentalId)
+        {
+            var userId = _userService.GetMyId();
+            await _rentalService.EndRental(rentalId, userId);
+            
+            return Ok(new { message = "Rental ended successfully." });
+        }
+
+        [HttpGet("active/renter"), Authorize]
+        public async Task<IActionResult> GetActiveRentalByRenter()
+        {
+            var userId = _userService.GetMyId();
+            var rental = await _rentalService.GetActiveRentalByRenterId(userId);
+
+            var rentalResponse = _mapper.Map<RentalResponse>(rental);
+            return Ok(rentalResponse);
+        }
+
+        [HttpGet("active/owner"), Authorize]
+        public async Task<IActionResult> GetActiveRentalsByOwner()
+        {
+            var userId = _userService.GetMyId();
+            var rental = await _rentalService.GetActiveRentalsByOwnerId(userId);
+
+            var rentalResponse = _mapper.Map<List<RentalResponse>>(rental);
+            return Ok(rentalResponse);
+        }
     }
 }

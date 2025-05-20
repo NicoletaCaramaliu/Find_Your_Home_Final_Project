@@ -19,6 +19,7 @@ const MyReservationsPage: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [hasActiveRental, setHasActiveRental] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,7 +34,17 @@ const MyReservationsPage: React.FC = () => {
       }
     };
 
+    const checkActiveRental = async () => {
+      try {
+        const res = await api.get("/rentals/active/renter");
+        if (res.data) setHasActiveRental(true);
+      } catch (err) {
+        setHasActiveRental(false);
+      }
+    };
+
     fetchBookings();
+    checkActiveRental();
   }, []);
 
   const cancelBooking = async (id: string) => {
@@ -112,15 +123,32 @@ const MyReservationsPage: React.FC = () => {
                       {booking.propertyName}
                     </h2>
                     <p className="mt-2">
-                      {format(new Date(booking.slotDate), "yyyy-MM-dd")} —{" "}
-                      {booking.startTime} - {booking.endTime}
+                      {format(new Date(booking.slotDate), "yyyy-MM-dd")} — {booking.startTime} - {booking.endTime}
                     </p>
                     <p>
-                      Status:{" "}
-                      <span className="font-semibold">
-                        {getStatusLabel(booking.status)}
-                      </span>
+                      Status: <span className="font-semibold">{getStatusLabel(booking.status)}</span>
                     </p>
+
+                    {Number(booking.status) === 4 && !hasActiveRental && (
+                      <button
+                        onClick={async () => {
+                          try {
+                            await api.post("/rentals/createRental", {
+                              propertyId: booking.propertyId,
+                              startDate: new Date().toISOString(),
+                            });
+                            alert("Închirierea a fost creată cu succes!");
+                            setHasActiveRental(true);
+                          } catch (err) {
+                            console.error("Eroare la închiriere:", err);
+                            alert("Nu s-a putut crea închirierea.");
+                          }
+                        }}
+                        className="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                      >
+                        Închiriază
+                      </button>
+                    )}
                   </div>
 
                   {Number(booking.status) === 1 && (
