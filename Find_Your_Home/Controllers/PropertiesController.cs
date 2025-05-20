@@ -238,6 +238,9 @@ namespace Find_Your_Home.Controllers
                propertiesQuery = await _propertyService.SearchProperties(propertiesQuery, searchText);
            }
 
+           propertiesQuery = propertiesQuery
+               .Where(p => p.IsRented == false);
+           
            propertiesQuery = await _propertyService.FilterProperties(propertiesQuery, filterRequest);
            propertiesQuery = await _propertyService.SortFilteredProperties(propertiesQuery, sortCriteria);
 

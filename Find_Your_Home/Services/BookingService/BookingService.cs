@@ -215,5 +215,14 @@ namespace Find_Your_Home.Services.BookingService
 
             return hasBooking;
         }
+        
+        public async Task<Booking> GetBookingByPropertyAndUserId(Guid propertyId, Guid userId)
+        {
+            var booking = await _bookingRepository
+                .GetAllQueryable()
+                .FirstOrDefaultAsync(b => b.PropertyId == propertyId && b.UserId == userId && b.Status == BookingStatus.Completed);
+
+            return booking;
+        }
     }
 }

@@ -5,6 +5,8 @@ using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Favorites.DTO;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
+using Find_Your_Home.Models.Rentals;
+using Find_Your_Home.Models.Rentals.DTO;
 using Find_Your_Home.Models.Reviews;
 using Find_Your_Home.Models.Reviews.DTO;
 using Find_Your_Home.Models.Users;
@@ -69,6 +71,16 @@ namespace Find_Your_Home.Helpers
                 .ForMember(dest => dest.ReviewerId, opt => opt.MapFrom(src => src.Reviewer.Id));
             
             CreateMap<ReviewResponse, Review>();
+            
+            //Rent
+            CreateMap<Rental, RentalRequest>();
+            CreateMap<RentalRequest, Rental>();
+            
+            CreateMap<Rental, RentalResponse>()
+                .ForMember(dest => dest.PropertyName, opt => opt.MapFrom(src => src.Property.Name))
+                .ForMember(dest => dest.RenterName, opt => opt.MapFrom(src => src.Renter.Username))
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Username));
+            CreateMap<RentalResponse, Rental>();
         }
     }
 }

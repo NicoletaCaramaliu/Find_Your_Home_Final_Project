@@ -66,14 +66,17 @@ namespace Find_Your_Home.Services.PropertyService
     
             
             var paginatedProperties = PaginationHelper.ApplyPagination(filteredProperties, pageNumber, pageSize);
-    
+            
+            //get only properties that have isRented = false
+            var availableProperties = paginatedProperties.Where(p => p.IsRented == false);
+            
             /*var paginatedProperties = filteredProperties
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
             return (await paginatedProperties.ToListAsync(), totalCount);*/
             
             
-            return (await paginatedProperties.ToListAsync(), totalCount);
+            return (await availableProperties.ToListAsync(), totalCount);
         }
 
 

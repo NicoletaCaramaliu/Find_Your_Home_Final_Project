@@ -5,6 +5,7 @@ using Find_Your_Home.Repositories.FavoriteRepository;
 using Find_Your_Home.Repositories.MessageRepository;
 using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
+using Find_Your_Home.Repositories.RentalRepository;
 using Find_Your_Home.Repositories.ReviewRepository;
 using Find_Your_Home.Repositories.UnitOfWork;
 using Find_Your_Home.Repositories.UserRepository;
@@ -16,6 +17,7 @@ using Find_Your_Home.Services.FavoriteService;
 using Find_Your_Home.Services.MessageService;
 using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
+using Find_Your_Home.Services.RentalService;
 using Find_Your_Home.Services.ReviewService;
 using Find_Your_Home.Services.UserService;
 
@@ -36,6 +38,7 @@ namespace Find_Your_Home.Helpers.Extensions
             services.AddTransient<IConversationRepository, ConversationRepository>();
             services.AddTransient<IMessageRepository, MessageRepository>();
             services.AddTransient<IReviewRepository, ReviewRepository>();
+            services.AddTransient<IRentalRepository, RentalRepository>();
             return services;
         }
 
@@ -53,6 +56,7 @@ namespace Find_Your_Home.Helpers.Extensions
             services.AddTransient<IConversationService, ConversationService>();
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<IReviewService, ReviewService>();
+            services.AddTransient<IRentalService, RentalService>();
             return services;
         }
     }

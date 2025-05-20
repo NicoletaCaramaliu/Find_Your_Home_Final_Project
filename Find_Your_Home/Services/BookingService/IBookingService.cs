@@ -12,5 +12,6 @@ namespace Find_Your_Home.Services.BookingService
         Task<IEnumerable<Booking>> GetBookingsByUserId(Guid userId);
         Task CancelBooking(Guid bookingId, Guid userId);
         Task<bool> HasBooking(Guid reviewerId, Guid targetUserId);
+        Task<Booking> GetBookingByPropertyAndUserId(Guid PropertyId, Guid userId);
     }
 }
