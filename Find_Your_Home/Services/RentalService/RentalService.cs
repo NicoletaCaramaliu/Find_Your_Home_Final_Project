@@ -1,10 +1,14 @@
 ﻿using Find_Your_Home.Exceptions;
+using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Rentals;
 using Find_Your_Home.Repositories.BookingRepository;
 using Find_Your_Home.Repositories.RentalRepository;
+using Find_Your_Home.Services.AuthService;
 using Find_Your_Home.Services.BookingService;
+using Find_Your_Home.Services.ConversationService;
 using Find_Your_Home.Services.NotificationsService;
 using Find_Your_Home.Services.PropertyService;
+using Find_Your_Home.Services.UserService;
 
 namespace Find_Your_Home.Services.RentalService
 {
@@ -14,15 +18,21 @@ namespace Find_Your_Home.Services.RentalService
         private readonly INotificationService _notificationService;
         private readonly IBookingService _bookingService;
         private readonly IPropertyService _propertyService;
+        private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
+        private readonly IConversationService _conversationService;
         
-        public RentalService(IRentalRepository rentalRepository, INotificationService notificationService, IBookingService bookingService, IPropertyService propertyService)
+        public RentalService(IRentalRepository rentalRepository, INotificationService notificationService, IBookingService bookingService, 
+            IPropertyService propertyService, IUserService userService, IEmailService emailService, IConversationService conversationService)
         {
-            _propertyService = propertyService;
             _rentalRepository = rentalRepository;
             _notificationService = notificationService;
             _bookingService = bookingService;
+            _propertyService = propertyService;
+            _userService = userService;
+            _emailService = emailService;
+            _conversationService = conversationService;
         }
-
         public async Task<Rental> CreateRental(Rental rental)
         {
             //verify if there is an booking completed for this rental
@@ -55,10 +65,29 @@ namespace Find_Your_Home.Services.RentalService
             
             rental.OwnerId = property.OwnerId;
             
+            var conversationId = await _conversationService.StartOrGetConversation(rental.OwnerId, rental.RenterId);
+            rental.ConversationId = conversationId;
+            
             var createdRental = await _rentalRepository.CreateRentalAsync(rental);
             
             await _propertyService.UpdateProperty(property);
-            //no notif yet
+            
+            var renter = await _userService.GetUserById(rental.RenterId);
+            
+            await _notificationService.SendNotificationAsync(
+                existingProperty.OwnerId.ToString(),
+                NotificationMessage.CreateRentalInfo(createdRental.Id, renter.Username)
+            );
+            
+            await _emailService.SendRentalConfirmationEmailAsync(
+                property.Owner.Email,
+                property.Owner.Username,
+                property.Name,
+                rental.Renter.Username,
+                rental.StartDate
+            );
+
+            
             return createdRental;
         }
 

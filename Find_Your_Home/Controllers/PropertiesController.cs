@@ -363,7 +363,7 @@ namespace Find_Your_Home.Controllers
                 return Unauthorized("You are not authorized to delete this property");
             }
 
-            await _propertyService.DeleteProperty(property.Id);
+            await _propertyService.DeletePropertyAndDependencies(property.Id);
             return NoContent();
         }
 

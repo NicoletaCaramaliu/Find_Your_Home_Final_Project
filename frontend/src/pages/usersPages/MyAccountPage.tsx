@@ -84,8 +84,10 @@ const MyAccountPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (user && shouldSeeFavoritesInstead(user.role)) {
-      fetchFavorites();
+    if (user) {
+      if (shouldSeeFavoritesInstead(user.role)) {
+        fetchFavorites();
+      }
     }
   }, [user]);
 
@@ -137,14 +139,22 @@ const MyAccountPage: React.FC = () => {
               </button>
             )}
 
-
             {user?.role === 4 && (
-            <button
-              onClick={() => navigate("/my-reservations")}
-              className="mb-4 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-            >
-              Vezi rezervările făcute
-            </button>
+              <>
+                <button
+                  onClick={() => navigate("/my-reservations")}
+                  className="mb-2 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+                >
+                  Vezi rezervările făcute
+                </button>
+
+                <button
+                  onClick={() => navigate("/rental-collaboration")}
+                  className="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                >
+                  Mergi la colaborare (închiriere activă)
+                </button>
+              </>
             )}
 
             {user && (
@@ -155,8 +165,6 @@ const MyAccountPage: React.FC = () => {
                 Vezi recenziile primite
               </button>
             )}
-
-
 
             {isAllowedToManageProperties(user.role) && (
               <>

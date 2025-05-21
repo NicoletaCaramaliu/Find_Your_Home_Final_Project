@@ -29,7 +29,8 @@ namespace Find_Your_Home.Helpers
             // Property
             CreateMap<Property, PropertyRequest>();
             CreateMap<PropertyRequest, Property>();
-            CreateMap<Property, PropertyResponse>();
+            CreateMap<Property, PropertyResponse>()
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Username));
             CreateMap<PropertyResponse, Property>();
 
             // Favorite
@@ -52,7 +53,9 @@ namespace Find_Your_Home.Helpers
 
             CreateMap<Booking, BookingResponseDto>()
                 .ForMember(dest => dest.PropertyName, opt => opt.MapFrom(src => src.Property.Name))
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username));
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username))
+                .ForMember(dest => dest.isRented, opt => opt.MapFrom(src => src.Property.IsRented))
+                .ForMember(dest => dest.isForRent, opt => opt.MapFrom(src => src.Property.ForRent));
                 //.ForMember(dest => dest.AvailabilitySlot, opt => opt.MapFrom(src => src.AvailabilitySlot));
             CreateMap<BookingResponseDto, Booking>();
             

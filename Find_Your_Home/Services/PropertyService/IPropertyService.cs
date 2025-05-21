@@ -29,6 +29,7 @@ namespace Find_Your_Home.Services.PropertyService
         Task<Property> DeleteProperty(Guid id);
         
         Task<List<PropertyResponse>> MapPropertiesWithImagesAsync(List<Property> properties);
+        Task<Property> DeletePropertyAndDependencies(Guid propertyId);
 
     }
 }

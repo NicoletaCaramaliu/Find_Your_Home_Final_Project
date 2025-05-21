@@ -11,5 +11,6 @@ namespace Find_Your_Home.Repositories.PropertyRepository
         Task<IQueryable<Property>> SortPropertiesAsync(IQueryable<Property> properties, SortCriteria sortCriteria);
         
         Task<IQueryable<Property>> SearchPropertiesAsync(IQueryable<Property> properties, string searchText);
+        Task<Property?> GetPropertyByIDAsync(Guid propertyId);
     }
 }

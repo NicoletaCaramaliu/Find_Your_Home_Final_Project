@@ -21,5 +21,6 @@ namespace Find_Your_Home.Models.Rentals
         public DateTime? EndDate { get; set; }
 
         public bool IsActive { get; set; } = true;
+        public Guid? ConversationId { get; set; }
     }
 }

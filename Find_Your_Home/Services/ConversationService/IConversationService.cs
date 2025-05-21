@@ -1,4 +1,5 @@
-﻿using Find_Your_Home.Models.Chat.DTO;
+﻿using Find_Your_Home.Models.Chat;
+using Find_Your_Home.Models.Chat.DTO;
 
 namespace Find_Your_Home.Services.ConversationService
 {
