@@ -9,5 +9,6 @@ namespace Find_Your_Home.Services.RentalService
         Task EndRental(Guid rentalId, Guid userId);
         Task<Rental> GetActiveRentalByRenterId(Guid renterId);
         Task<List<Rental>> GetActiveRentalsByOwnerId(Guid ownerId);
+        Task<Rental> GetRentalById(Guid rentalId);
     }
 }

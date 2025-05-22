@@ -82,7 +82,8 @@ namespace Find_Your_Home.Helpers
             CreateMap<Rental, RentalResponse>()
                 .ForMember(dest => dest.PropertyName, opt => opt.MapFrom(src => src.Property.Name))
                 .ForMember(dest => dest.RenterName, opt => opt.MapFrom(src => src.Renter.Username))
-                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Username));
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Username))
+                .ForMember(dest => dest.ConversationId, opt => opt.MapFrom(src => src.ConversationId));
             CreateMap<RentalResponse, Rental>();
         }
     }

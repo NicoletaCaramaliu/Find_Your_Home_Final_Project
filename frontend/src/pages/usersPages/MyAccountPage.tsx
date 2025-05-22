@@ -140,22 +140,22 @@ const MyAccountPage: React.FC = () => {
             )}
 
             {user?.role === 4 && (
-              <>
-                <button
-                  onClick={() => navigate("/my-reservations")}
-                  className="mb-2 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-                >
-                  Vezi rezervările făcute
-                </button>
-
-                <button
-                  onClick={() => navigate("/rental-collaboration")}
-                  className="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                >
-                  Mergi la colaborare (închiriere activă)
-                </button>
-              </>
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await api.get("/rentals/active/renter");
+                    const rentalId = res.data.id;
+                    navigate(`/rental-collaboration/${rentalId}`);
+                  } catch (err) {
+                    alert("Nu ai o închiriere activă.");
+                  }
+                }}
+                className="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Mergi către închirierea activă
+              </button>
             )}
+
 
             {user && (
               <button

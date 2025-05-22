@@ -36,7 +36,7 @@ function App() {
       <Route path="/my-reservations" element={<MyReservationsPage />} />
       <Route path="/conversations" element={<ConversationsPage />} />
       <Route path="/chat/:id" element={<ChatPage />} />
-      <Route path="/rental-collaboration" element={<RentalCollaborationPage />} />
+      <Route path="/rental-collaboration/:rentalId" element={<RentalCollaborationPage />} />
     </Routes>
     </ThemeProvider>
   );

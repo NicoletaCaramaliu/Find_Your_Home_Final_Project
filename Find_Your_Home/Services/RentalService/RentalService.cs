@@ -145,5 +145,16 @@ namespace Find_Your_Home.Services.RentalService
 
             return rental;
         }
+
+        public async Task<Rental> GetRentalById(Guid rentalId)
+        {
+            var rental = await _rentalRepository.GetRentalByIdAsync(rentalId);
+            if (rental == null)
+            {
+                throw new AppException("RENTAL_NOT_FOUND");
+            }
+
+            return rental;
+        }
     }
 }

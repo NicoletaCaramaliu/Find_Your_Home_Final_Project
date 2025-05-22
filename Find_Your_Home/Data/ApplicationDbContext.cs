@@ -24,7 +24,9 @@ namespace Find_Your_Home.Data
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Rental> Rentals { get; set; }
-
+        public DbSet<RentalDocument> RentalDocuments { get; set; }
+        public DbSet<RentalTask> RentalTasks { get; set; }
+        public DbSet<RentalNote> RentalNotes { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
@@ -204,6 +206,31 @@ namespace Find_Your_Home.Data
                 .WithMany()
                 .HasForeignKey(r => r.RenterId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<RentalDocument>()
+                .HasKey(rd => rd.Id);
+            
+            modelBuilder.Entity<RentalDocument>()
+                .HasOne(rd => rd.Rental)
+                .WithMany()
+                .HasForeignKey(rd => rd.RentalId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<RentalTask>()
+                .HasKey(rt => rt.Id);
+            modelBuilder.Entity<RentalTask>()
+                .HasOne(rt => rt.Rental)
+                .WithMany()
+                .HasForeignKey(rt => rt.RentalId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<RentalNote>()
+                .HasKey(rn => rn.Id);
+            modelBuilder.Entity<RentalNote>()
+                .HasOne(rn => rn.Rental)
+                .WithMany()
+                .HasForeignKey(rn => rn.RentalId)
+                .OnDelete(DeleteBehavior.Cascade);
             
 
             base.OnModelCreating(modelBuilder);

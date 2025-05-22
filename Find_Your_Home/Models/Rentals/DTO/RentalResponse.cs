@@ -12,5 +12,6 @@
         public string PropertyName { get; set; }
         public string OwnerName { get; set; }
         public string RenterName { get; set; }
+        public Guid? ConversationId { get; set; }
     }
 }

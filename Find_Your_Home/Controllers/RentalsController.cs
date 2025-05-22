@@ -71,5 +71,19 @@ namespace Find_Your_Home.Controllers
             var rentalResponse = _mapper.Map<List<RentalResponse>>(rental);
             return Ok(rentalResponse);
         }
+        
+        [HttpGet("{rentalId}"), Authorize]
+        public async Task<ActionResult<RentalResponse>> GetRentalById(Guid rentalId)
+        {
+            var userId = _userService.GetMyId();
+            var rental = await _rentalService.GetRentalById(rentalId);
+
+            if (rental == null || (rental.OwnerId != userId && rental.RenterId != userId))
+                return Forbid();
+
+            var rentalResponse = _mapper.Map<RentalResponse>(rental);
+            return Ok(rentalResponse);
+        }
+
     }
 }
