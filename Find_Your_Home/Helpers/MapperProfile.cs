@@ -5,6 +5,8 @@ using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Favorites.DTO;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
+using Find_Your_Home.Models.Rentals;
+using Find_Your_Home.Models.Rentals.DTO;
 using Find_Your_Home.Models.Reviews;
 using Find_Your_Home.Models.Reviews.DTO;
 using Find_Your_Home.Models.Users;
@@ -27,7 +29,8 @@ namespace Find_Your_Home.Helpers
             // Property
             CreateMap<Property, PropertyRequest>();
             CreateMap<PropertyRequest, Property>();
-            CreateMap<Property, PropertyResponse>();
+            CreateMap<Property, PropertyResponse>()
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Username));
             CreateMap<PropertyResponse, Property>();
 
             // Favorite
@@ -50,7 +53,9 @@ namespace Find_Your_Home.Helpers
 
             CreateMap<Booking, BookingResponseDto>()
                 .ForMember(dest => dest.PropertyName, opt => opt.MapFrom(src => src.Property.Name))
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username));
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username))
+                .ForMember(dest => dest.isRented, opt => opt.MapFrom(src => src.Property.IsRented))
+                .ForMember(dest => dest.isForRent, opt => opt.MapFrom(src => src.Property.ForRent));
                 //.ForMember(dest => dest.AvailabilitySlot, opt => opt.MapFrom(src => src.AvailabilitySlot));
             CreateMap<BookingResponseDto, Booking>();
             
@@ -69,6 +74,17 @@ namespace Find_Your_Home.Helpers
                 .ForMember(dest => dest.ReviewerId, opt => opt.MapFrom(src => src.Reviewer.Id));
             
             CreateMap<ReviewResponse, Review>();
+            
+            //Rent
+            CreateMap<Rental, RentalRequest>();
+            CreateMap<RentalRequest, Rental>();
+            
+            CreateMap<Rental, RentalResponse>()
+                .ForMember(dest => dest.PropertyName, opt => opt.MapFrom(src => src.Property.Name))
+                .ForMember(dest => dest.RenterName, opt => opt.MapFrom(src => src.Renter.Username))
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Username))
+                .ForMember(dest => dest.ConversationId, opt => opt.MapFrom(src => src.ConversationId));
+            CreateMap<RentalResponse, Rental>();
         }
     }
 }

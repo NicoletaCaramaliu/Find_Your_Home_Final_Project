@@ -238,6 +238,9 @@ namespace Find_Your_Home.Controllers
                propertiesQuery = await _propertyService.SearchProperties(propertiesQuery, searchText);
            }
 
+           propertiesQuery = propertiesQuery
+               .Where(p => p.IsRented == false);
+           
            propertiesQuery = await _propertyService.FilterProperties(propertiesQuery, filterRequest);
            propertiesQuery = await _propertyService.SortFilteredProperties(propertiesQuery, sortCriteria);
 
@@ -360,7 +363,7 @@ namespace Find_Your_Home.Controllers
                 return Unauthorized("You are not authorized to delete this property");
             }
 
-            await _propertyService.DeleteProperty(property.Id);
+            await _propertyService.DeletePropertyAndDependencies(property.Id);
             return NoContent();
         }
 

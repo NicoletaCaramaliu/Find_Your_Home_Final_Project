@@ -25,7 +25,7 @@ const AddReviewForm: React.FC<Props> = ({ targetUserId, onReviewAdded }) => {
       setComment("");
       setRating(5);
       onReviewAdded();
-      alert("Recenzia a fost trimisă cu succes.");
+      //alert("Recenzia a fost trimisă cu succes.");
     } catch (err: any) {
       console.error("Eroare la trimiterea recenziei:", err);
       alert(err.response?.data || "A apărut o eroare.");

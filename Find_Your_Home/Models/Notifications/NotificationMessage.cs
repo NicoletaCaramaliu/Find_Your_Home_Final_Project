@@ -97,6 +97,20 @@ namespace Find_Your_Home.Models.Notifications
                 SenderName = reviewerName
             };
         }
+        
+        public static NotificationMessage CreateRentalInfo(Guid rentalId, string renterName)
+        {
+            return new NotificationMessage
+            {
+                Type = "rental-created",
+                Title = "Proprietatea ta a fost închiriată",
+                Message = $"{renterName} a închiriat una dintre proprietățile tale.",
+                Timestamp = DateTime.UtcNow,
+                Data = new { RentalId = rentalId },
+                SenderName = renterName
+            };
+        }
+
 
     }
 }

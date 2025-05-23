@@ -113,6 +113,8 @@ export default function NotificationDropdown() {
       if (userId) {
         navigate(`/user/${userId}`);
       }
+    }else if (type === "rental-created") {
+      navigate("/my-rentals"); 
     }
 
     } catch (error) {
