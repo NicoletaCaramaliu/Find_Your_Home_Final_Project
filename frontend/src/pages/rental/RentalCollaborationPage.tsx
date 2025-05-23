@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import api from "../../api";
 import MainNavBar from "../../components/MainNavBar";
 import MiniChatWidget from "../../pages/conversations/MiniChatWidget"; 
-
 
 const RentalCollaborationPage: React.FC = () => {
   const { rentalId } = useParams();
@@ -14,6 +12,8 @@ const RentalCollaborationPage: React.FC = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [note, setNote] = useState<string>("");
   const [fileInput, setFileInput] = useState<FileList | null>(null);
+  const [newTaskTitle, setNewTaskTitle] = useState<string>("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,16 +81,29 @@ const RentalCollaborationPage: React.FC = () => {
     }
   };
 
-const saveNote = async () => {
+  const addTask = async () => {
+    if (!newTaskTitle.trim() || !rentalId) return;
+
     try {
-        await api.post(`/rentalnotes/${rentalId}`, { content: note });
-        alert("Notiță salvată cu succes!");
+        const res = await api.post(`/rentaltasks/${rentalId}`, {
+        title: newTaskTitle
+        });
+        setTasks((prev) => [...prev, res.data]);
+        setNewTaskTitle("");
     } catch (err) {
-        console.error("Eroare la salvarea notiței:", err);
+        console.error("Eroare la adăugarea taskului:", err);
     }
-    };
+  };
 
 
+  const saveNote = async () => {
+    try {
+      await api.post(`/rentalnotes/${rentalId}`, { content: note });
+      alert("Notiță salvată cu succes!");
+    } catch (err) {
+      console.error("Eroare la salvarea notiței:", err);
+    }
+  };
 
   if (!rental) return <p className="p-4">Se încarcă închirierea...</p>;
 
@@ -139,7 +152,7 @@ const saveNote = async () => {
 
           <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow">
             <h3 className="text-xl font-semibold mb-2">📝 Taskuri comune</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 mb-4">
               {tasks.map((task) => (
                 <li key={task.id} className="flex justify-between items-center">
                   <span>{task.title}</span>
@@ -151,6 +164,22 @@ const saveNote = async () => {
                 </li>
               ))}
             </ul>
+
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={newTaskTitle}
+                onChange={(e) => setNewTaskTitle(e.target.value)}
+                placeholder="Adaugă un task nou..."
+                className="flex-1 p-2 border rounded"
+              />
+              <button
+                onClick={addTask}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Adaugă
+              </button>
+            </div>
           </section>
         </div>
 
@@ -171,15 +200,15 @@ const saveNote = async () => {
         </section>
 
       </div>
+
       {rental?.conversationId && (
         <button
-            onClick={() => navigate(`/chat/${rental.conversationId}`)}
-            className="fixed bottom-4 right-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition"
+          onClick={() => navigate(`/chat/${rental.conversationId}`)}
+          className="fixed bottom-4 right-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition"
         >
-            💬 Mergi la conversație
+          💬 Mergi la conversație
         </button>
-        )}
-
+      )}
     </div>
   );
 };

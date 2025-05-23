@@ -1,4 +1,6 @@
 ﻿using Find_Your_Home.Data;
+using Find_Your_Home.Models.Rentals;
+using Find_Your_Home.Models.Rentals.DTO;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -47,5 +49,26 @@ namespace Find_Your_Home.Controllers
 
             return Ok();
         }
+        
+        [HttpPost("{rentalId}")]
+        public async Task<IActionResult> AddTask(Guid rentalId, [FromBody] TaskDto dto)
+        {
+            var userId = _userService.GetMyId();
+            if (!await IsUserInRental(rentalId, userId)) return Forbid();
+
+            var task = new RentalTask
+            {
+                Id = Guid.NewGuid(),
+                Title = dto.Title,
+                Completed = false,
+                RentalId = rentalId
+            };
+
+            _context.RentalTasks.Add(task);
+            await _context.SaveChangesAsync();
+
+            return Ok(task);
+        }
+
     }
 }

@@ -131,15 +131,25 @@ const MyAccountPage: React.FC = () => {
             </div>
 
             {isAllowedToManageProperties(user.role) && (
-              <button
-                onClick={() => navigate("/my-bookings")}
-                className="mb-4 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-              >
-                Vezi rezervările primite
-              </button>
+              <>
+                <button
+                  onClick={() => navigate("/my-bookings")}
+                  className="mb-4 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+                >
+                  Vezi rezervările primite
+                </button>
+                <button
+                  onClick={() => navigate("/my-rentals")}
+                  className="mb-4 mt-2 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700"
+                >
+                  Vezi închirierile active
+                </button>
+              </>
+
             )}
 
             {user?.role === 4 && (
+            <>
               <button
                 onClick={async () => {
                   try {
@@ -150,11 +160,20 @@ const MyAccountPage: React.FC = () => {
                     alert("Nu ai o închiriere activă.");
                   }
                 }}
-                className="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                className="mb-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
               >
                 Mergi către închirierea activă
               </button>
-            )}
+
+              <button
+                onClick={() => navigate("/my-reservations")}
+                className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              >
+                Vezi rezervările făcute
+              </button>
+            </>
+          )}
+
 
 
             {user && (
