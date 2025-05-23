@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import MainNavBar from '../../components/MainNavBar';
-import OwnerProfileCard from '../../components/properties/OwnerProfileCard';
+import OwnerProfileCard from '../../components/user/UserCard';
 import api from "../../api";
 import { Property } from '../../types/PropertyDetails';
 import { Heart } from 'lucide-react';
@@ -162,7 +162,7 @@ const PropertyDetailsPage: React.FC = () => {
       <div className="container mx-auto p-6">
         {property && (
           <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            {/* Inima in coltul dreapta sus */}
+    
             <button
               onClick={handleToggleFavorite}
               className="absolute top-4 right-4 bg-white/80 dark:bg-gray-700/80 p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-200 z-10"
@@ -221,9 +221,9 @@ const PropertyDetailsPage: React.FC = () => {
         <div className="mt-6">
           {owner && (
             <OwnerProfileCard
-            name={owner.username}
+            username={owner.username}
             profileImageUrl={owner.profilePicture}
-            ownerId={owner.id}
+            userId={owner.id}
             createdAt={owner.createdAt}
           />
           )}

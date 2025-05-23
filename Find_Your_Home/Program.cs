@@ -21,6 +21,8 @@ using Find_Your_Home.Repositories.MessageRepository;
 using Find_Your_Home.Repositories.NotificationsRepository;
 using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
+using Find_Your_Home.Repositories.RentalRepository;
+using Find_Your_Home.Repositories.ReviewRepository;
 using Find_Your_Home.Repositories.UnitOfWork;
 using Find_Your_Home.Repositories.UserRepository;
 using Find_Your_Home.Services.AuthService;
@@ -32,12 +34,19 @@ using Find_Your_Home.Services.MessageService;
 using Find_Your_Home.Services.NotificationsService;
 using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
+using Find_Your_Home.Services.RentalService;
+using Find_Your_Home.Services.ReviewService;
 using Find_Your_Home.Services.UserService;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Diagnostics;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+
 
 // Add services to the container.
 
@@ -66,16 +75,22 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+
 builder.Services.AddScoped<IPropertyImgService, PropertyImgService>();
 builder.Services.AddScoped<IPropertyImgRepository, PropertyImgRepository>();
+
 builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+
 builder.Services.AddScoped<IAvailabilitySlotRepository, AvailabilitySlotRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IAvailabilitySlotService, AvailabilitySlotService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddHostedService<BookingStatusUpdateService>();
+
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSingleton<ImageService>();
@@ -93,6 +108,12 @@ builder.Services.AddScoped<IConversationService, ConversationService>();
 
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IMessageService, MessageService>();
+
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+
+builder.Services.AddScoped<IRentalService, RentalService>();
+builder.Services.AddScoped<IRentalRepository, RentalRepository>();
 
 
 
@@ -172,7 +193,7 @@ builder.Services.AddCors(options =>
         {
             builder.WithOrigins("https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net",
                     "http://localhost:5173",
-                    "https://find-your-home-final-project.vercel.app",
+                    "http://find-your-home-final-project.vercel.app",
                     "https://find-your-home-final-pro-git-main-yourname-projects.vercel.app",
                     "http://localhost:4173") 
                 .AllowAnyHeader()
@@ -240,7 +261,7 @@ app.MapHub<ChatHub>("/chatHub");
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

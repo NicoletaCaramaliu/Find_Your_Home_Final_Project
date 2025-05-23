@@ -32,5 +32,6 @@
         public DateTime UpdatedAt { get; set; }
         public bool IsAvailable { get; set; } = true;
         public Guid OwnerId { get; set; }
+        public string OwnerName { get; set; }
     }
 }

@@ -54,13 +54,7 @@ namespace Find_Your_Home.Controllers
             return Ok(new { message = "BOOKING_CONFIRMED" });
         }
 
-        /*
-        [HttpPost("cancel/{bookingId}"), Authorize(Roles = "Admin, PropertyOwner, Agent")]
-        public async Task<ActionResult> CancelBooking(Guid bookingId)
-        {
-            await _bookingService.CancelBooking(bookingId);
-            return Ok(new { message = "BOOKING_CANCELLED" });
-        }*/
+
 
         [HttpGet("getAllMyPropertiesBookings"), Authorize]
         public async Task<ActionResult<List<BookingResponseDto>>> GetBookingsForOwner()
@@ -71,7 +65,7 @@ namespace Find_Your_Home.Controllers
             return Ok(result);
         }
         
-        [HttpGet("reject/{bookingId}"), Authorize]
+        [HttpGet("reject/{bookingId}"), Authorize(Roles = "Admin, PropertyOwner, Agent")]
         public async Task<ActionResult> RejectBooking(Guid bookingId)
         {
             var userId = _userService.GetMyId();
@@ -86,6 +80,14 @@ namespace Find_Your_Home.Controllers
             var bookings = await _bookingService.GetBookingsByUserId(userId);
             var result = _mapper.Map<List<BookingResponseDto>>(bookings);
             return Ok(result);
+        }
+        
+        [HttpPost("cancel/{bookingId}"), Authorize(Roles = "Admin, PropertyOwner, Agent")]
+        public async Task<ActionResult> CancelBooking(Guid bookingId)
+        {
+            var userId = _userService.GetMyId();
+            await _bookingService.CancelBooking(bookingId, userId);
+            return Ok(new { message = "BOOKING_CANCELLED" });
         }
     }
 }

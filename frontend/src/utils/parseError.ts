@@ -16,6 +16,8 @@ const errorTranslations: Record<string, string> = {
   TIME_SLOT_NOT_AVAILABLE: "Intervalul de timp selectat nu mai este disponibil.",
   PROPERTY_NOT_FOUND: "Proprietatea nu a fost găsită.",
   CANNOT_BOOK_OWN_PROPERTY: "Nu poți rezerva propria ta proprietate.",
+  NO_REVIEW_PERMISSION: "Poți lăsa o recenzie doar dacă ai avut o rezervare cu acest utilizator.",
+  
  
   //Availability 
   SLOT_NOT_FOUND: "Perioada nu a fost găsită.",
@@ -24,7 +26,8 @@ const errorTranslations: Record<string, string> = {
   INVALID_TIME_RANGE: "Ora de început trebuie să fie înainte de ora de sfârșit.",
   SLOT_DELETED_SUCCESSFULLY: "Slot șters cu succes!",
   CANNOT_DELETE_SLOT_WITH_BOOKINGS: "Nu poți șterge un slot care are rezervări existente.",
-  NO_SLOTS_FOUND_FOR_PROPERTY: "Nu sunt adăugate perioade de vizită pentru această proprietate"
+  NO_SLOTS_FOUND_FOR_PROPERTY: "Nu sunt adăugate perioade de vizită pentru această proprietate",
+  CANNOT_BOOK_SLOT_WITH_LESS_THAN_12_HOURS: "Nu poți rezerva un slot cu mai puțin de 12 ore înainte."
 };
 
 export const parseError = (error: any): string => {

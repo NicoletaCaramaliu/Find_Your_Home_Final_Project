@@ -9,6 +9,8 @@ namespace Find_Your_Home.Models.Bookings.DTO
         public Guid PropertyId { get; set; }
 
         public string PropertyName { get; set; }
+        public bool isRented { get; set; }
+        public bool isForRent { get; set; }
 
         public Guid UserId { get; set; }
 

@@ -28,6 +28,7 @@ namespace Find_Your_Home.Services.ConversationService
             };
 
             await _conversationRepository.CreateAsync(newConv);
+            await _conversationRepository.SaveAsync(); 
             return newConv.Id;
 
         }
