@@ -181,27 +181,21 @@ builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
-    /*options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });*/
     options.AddPolicy("AllowFrontend",
         builder =>
         {
-            builder.WithOrigins("https://findyourhomeapp-g2h4decmh2argjet.westeurope-01.azurewebsites.net",
-                    "http://localhost:5173",
+            builder.WithOrigins(
                     "https://find-your-home-final-project.vercel.app",
-                    "https://find-your-home-final-pro-git-main-yourname-projects.vercel.app",
-                    "http://localhost:4173") 
+                    "https://find-your-home-final-pro-git-main-yourname-projects.vercel.app", 
+                    "http://localhost:5173",
+                    "http://localhost:4173"
+                )
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
-            
         });
 });
+
 
 
 
