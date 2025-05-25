@@ -7,11 +7,9 @@ const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()+={}[\]:;"'<>,.?/~`|\\_-])[A-Za-z\d@$!%*?&#^()+={}[\]:;"'<>,.?/~`|\\_-]{8,}$/;
 
 const roles = [
-  { label: "Admin", value: 0 },
-  { label: "User", value: 4 },
+  { label: "Utilizator", value: 4 },
   { label: "Agent", value: 3 },
-  { label: "PropertyOwner", value: 2 },
-  { label: "Moderator", value: 1 }
+  { label: "Proprietar", value: 2 }
 ];
 
 interface RegisterFormProps {
@@ -89,7 +87,7 @@ export default function RegisterForm({ onRegister, errorMessage }: RegisterFormP
       </div>
 
       <select
-        className="w-full p-2 border rounded-lg"
+        className="w-full p-2 border rounded-lg bg-white text-black dark:bg-gray-800 dark:text-white"
         value={role}
         onChange={(e) => setRole(Number(e.target.value))}
       >
@@ -99,6 +97,7 @@ export default function RegisterForm({ onRegister, errorMessage }: RegisterFormP
           </option>
         ))}
       </select>
+
 
       <Button type="submit" className="w-full">
         Înregistrare
