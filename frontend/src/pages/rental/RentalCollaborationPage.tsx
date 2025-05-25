@@ -95,11 +95,14 @@ const RentalCollaborationPage: React.FC = () => {
     }
   };
 
+  const [noteSaved, setNoteSaved] = useState(false);
 
   const saveNote = async () => {
     try {
       await api.post(`/rentalnotes/${rentalId}`, { content: note });
-      alert("Notiță salvată cu succes!");
+      //alert("Notiță salvată cu succes!");
+        setNoteSaved(true);
+        setTimeout(() => setNoteSaved(false), 3000);
     } catch (err) {
       console.error("Eroare la salvarea notiței:", err);
     }
@@ -197,6 +200,9 @@ const RentalCollaborationPage: React.FC = () => {
           >
             Salvează notița
           </button>
+            {noteSaved && (
+                <p className="text-green-500 mt-2">✔️Notița a fost salvată cu succes!</p>
+            )}
         </section>
 
       </div>

@@ -25,6 +25,8 @@
         public int yearOfConstruction { get; set; }
         public bool furnished { get; set; }
         public bool petFriendly { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         
         public string FirstImageUrl { get; set; }
         
