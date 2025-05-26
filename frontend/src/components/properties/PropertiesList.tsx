@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PropertyCard } from '../ui/PropertyCard';
+import { PropertyCard } from './PropertyCard';
 import api from '../../api'; 
 
 interface Property {

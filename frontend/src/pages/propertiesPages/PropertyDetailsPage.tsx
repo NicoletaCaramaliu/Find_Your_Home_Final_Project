@@ -151,7 +151,7 @@ const PropertyDetailsPage: React.FC = () => {
               </>
             )}
 
-            <p className="text-xl font-bold text-blue-600 dark:text-blue-400 mt-4">${property.price.toLocaleString()}</p>
+            <p className="text-xl font-bold text-blue-600 dark:text-blue-400 mt-4">{property.price.toLocaleString()}€</p>
             <div className="grid grid-cols-2 gap-4 mt-4">
               <p className="text-gray-700 dark:text-gray-300">Camere: {property.rooms}</p>
               <p className="text-gray-700 dark:text-gray-300">Băi: {property.bathrooms}</p>

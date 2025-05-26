@@ -42,67 +42,89 @@ const HomePage = () => {
     fetchProperties();
   }, []);
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white font-[Inter]">
       <MainNavBar />
+        <div className="fixed top-20 left-4 z-50">
+            <button
+                className="bg-blue-600 text-white rounded-full p-3 shadow-lg hover:bg-blue-700"
+                onClick={() => setMenuOpen(!menuOpen)}
+            >
+                ☰
+            </button>
 
-      <section className="relative flex flex-col md:flex-row h-[80vh]">
+            {menuOpen && (
+                <div className="mt-2 bg-white dark:bg-gray-800 rounded shadow p-2 flex flex-col space-y-2">
+                <a href="#recommended" className="hover:text-blue-600" onClick={() => setMenuOpen(false)}>🏡 Recomandate</a>
+                <a href="#testimonials" className="hover:text-blue-600" onClick={() => setMenuOpen(false)}>🗣 Testimoniale</a>
+                <a href="#faq" className="hover:text-blue-600" onClick={() => setMenuOpen(false)}>❓ Întrebări</a>
+                <a href="#contact" className="hover:text-blue-600" onClick={() => setMenuOpen(false)}>📞 Contact</a>
+                </div>
+            )}
+            </div>
+
+
+      <section className="relative flex flex-col md:flex-row h-[70vh] max-w-7xl mx-auto">
         <div className="md:w-3/4 relative">
-          <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
+            <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
             <source src="/videos/homePageVideo.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <div className="bg-black/50 absolute inset-0" />
-          <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+            Browserul tau nu poate vedea videoclipul.
+            </video>
+            <div className="bg-black/50 absolute inset-0" />
+            <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
             <h1 className="text-5xl font-bold mb-4 drop-shadow-lg">Găsește-ți casa visurilor</h1>
             <p className="text-lg mb-6 max-w-xl">Caută, cumpără sau închiriază rapid locuința perfectă pentru tine. Experiență premium, simplă și eficientă.</p>
             <Link to="/properties" className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 shadow-lg transition">
-              Vezi toate proprietățile
+                Vezi toate proprietățile
             </Link>
-          </div>
+            </div>
         </div>
 
         <div className="md:w-1/4 bg-white dark:bg-gray-800 flex items-center justify-center p-2">
-          {loadError && <p className="text-red-600">Eroare la încărcarea hărții</p>}
-          {!isLoaded ? (
+            {loadError && <p className="text-red-600">Eroare la încărcarea hărții</p>}
+            {!isLoaded ? (
             <p>Se încarcă harta...</p>
-          ) : (
+            ) : (
             <GoogleMap
-              mapContainerStyle={{ width: '100%', height: '100%' }}
-              zoom={10}
-              center={{ lat: 44.4268, lng: 26.1025 }}
+                mapContainerStyle={{ width: '100%', height: '100%' }}
+                zoom={10}
+                center={{ lat: 44.4268, lng: 26.1025 }}
             >
-              {properties.map((property) => (
+                {properties.map((property) => (
                 <Marker
-                  key={property.id}
-                  position={{ lat: property.latitude, lng: property.longitude }}
-                  onClick={() => setSelectedProperty(property)}
-                  label={{
-                    text: `$${property.price}`,
+                    key={property.id}
+                    position={{ lat: property.latitude, lng: property.longitude }}
+                    onClick={() => setSelectedProperty(property)}
+                    label={{
+                    text: `${property.price}€`,
                     className: "text-xs bg-white px-1 py-0.5 rounded shadow",
-                  }}
+                    }}
                 />
-              ))}
+                ))}
 
-              {selectedProperty && (
+                {selectedProperty && (
                 <InfoWindow
-                  position={{ lat: selectedProperty.latitude, lng: selectedProperty.longitude }}
-                  onCloseClick={() => setSelectedProperty(null)}
+                    position={{ lat: selectedProperty.latitude, lng: selectedProperty.longitude }}
+                    onCloseClick={() => setSelectedProperty(null)}
                 >
-                  <div className="p-2">
-                    <h3 className="font-bold">{selectedProperty.name}</h3>
-                    <p>Preț: ${selectedProperty.price}</p>
-                    <p>{selectedProperty.address}, {selectedProperty.city}</p>
-                    <Link to={`/properties/${selectedProperty.id}`} className="text-blue-600 hover:underline">Vezi detalii</Link>
-                  </div>
+                    <div className="bg-white dark:bg-gray-800 text-black dark:text-white rounded shadow p-4 max-w-xs">
+                    <h3 className="font-bold text-lg mb-2">{selectedProperty.name}</h3>
+                    <p className="text-sm mb-1">Preț: ${selectedProperty.price}</p>
+                    <p className="text-sm mb-1">{selectedProperty.address}, {selectedProperty.city}</p>
+                    <Link to={`/properties/${selectedProperty.id}`} className="text-blue-600 dark:text-blue-400 hover:underline text-sm">
+                        Vezi detalii
+                    </Link>
+                    </div>
                 </InfoWindow>
-              )}
+                )}
             </GoogleMap>
-          )}
+            )}
         </div>
-      </section>
+        </section>
 
-      <section className="py-16 container mx-auto">
+      <section id="recommended" className="py-16 container mx-auto">
         <h2 className="text-3xl font-bold text-center mb-10">🏡 Proprietăți recomandate</h2>
         <Slider {...sliderSettings}>
           {[1, 2, 3, 4, 5].map((item) => (
@@ -137,7 +159,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="py-16 bg-gray-100 dark:bg-gray-900">
+      <section id="testimonials"  className="py-16 bg-gray-100 dark:bg-gray-900">
         <h2 className="text-3xl font-bold text-center mb-10">🗣 Ce spun clienții noștri?</h2>
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
           {[
@@ -153,7 +175,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="py-16 container mx-auto">
+      <section id="faq" className="py-16 container mx-auto">
         <h2 className="text-3xl font-bold text-center mb-10">❓ Întrebări frecvente</h2>
         <div className="max-w-3xl mx-auto space-y-4">
           {[
@@ -184,7 +206,7 @@ const HomePage = () => {
         </p>
       </section>
 
-      <footer className="bg-gray-800 text-white py-6 text-center">
+      <footer id="contact" className="bg-gray-800 text-white py-6 text-center">
         <p className="mb-2 font-semibold">© 2025 FindYourHome</p>
         <p className="text-sm">Toate drepturile rezervate | <Link to="/contact" className="underline hover:text-blue-300">Contact</Link></p>
       </footer>

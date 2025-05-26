@@ -176,7 +176,7 @@ const AddPropertyForm: React.FC<Props> = ({
     { name: "city", label: "Oraș", type: "text" },
     { name: "state", label: "Județ", type: "text" },
     { name: "zip", label: "Cod poștal", type: "text" },
-    { name: "price", label: "Preț", type: "number" },
+    { name: "price", label: "Preț(€)", type: "number" },
     { name: "rooms", label: "Camere", type: "number" },
     { name: "bathrooms", label: "Băi", type: "number" },
     { name: "level", label: "Etaj", type: "number" },
