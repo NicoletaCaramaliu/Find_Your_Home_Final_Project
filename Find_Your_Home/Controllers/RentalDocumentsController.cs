@@ -1,6 +1,7 @@
 ﻿using Find_Your_Home.Data;
 using Find_Your_Home.Models.Rentals;
 using Find_Your_Home.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,7 @@ namespace Find_Your_Home.Controllers
             return rental != null && (rental.OwnerId == userId || rental.RenterId == userId);
         }
 
-        [HttpGet("{rentalId}")]
+        [HttpGet("{rentalId}"), Authorize]
         public async Task<IActionResult> GetDocuments(Guid rentalId)
         {
             var userId = _userService.GetMyId();
@@ -35,7 +36,7 @@ namespace Find_Your_Home.Controllers
             return Ok(docs);
         }
 
-        [HttpPost("upload/{rentalId}")]
+        [HttpPost("upload/{rentalId}"), Authorize]
         public async Task<IActionResult> UploadDocuments(Guid rentalId, [FromForm] IFormFileCollection files)
         {
             var userId = _userService.GetMyId();
@@ -69,7 +70,7 @@ namespace Find_Your_Home.Controllers
             return Ok();
         }
 
-        [HttpGet("file/{id}")]
+        [HttpGet("file/{id}"), Authorize]
         public async Task<IActionResult> Download(Guid id)
         {
             var doc = await _context.RentalDocuments.FindAsync(id);

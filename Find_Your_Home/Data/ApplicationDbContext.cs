@@ -27,6 +27,7 @@ namespace Find_Your_Home.Data
         public DbSet<RentalDocument> RentalDocuments { get; set; }
         public DbSet<RentalTask> RentalTasks { get; set; }
         public DbSet<RentalNote> RentalNotes { get; set; }
+        public DbSet<RentalInfo> RentalInfos { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
@@ -232,6 +233,13 @@ namespace Find_Your_Home.Data
                 .HasForeignKey(rn => rn.RentalId)
                 .OnDelete(DeleteBehavior.Cascade);
             
+            modelBuilder.Entity<RentalInfo>()
+                .HasKey(ri => ri.Id);
+            modelBuilder.Entity<RentalInfo>()
+                .HasOne(ri => ri.Rental)
+                .WithMany()
+                .HasForeignKey(ri => ri.RentalId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }
