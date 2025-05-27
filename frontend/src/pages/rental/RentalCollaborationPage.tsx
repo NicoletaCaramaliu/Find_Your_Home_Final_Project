@@ -111,47 +111,47 @@ const RentalCollaborationPage: React.FC = () => {
       <div className="flex">
         <RentalSidebar rentalId={rentalId!} />
         <div className="flex-1 max-w-6xl mx-auto p-6 space-y-6">
-          <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow">
-            <h2 className="text-2xl font-bold mb-2">{rental.property?.name}</h2>
-            <p>{rental.property?.address}</p>
-            <p>Început: {new Date(rental.startDate).toLocaleDateString()}</p>
-            {rental.endDate && (
-              <p>Final: {new Date(rental.endDate).toLocaleDateString()}</p>
-            )}
-          </section>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <DocumentsSection
-              documents={documents}
-              downloadDocument={downloadDocument}
-              uploadDocuments={uploadDocuments}
-              setFileInput={setFileInput}
+            <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow">
+                <h2 className="text-2xl font-bold mb-2">{rental.property?.name}</h2>
+                <p>{rental.property?.address}</p>
+                <p>Început: {new Date(rental.startDate).toLocaleDateString()}</p>
+                {rental.endDate && (
+                <p>Final: {new Date(rental.endDate).toLocaleDateString()}</p>
+                )}
+            </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <DocumentsSection
+                documents={documents}
+                downloadDocument={downloadDocument}
+                uploadDocuments={uploadDocuments}
+                setFileInput={setFileInput}
+                />
+                <TasksSection
+                tasks={tasks}
+                toggleTask={toggleTask}
+                newTaskTitle={newTaskTitle}
+                setNewTaskTitle={setNewTaskTitle}
+                addTask={addTask}
+                />
+            </div>
+            <NotesSection
+                note={note}
+                setNote={setNote}
+                saveNote={saveNote}
+                noteSaved={noteSaved}
             />
-            <TasksSection
-              tasks={tasks}
-              toggleTask={toggleTask}
-              newTaskTitle={newTaskTitle}
-              setNewTaskTitle={setNewTaskTitle}
-              addTask={addTask}
-            />
-          </div>
-          <NotesSection
-            note={note}
-            setNote={setNote}
-            saveNote={saveNote}
-            noteSaved={noteSaved}
-          />
+            </div>
         </div>
-      </div>
-      {rental?.conversationId && (
-        <button
-          onClick={() => navigate(`/chat/${rental.conversationId}`)}
-          className="fixed bottom-4 right-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition"
-        >
-          💬 Mergi la conversație
-        </button>
-      )}
-    </div>
-  );
+        {rental?.conversationId && (
+            <button
+            onClick={() => navigate(`/chat/${rental.conversationId}`)}
+            className="fixed bottom-4 right-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition"
+            >
+            💬 Mergi la conversație
+            </button>
+        )}
+        </div>
+    );
 };
 
 export default RentalCollaborationPage;

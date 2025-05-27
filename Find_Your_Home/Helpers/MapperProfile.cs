@@ -85,6 +85,9 @@ namespace Find_Your_Home.Helpers
                 .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Username))
                 .ForMember(dest => dest.ConversationId, opt => opt.MapFrom(src => src.ConversationId));
             CreateMap<RentalResponse, Rental>();
+
+            CreateMap<RentalInfo, InfoDto>();
+            CreateMap<InfoDto, RentalInfo>();
         }
     }
 }

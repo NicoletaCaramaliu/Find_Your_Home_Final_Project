@@ -1,12 +1,7 @@
-﻿using Find_Your_Home.Models.Base;
-
-namespace Find_Your_Home.Models.Rentals
+﻿namespace Find_Your_Home.Models.Rentals.DTO
 {
-    public class RentalInfo : BaseEntity
+    public class InfoDto
     {
-        public Guid RentalId { get; set; }
-        
-        //dates
         public DateTime? RentPaymentDate { get; set; }
         public DateTime? ElectricityPaymentDate { get; set; }
         public DateTime? WaterPaymentDate { get; set; }
@@ -19,15 +14,11 @@ namespace Find_Your_Home.Models.Rentals
         public string? ElectricianPhone { get; set; }
         public string? GasServicePhone { get; set; }
         public string? InternetProviderPhone { get; set; }
-        public string? EmergencyContact { get; set; }
 
         //contract details
         public bool? ContractSigned { get; set; }
         public DateTime? ContractStartDate { get; set; }
         public DateTime? ContractEndDate { get; set; }
         public string? RentAmount { get; set; }
-
-        public Rental? Rental { get; set; }
-        
     }
 }
