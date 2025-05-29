@@ -28,5 +28,6 @@ export interface Property {
     views: number; 
     latitude: number;
     longitude: number;
+    isRented: boolean;
   }
   

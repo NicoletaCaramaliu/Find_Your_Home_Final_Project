@@ -17,11 +17,18 @@ export default function ConversationsPage() {
   const [conversations, setConversations] = useState<ConversationPreview[]>([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    api.get("/conversations/myConversations")
-      .then(res => setConversations(res.data))
-      .catch(err => console.error("Eroare la încărcarea conversațiilor:", err));
-  }, []);
+useEffect(() => {
+  api.get("/conversations/myConversations")
+    .then(res => {
+      const sortedConversations = res.data.sort(
+        (a: ConversationPreview, b: ConversationPreview) =>
+          new Date(b.lastMessageDate).getTime() - new Date(a.lastMessageDate).getTime()
+      );
+      setConversations(sortedConversations);
+    })
+    .catch(err => console.error("Eroare la încărcarea conversațiilor:", err));
+}, []);
+
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">

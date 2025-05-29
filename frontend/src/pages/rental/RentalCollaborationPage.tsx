@@ -16,7 +16,6 @@ const RentalCollaborationPage: React.FC = () => {
   const [note, setNote] = useState<string>("");
   const [fileInput, setFileInput] = useState<FileList | null>(null);
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
-
   const [noteSaved, setNoteSaved] = useState(false);
   const navigate = useNavigate();
 
@@ -104,63 +103,77 @@ const RentalCollaborationPage: React.FC = () => {
     }
   };
 
+  const endCollaboration = async () => {
+    if (!rentalId) return;
+    try {
+      await api.post(`/rentals/endRental/${rentalId}`);
+      alert("Colaborarea a fost încheiată cu succes.");
+      navigate("/rentals"); // Redirecționează spre lista de închirieri
+    } catch (err) {
+      console.error("Eroare la încheierea colaborării:", err);
+      alert("A apărut o eroare. Încearcă din nou.");
+    }
+  };
+
   if (!rental) return <p className="p-4">Se încarcă închirierea...</p>;
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white">
-        <MainNavBar />
-        <div className="flex">
-            <RentalSidebar rentalId={rentalId!} />
-            <div className="flex-1 flex flex-col md:flex-row gap-6 p-6 max-w-7xl mx-auto">
-
-            <div className="flex-1 space-y-6">
-                <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow">
+      <MainNavBar />
+      <div className="flex">
+        <RentalSidebar rentalId={rentalId!} />
+        <div className="flex-1 flex flex-col md:flex-row gap-6 p-6 max-w-7xl mx-auto">
+          <div className="flex-1 space-y-6">
+            <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex justify-between items-center">
+              <div>
                 <h2 className="text-2xl font-bold mb-2">{rental.property?.name}</h2>
                 <p>{rental.property?.address}</p>
                 <p>Început: {new Date(rental.startDate).toLocaleDateString()}</p>
                 {rental.endDate && <p>Final: {new Date(rental.endDate).toLocaleDateString()}</p>}
-                </section>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <DocumentsSection
-                    documents={documents}
-                    downloadDocument={downloadDocument}
-                    uploadDocuments={uploadDocuments}
-                    setFileInput={setFileInput}
-                />
-                <TasksSection
-                    tasks={tasks}
-                    toggleTask={toggleTask}
-                    newTaskTitle={newTaskTitle}
-                    setNewTaskTitle={setNewTaskTitle}
-                    addTask={addTask}
-                />
-                </div>
-                <NotesSection
-                note={note}
-                setNote={setNote}
-                saveNote={saveNote}
-                noteSaved={noteSaved}
-                />
-            </div>
+              </div>
+              <button
+                onClick={endCollaboration}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Încheie colaborarea
+              </button>
+            </section>
 
-            <div className="w-full md:w-1/3 bg-white dark:bg-gray-700 rounded-xl shadow p-4">
-                <h4 className="text-lg font-semibold mb-2">📅 Date importante</h4>
-                <RentalCalendarSection rentalId={rentalId!} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <DocumentsSection
+                documents={documents}
+                downloadDocument={downloadDocument}
+                uploadDocuments={uploadDocuments}
+                setFileInput={setFileInput}
+              />
+              <TasksSection
+                tasks={tasks}
+                toggleTask={toggleTask}
+                newTaskTitle={newTaskTitle}
+                setNewTaskTitle={setNewTaskTitle}
+                addTask={addTask}
+              />
             </div>
+            <NotesSection note={note} setNote={setNote} saveNote={saveNote} noteSaved={noteSaved} />
+          </div>
 
-            </div>
+          <div className="w-full md:w-1/3 bg-white dark:bg-gray-700 rounded-xl shadow p-4">
+            <h4 className="text-lg font-semibold mb-2">📅 Date importante</h4>
+            <RentalCalendarSection rentalId={rentalId!} />
+          </div>
         </div>
+      </div>
 
-        {rental?.conversationId && (
-            <button
-            onClick={() => navigate(`/chat/${rental.conversationId}`)}
-            className="fixed bottom-4 right-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition"
-            >
-            💬 Mergi la conversație
-            </button>
-        )}
-        </div>
-    );
+      {rental?.conversationId && (
+        <button
+          onClick={() => navigate(`/chat/${rental.conversationId}`)}
+          className="fixed bottom-4 right-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition"
+        >
+          💬 Mergi la conversație
+        </button>
+      )}
+    </div>
+  );
 };
 
 export default RentalCollaborationPage;

@@ -16,7 +16,7 @@ import ConversationsPage from "./pages/conversations/ConversationsPage";
 import ChatPage from "./pages/conversations/ChatPage";
 import RentalCollaborationPage from "./pages/rental/RentalCollaborationPage";
 import MyRentalsPage from "./pages/rental/MyRentalsPage";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/homePage/HomePage";
 
 function App() {
 

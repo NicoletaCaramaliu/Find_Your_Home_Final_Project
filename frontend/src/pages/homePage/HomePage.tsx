@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import MainNavBar from '../components/MainNavBar';
-import Slider from 'react-slick';
+import MainNavBar from '../../components/MainNavBar';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { GoogleMap, Marker, InfoWindow, useLoadScript } from "@react-google-maps/api";
-import api from '../api';
-import { Property } from '../types/Property'; 
+import api from '../../api';
+import { Property } from '../../types/Property'; 
+import RecommendedProperties from './RecommendedProperties';
 
 const HomePage = () => {
   const sliderSettings = {
@@ -92,7 +92,9 @@ const HomePage = () => {
                 zoom={10}
                 center={{ lat: 44.4268, lng: 26.1025 }}
             >
-                {properties.map((property) => (
+                {properties
+                    .filter(property => property.isAvailable && !property.isRented)
+                    .map((property) => (
                 <Marker
                     key={property.id}
                     position={{ lat: property.latitude, lng: property.longitude }}
@@ -124,22 +126,8 @@ const HomePage = () => {
         </div>
         </section>
 
-      <section id="recommended" className="py-16 container mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-10">🏡 Proprietăți recomandate</h2>
-        <Slider {...sliderSettings}>
-          {[1, 2, 3, 4, 5].map((item) => (
-            <div key={item} className="p-4">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-1">
-                <img src={`https://source.unsplash.com/400x300/?house,${item}`} alt={`Property ${item}`} className="h-56 w-full object-cover"/>
-                <div className="p-4">
-                  <h3 className="font-bold text-lg mb-2">Proprietate #{item}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Preț: $XXX,XXX</p>
-                  <Link to="/properties" className="text-blue-600 hover:underline text-sm">Vezi detalii</Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </Slider>
+      <section id="recommended">
+        <RecommendedProperties />
       </section>
 
       <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800">
