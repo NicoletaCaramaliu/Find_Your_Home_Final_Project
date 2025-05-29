@@ -33,6 +33,7 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsAvailable { get; set; } = true;
+        public bool IsRented { get; set; } = false;
         public Guid OwnerId { get; set; }
         public string OwnerName { get; set; }
     }

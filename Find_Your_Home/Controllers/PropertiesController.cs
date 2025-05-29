@@ -29,7 +29,7 @@ namespace Find_Your_Home.Controllers
             _mapper = mapper;
         }   
         
-        [HttpPost("createProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner")]
+        [HttpPost("createProperty"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<ActionResult<PropertyResponse>> CreateProperty(
             [FromForm] PropertyRequest propertyRequest,
             [FromForm] List<IFormFile> images,
@@ -94,7 +94,7 @@ namespace Find_Your_Home.Controllers
             return Ok(result);
         }
          
-        [HttpDelete("deletePropertyImage"), Authorize(Roles = "Admin, Agent, PropertyOwner")]
+        [HttpDelete("deletePropertyImage"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<IActionResult> DeletePropertyImage(Guid imageId)
         {
             var userId = _userService.GetMyId();
@@ -280,7 +280,7 @@ namespace Find_Your_Home.Controllers
             return Ok(propertyResponse);
         }
 
-        [HttpPut("updateProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner")]
+        [HttpPut("updateProperty"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<ActionResult<object>> UpdateProperty(
             [FromForm] PropertyRequest propertyRequest,
             [FromForm] List<IFormFile> images,
@@ -344,7 +344,7 @@ namespace Find_Your_Home.Controllers
         }
 
         
-        [HttpDelete("deleteProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner, Moderator")]
+        [HttpDelete("deleteProperty"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<ActionResult> DeleteProperty(Guid propertyId)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -365,6 +365,29 @@ namespace Find_Your_Home.Controllers
 
             await _propertyService.DeletePropertyAndDependencies(property.Id);
             return NoContent();
+        }
+
+        [HttpPatch("sellProperty"), Authorize(Roles = "PropertyOwner")]
+        public async Task<ActionResult<PropertyResponse>> SellProperty(Guid propertyId)
+        {
+            var userId = _userService.GetMyId();
+            var property = await _propertyService.GetPropertyByID(propertyId);
+
+            if (property.OwnerId != userId)
+            {
+                return Unauthorized("You are not authorized to sell this property");
+            }
+
+            if (property.IsRented)
+            {
+                return BadRequest("Cannot sell a rented property");
+            }
+
+            property.IsAvailable = false;
+            await _propertyService.UpdateProperty(property);
+
+            var propertyResponse = _mapper.Map<PropertyResponse>(property);
+            return Ok(propertyResponse);
         }
 
     }

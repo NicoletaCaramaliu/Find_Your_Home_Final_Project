@@ -27,4 +27,5 @@ export interface Property {
     imageUrls: string[];
     latitude: number;
     longitude: number;
+    isRented: boolean;
 }

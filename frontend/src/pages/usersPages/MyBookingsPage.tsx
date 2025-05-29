@@ -15,6 +15,8 @@ interface Booking {
   endTime: string;
   status: string;
   createdAt: string;
+  isForRent: boolean;  
+  isSold: boolean;
 }
 
 const MyBookingsPage: React.FC = () => {
@@ -68,6 +70,17 @@ const MyBookingsPage: React.FC = () => {
       );
     } catch (err) {
       console.error("Eroare la anulare:", err);
+    }
+  };
+
+  const sellProperty = async (propertyId: string) => {
+    try {
+      await api.patch(`/Properties/sellProperty?propertyId=${propertyId}`);
+      const res = await api.get("/bookings/getAllMyPropertiesBookings");
+      setBookings(res.data);
+    } catch (err) {
+      console.error("Eroare la vânzare:", err);
+      alert("A apărut o eroare la marcare ca vândut.");
     }
   };
 
@@ -189,6 +202,15 @@ const MyBookingsPage: React.FC = () => {
                         className="px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700"
                       >
                         Anulează
+                      </button>
+                    )}
+
+                    {!booking.isForRent && Number(booking.status) === 4 && !booking.isSold && (
+                      <button
+                        onClick={() => sellProperty(booking.propertyId)}
+                        className="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700"
+                      >
+                        Marcare Vândut
                       </button>
                     )}
 

@@ -65,7 +65,7 @@ namespace Find_Your_Home.Controllers
             return Ok(result);
         }
         
-        [HttpGet("reject/{bookingId}"), Authorize(Roles = "Admin, PropertyOwner, Agent")]
+        [HttpGet("reject/{bookingId}"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<ActionResult> RejectBooking(Guid bookingId)
         {
             var userId = _userService.GetMyId();
@@ -82,7 +82,7 @@ namespace Find_Your_Home.Controllers
             return Ok(result);
         }
         
-        [HttpPost("cancel/{bookingId}"), Authorize(Roles = "Admin, PropertyOwner, Agent")]
+        [HttpPost("cancel/{bookingId}"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<ActionResult> CancelBooking(Guid bookingId)
         {
             var userId = _userService.GetMyId();

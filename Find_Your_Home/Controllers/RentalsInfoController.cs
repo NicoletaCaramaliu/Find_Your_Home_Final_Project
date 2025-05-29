@@ -75,7 +75,7 @@ namespace Find_Your_Home.Controllers
             var existingInfo = await _context.RentalInfos.FirstOrDefaultAsync(ri => ri.RentalId == rentalId);
             if (existingInfo == null)
                 return NotFound("Informațiile pentru această închiriere nu există.");
-
+            
             existingInfo.RentPaymentDate = updatedInfo.RentPaymentDate;
             existingInfo.ElectricityPaymentDate = updatedInfo.ElectricityPaymentDate;
             existingInfo.WaterPaymentDate = updatedInfo.WaterPaymentDate;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import MainNavBar from '../../components/MainNavBar';
 import OwnerProfileCard from '../../components/user/UserCard';
 import api from "../../api";
@@ -23,6 +23,7 @@ interface PropertyImage {
 
 const PropertyDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [property, setProperty] = useState<Property | null>(null);
   const [owner, setOwner] = useState<Owner | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,7 +34,7 @@ const PropertyDetailsPage: React.FC = () => {
   const [showMap, setShowMap] = useState(false);
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBG-_7FJZ_xOMG3zfjE50XbHFz_7SCfh8Y" 
+    googleMapsApiKey: "AIzaSyBG-_7FJZ_xOMG3zfjE50XbHFz_7SCfh8Y"
   });
 
   useEffect(() => {
@@ -113,11 +114,29 @@ const PropertyDetailsPage: React.FC = () => {
   if (loading) return <div className="text-center text-gray-700 dark:text-white">Loading...</div>;
   if (error) return <div className="text-center text-red-600">{error}</div>;
 
+   const isSold = property && !property.isAvailable;
+  const isRented = property && property.forRent && property.isRented;
+
   return (
     <div className="min-h-screen w-full bg-blue-950 dark:bg-gray-800/90">
       <div className="w-full bg-blue-500 dark:bg-gray-800/90"><MainNavBar /></div>
       <div className="container mx-auto p-6">
-        {property && (
+        {property && (isSold || isRented) ? (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
+            <h1 className="text-3xl font-bold text-red-600 dark:text-red-400">
+              {isSold ? "Proprietatea a fost vândută" : "Proprietatea este închiriată"}
+            </h1>
+            <p className="mt-4 text-gray-700 dark:text-gray-300">
+              Această proprietate nu mai poate fi vizualizată momentan.
+            </p>
+            <button
+              onClick={() => navigate('/properties')}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Înapoi la listă
+            </button>
+          </div>
+        ) : property && (
           <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
             <button onClick={handleToggleFavorite} className="absolute top-4 right-4 bg-white/80 dark:bg-gray-700/80 p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-200 z-10" title={isFavorited ? "Elimină din favorite" : "Adaugă la favorite"}>
               <Heart className="w-6 h-6" fill={isFavorited ? "red" : "none"} stroke="red" />
@@ -125,13 +144,11 @@ const PropertyDetailsPage: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{property.name}</h1>
             <p className="text-gray-600 dark:text-gray-300 mt-2">{property.description}</p>
             <p className="text-gray-500 dark:text-gray-400 mt-1">{property.address}</p>
-
-            {property?.latitude && property?.longitude && (
+            {property.latitude && property.longitude && (
               <button onClick={() => setShowMap(!showMap)} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                 {showMap ? "Ascunde harta" : "Arată pe hartă"}
               </button>
             )}
-
             {showMap && (
               <>
                 {loadError && <p className="text-red-500">❌ Eroare la încărcarea hărții</p>}
@@ -150,7 +167,6 @@ const PropertyDetailsPage: React.FC = () => {
                 )}
               </>
             )}
-
             <p className="text-xl font-bold text-blue-600 dark:text-blue-400 mt-4">{property.price.toLocaleString()}€</p>
             <div className="grid grid-cols-2 gap-4 mt-4">
               <p className="text-gray-700 dark:text-gray-300">Camere: {property.rooms}</p>
@@ -165,7 +181,6 @@ const PropertyDetailsPage: React.FC = () => {
               <p className="text-gray-700 dark:text-gray-300">An construcție: {property.yearOfConstruction}</p>
               <p className="text-gray-700 dark:text-gray-300">Mobilat: {property.furnished ? "Da" : "Nu"}</p>
             </div>
-
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {images.length > 0 ? (
                 images.map((img, index) => (
@@ -175,7 +190,6 @@ const PropertyDetailsPage: React.FC = () => {
                 <p className="text-gray-500 dark:text-gray-400">Nu există imagini disponibile</p>
               )}
             </div>
-
             <p className="text-gray-700 dark:text-gray-300 mt-4">Publicat: {new Date(property.createdAt).toLocaleDateString()}</p>
             <p className="text-gray-700 dark:text-gray-300">Actualizat: {new Date(property.updatedAt).toLocaleDateString()}</p>
             <p className="text-right text-gray-700 dark:text-gray-300">Vizualizări: {property.views}</p>
@@ -183,7 +197,7 @@ const PropertyDetailsPage: React.FC = () => {
         )}
 
         <div className="mt-6">
-          {owner && (
+          {owner && property?.isAvailable && !property?.isRented && (
             <OwnerProfileCard
               username={owner.username}
               profileImageUrl={owner.profilePicture}
@@ -191,7 +205,9 @@ const PropertyDetailsPage: React.FC = () => {
               createdAt={owner.createdAt}
             />
           )}
-          {property && <AvailableVisits propertyId={property.id} />}
+          {property?.isAvailable && !property?.isRented && (
+            <AvailableVisits propertyId={property.id} />
+          )}
         </div>
       </div>
 

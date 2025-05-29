@@ -1,2 +1,34 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+.rbc-today {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid #3b82f6 !important;
+  color: black !important; 
+}
+
+.dark .rbc-today {
+  background-color: rgba(0, 0, 0, 0.4) !important; 
+  border: 2px solid #60a5fa !important;
+  color: white !important; 
+}
+
+.rbc-date-cell {
+  color: black !important;
+}
+
+.dark .rbc-date-cell {
+  color: rgb(18, 5, 5) !important;
+}
+
+.rbc-event {
+    font-size: 0.7rem !important; /* micșorează textul */
+    padding: 2px !important;       /* reduce spațiul */
+    white-space: normal !important; /* permite mai multe rânduri */
+    overflow: visible !important;  /* permite afișarea completă */
+    text-overflow: unset !important; /* elimină tăierea cu "..." */
+    line-height: 1.1 !important;   /* spațiu între rânduri */
+    max-height: 2.2em;             /* opțional, pentru a limita la 2 rânduri */
+}
+
+

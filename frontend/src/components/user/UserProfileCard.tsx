@@ -1,7 +1,46 @@
 import React, { useState } from "react";
-import { rolesMap } from "../../constants/roles";
 import { LoggedUser } from "../../types/User";
 import api from "../../api";
+
+// Traducerile erorilor
+const errorTranslations: Record<string, string> = {
+  USER_ALREADY_EXISTS: "Utilizatorul există deja.",
+  INVALID_CREDENTIALS: "Email sau parolă incorecte.",
+  USER_NOT_FOUND: "Utilizatorul nu a fost găsit.",
+  REFRESH_TOKEN_NOT_FOUND: "Tokenul de reîmprospătare lipsește.",
+  INVALID_REFRESH_TOKEN: "Tokenul este invalid sau a expirat.",
+  EMAIL_NOT_FOUND: "Nu există niciun cont asociat acestui email.",
+  RESET_TOKEN_INVALID: "Linkul de resetare este invalid sau expirat.",
+  PASSWORD_RESET_SUCCESS: "Parola a fost resetată cu succes.",
+  PASSWORD_CHANGED_SUCCESSFULLY: "Parola a fost schimbată cu succes.",
+  USER_DELETED_SUCCESSFULLY: "Contul a fost șters.",
+  LOGOUT_SUCCESS: "Ai fost delogat cu succes.",
+  OLD_PASSWORD_INVALID: "Parola veche este incorectă.",
+  UNKNOWN_ERROR: "A apărut o eroare necunoscută.",
+
+  // Booking
+  TIME_SLOT_ALREADY_BOOKED: "Intervalul de timp selectat este deja rezervat.",
+  TIME_SLOT_NOT_AVAILABLE: "Intervalul de timp selectat nu mai este disponibil.",
+  PROPERTY_NOT_FOUND: "Proprietatea nu a fost găsită.",
+  CANNOT_BOOK_OWN_PROPERTY: "Nu poți rezerva propria ta proprietate.",
+  NO_REVIEW_PERMISSION: "Poți lăsa o recenzie doar dacă ai avut o rezervare cu acest utilizator.",
+
+  // Availability
+  SLOT_NOT_FOUND: "Perioada nu a fost găsită.",
+  NOT_OWNER_OF_PROPERTY: "Nu ești proprietarul acestei proprietăți.",
+  SLOT_OVERLAP_EXISTS: "Există deja o perioadă disponibilă care se suprapune.",
+  INVALID_TIME_RANGE: "Ora de început trebuie să fie înainte de ora de sfârșit.",
+  SLOT_DELETED_SUCCESSFULLY: "Slot șters cu succes!",
+  CANNOT_DELETE_SLOT_WITH_BOOKINGS: "Nu poți șterge un slot care are rezervări existente.",
+  NO_SLOTS_FOUND_FOR_PROPERTY: "Nu sunt adăugate perioade de vizită pentru această proprietate",
+  CANNOT_BOOK_SLOT_WITH_LESS_THAN_12_HOURS: "Nu poți rezerva un slot cu mai puțin de 12 ore înainte."
+};
+
+// Funcție de parsare eroare
+const parseError = (error: any): string => {
+  const errorCode = error?.response?.data?.errorCode || error?.response?.data?.message;
+  return errorTranslations[errorCode] || "A apărut o eroare necunoscută.";
+};
 
 interface Props {
   user: LoggedUser;
@@ -20,6 +59,9 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
+  const [passwordChangeSuccess, setPasswordChangeSuccess] = useState<string | null>(null);
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -52,34 +94,39 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
   };
 
   const handleChangePassword = async () => {
+    setPasswordChangeError(null);
+    setPasswordChangeSuccess(null);
+
     if (!oldPassword || !newPassword || !confirmPassword) {
-      alert("Completează toate câmpurile.");
+      setPasswordChangeError("Completează toate câmpurile.");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      alert("Parolele nu coincid.");
+      setPasswordChangeError("Parolele nu coincid.");
       return;
     }
 
     if (!passwordRegex.test(newPassword)) {
-      alert("Parola nouă nu respectă cerințele de securitate.");
+      setPasswordChangeError("Parola nouă nu respectă cerințele de securitate.");
       return;
     }
 
     try {
-      await api.put("/User/changePassword", {
+      const response = await api.put("/User/changePassword", {
         oldPassword,
         newPassword,
       });
 
-      alert("Parola a fost schimbată cu succes.");
+      const message = response.data?.message;
+      setPasswordChangeSuccess(errorTranslations[message] || "Parola a fost schimbată cu succes.");
       setShowPasswordForm(false);
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
+      refreshUser();
     } catch (error: any) {
-      alert(error.response?.data || "Eroare la schimbarea parolei.");
+      setPasswordChangeError(parseError(error));
     }
   };
 
@@ -205,6 +252,8 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
               >
                 Salvează noua parolă
               </button>
+              {passwordChangeError && <p className="text-red-600 mt-2">{passwordChangeError}</p>}
+              {passwordChangeSuccess && <p className="text-green-600 mt-2">{passwordChangeSuccess}</p>}
             </div>
           )}
 

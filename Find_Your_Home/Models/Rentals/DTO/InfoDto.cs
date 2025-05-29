@@ -2,12 +2,13 @@
 {
     public class InfoDto
     {
+        //dates
         public DateTime? RentPaymentDate { get; set; }
         public DateTime? ElectricityPaymentDate { get; set; }
         public DateTime? WaterPaymentDate { get; set; }
         public DateTime? GasPaymentDate { get; set; }
         public DateTime? InternetPaymentDate { get; set; }
-
+        
         //contacts
         public string? LandlordPhone { get; set; }
         public string? PlumberPhone { get; set; }

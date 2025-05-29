@@ -74,5 +74,39 @@ public class EmailService : IEmailService
         await smtpClient.SendMailAsync(mailMessage);
     }
 
+    public async Task SendPaymentReminderEmailAsync(string toEmail, string paymentType, DateTime paymentDate)
+    {
+        var fromEmail = _config["EmailSettings:From"];
+        var smtpClient = new SmtpClient(_config["EmailSettings:Smtp"])
+        {
+            Port = int.Parse(_config["EmailSettings:Port"]!),
+            Credentials = new NetworkCredential(
+                _config["EmailSettings:Username"],
+                _config["EmailSettings:Password"]
+            ),
+            EnableSsl = true,
+        };
+
+        var subject = $"Reminder: Plată {paymentType}";
+        var body = $@"
+        Salut,
+
+        Acesta este un memento pentru plata de tip '{paymentType}', care are termenul limită pe {paymentDate:dd MMMM yyyy}.
+
+        Vă rugăm să efectuați plata până la această dată.
+
+        Mulțumim,
+        Echipa Find Your Home
+    ";
+
+        var mailMessage = new MailMessage(fromEmail, toEmail)
+        {
+            Subject = subject,
+            Body = body,
+            IsBodyHtml = false,
+        };
+
+        await smtpClient.SendMailAsync(mailMessage);
+    }
 
 }

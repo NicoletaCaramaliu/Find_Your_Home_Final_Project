@@ -43,7 +43,7 @@ const UserDetailsPage: React.FC = () => {
 
         setUser(transformedUser);
 
-        const rolesWithProperties = [0, 2, 3];
+        const rolesWithProperties = [0, 1];
         if (rolesWithProperties.includes(userData.role)) {
           const propRes = await api.get('/Properties/getAllPropertiesByUserId', {
             params: { userId: userId },
@@ -144,7 +144,7 @@ const UserDetailsPage: React.FC = () => {
           )}
         </div>
 
-        {[0, 2, 3].includes(role ?? -1) && (
+        {[0, 1].includes(role ?? -1) && (
           <div className="mb-6">
             <h3 className="text-xl font-semibold mb-4">Proprietățile utilizatorului:</h3>
             <div className="bg-white dark:bg-gray-700 rounded shadow p-4 max-h-[500px] overflow-y-auto">

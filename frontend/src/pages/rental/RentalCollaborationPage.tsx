@@ -6,6 +6,7 @@ import DocumentsSection from "./components/DocumentsSection";
 import TasksSection from "./components/TasksSection";
 import NotesSection from "./components/NotesSection";
 import RentalSidebar from "./components/RentalSidebar";
+import RentalCalendarSection from "./components/RentalCalendar";
 
 const RentalCollaborationPage: React.FC = () => {
   const { rentalId } = useParams();
@@ -107,41 +108,49 @@ const RentalCollaborationPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white">
-      <MainNavBar />
-      <div className="flex">
-        <RentalSidebar rentalId={rentalId!} />
-        <div className="flex-1 max-w-6xl mx-auto p-6 space-y-6">
-            <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow">
+        <MainNavBar />
+        <div className="flex">
+            <RentalSidebar rentalId={rentalId!} />
+            <div className="flex-1 flex flex-col md:flex-row gap-6 p-6 max-w-7xl mx-auto">
+
+            <div className="flex-1 space-y-6">
+                <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow">
                 <h2 className="text-2xl font-bold mb-2">{rental.property?.name}</h2>
                 <p>{rental.property?.address}</p>
                 <p>Început: {new Date(rental.startDate).toLocaleDateString()}</p>
-                {rental.endDate && (
-                <p>Final: {new Date(rental.endDate).toLocaleDateString()}</p>
-                )}
-            </section>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {rental.endDate && <p>Final: {new Date(rental.endDate).toLocaleDateString()}</p>}
+                </section>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <DocumentsSection
-                documents={documents}
-                downloadDocument={downloadDocument}
-                uploadDocuments={uploadDocuments}
-                setFileInput={setFileInput}
+                    documents={documents}
+                    downloadDocument={downloadDocument}
+                    uploadDocuments={uploadDocuments}
+                    setFileInput={setFileInput}
                 />
                 <TasksSection
-                tasks={tasks}
-                toggleTask={toggleTask}
-                newTaskTitle={newTaskTitle}
-                setNewTaskTitle={setNewTaskTitle}
-                addTask={addTask}
+                    tasks={tasks}
+                    toggleTask={toggleTask}
+                    newTaskTitle={newTaskTitle}
+                    setNewTaskTitle={setNewTaskTitle}
+                    addTask={addTask}
                 />
-            </div>
-            <NotesSection
+                </div>
+                <NotesSection
                 note={note}
                 setNote={setNote}
                 saveNote={saveNote}
                 noteSaved={noteSaved}
-            />
+                />
+            </div>
+
+            <div className="w-full md:w-1/3 bg-white dark:bg-gray-700 rounded-xl shadow p-4">
+                <h4 className="text-lg font-semibold mb-2">📅 Date importante</h4>
+                <RentalCalendarSection rentalId={rentalId!} />
+            </div>
+
             </div>
         </div>
+
         {rental?.conversationId && (
             <button
             onClick={() => navigate(`/chat/${rental.conversationId}`)}

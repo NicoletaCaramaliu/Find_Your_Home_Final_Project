@@ -69,7 +69,8 @@ namespace Find_Your_Home.Services.BookingService
             if (property.OwnerId == userId)
                 throw new AppException("CANNOT_BOOK_OWN_PROPERTY");
             
-            var timeDifference = booking.SlotDate - DateTime.UtcNow;
+            var bookingStartDateTime = booking.SlotDate.Date + booking.StartTime;
+            var timeDifference = bookingStartDateTime - DateTime.Now;
             if (timeDifference.TotalHours < 12)
                 throw new AppException("CANNOT_BOOK_SLOT_WITH_LESS_THAN_12_HOURS");
 
