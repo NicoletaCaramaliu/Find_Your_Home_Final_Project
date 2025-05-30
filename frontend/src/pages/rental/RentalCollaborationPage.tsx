@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import api from "../../api";
 import MainNavBar from "../../components/MainNavBar";
-import MiniChatWidget from "../../pages/conversations/MiniChatWidget"; 
+import DocumentsSection from "./components/DocumentsSection";
+import TasksSection from "./components/TasksSection";
+import NotesSection from "./components/NotesSection";
+import RentalSidebar from "./components/RentalSidebar";
+import RentalCalendarSection from "./components/RentalCalendar";
 
 const RentalCollaborationPage: React.FC = () => {
   const { rentalId } = useParams();
@@ -13,12 +16,11 @@ const RentalCollaborationPage: React.FC = () => {
   const [note, setNote] = useState<string>("");
   const [fileInput, setFileInput] = useState<FileList | null>(null);
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
-
+  const [noteSaved, setNoteSaved] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!rentalId) return;
-
     const fetchAll = async () => {
       try {
         const rentalRes = await api.get(`/rentals/${rentalId}`);
@@ -34,7 +36,6 @@ const RentalCollaborationPage: React.FC = () => {
         console.error("Eroare la preluarea datelor de colaborare:", err);
       }
     };
-
     fetchAll();
   }, [rentalId]);
 
@@ -83,25 +84,34 @@ const RentalCollaborationPage: React.FC = () => {
 
   const addTask = async () => {
     if (!newTaskTitle.trim() || !rentalId) return;
-
     try {
-        const res = await api.post(`/rentaltasks/${rentalId}`, {
-        title: newTaskTitle
-        });
-        setTasks((prev) => [...prev, res.data]);
-        setNewTaskTitle("");
+      const res = await api.post(`/rentaltasks/${rentalId}`, { title: newTaskTitle });
+      setTasks((prev) => [...prev, res.data]);
+      setNewTaskTitle("");
     } catch (err) {
-        console.error("Eroare la adăugarea taskului:", err);
+      console.error("Eroare la adăugarea taskului:", err);
     }
   };
-
 
   const saveNote = async () => {
     try {
       await api.post(`/rentalnotes/${rentalId}`, { content: note });
-      alert("Notiță salvată cu succes!");
+      setNoteSaved(true);
+      setTimeout(() => setNoteSaved(false), 3000);
     } catch (err) {
       console.error("Eroare la salvarea notiței:", err);
+    }
+  };
+
+  const endCollaboration = async () => {
+    if (!rentalId) return;
+    try {
+      await api.post(`/rentals/endRental/${rentalId}`);
+      alert("Colaborarea a fost încheiată cu succes.");
+      navigate("/rentals"); // Redirecționează spre lista de închirieri
+    } catch (err) {
+      console.error("Eroare la încheierea colaborării:", err);
+      alert("A apărut o eroare. Încearcă din nou.");
     }
   };
 
@@ -110,95 +120,48 @@ const RentalCollaborationPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white">
       <MainNavBar />
-      <div className="max-w-6xl mx-auto p-6 space-y-6">
-
-        <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow">
-          <h2 className="text-2xl font-bold mb-2">{rental.property?.name}</h2>
-          <p>{rental.property?.address}</p>
-          <p>Început: {new Date(rental.startDate).toLocaleDateString()}</p>
-          {rental.endDate && (
-            <p>Final: {new Date(rental.endDate).toLocaleDateString()}</p>
-          )}
-        </section>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow">
-            <h3 className="text-xl font-semibold mb-2">📎 Documente partajate</h3>
-            <ul className="mb-2 list-disc ml-5">
-              {documents.map((doc) => (
-                <li key={doc.id}>
-                  <button
-                    onClick={() => downloadDocument(doc.id, doc.fileName)}
-                    className="text-blue-500 underline hover:text-blue-700"
-                  >
-                    {doc.fileName}
-                  </button>
-                </li>
-              ))}
-            </ul>
-            <input
-              type="file"
-              multiple
-              onChange={(e) => setFileInput(e.target.files)}
-              className="mb-2"
-            />
-            <button
-              onClick={uploadDocuments}
-              className="px-4 py-2 bg-blue-600 text-white rounded"
-            >
-              Încarcă
-            </button>
-          </section>
-
-          <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow">
-            <h3 className="text-xl font-semibold mb-2">📝 Taskuri comune</h3>
-            <ul className="space-y-2 mb-4">
-              {tasks.map((task) => (
-                <li key={task.id} className="flex justify-between items-center">
-                  <span>{task.title}</span>
-                  <input
-                    type="checkbox"
-                    checked={task.completed}
-                    onChange={() => toggleTask(task.id)}
-                  />
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                value={newTaskTitle}
-                onChange={(e) => setNewTaskTitle(e.target.value)}
-                placeholder="Adaugă un task nou..."
-                className="flex-1 p-2 border rounded"
-              />
+      <div className="flex">
+        <RentalSidebar rentalId={rentalId!} />
+        <div className="flex-1 flex flex-col md:flex-row gap-6 p-6 max-w-7xl mx-auto">
+          <div className="flex-1 space-y-6">
+            <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-bold mb-2">{rental.property?.name}</h2>
+                <p>{rental.property?.address}</p>
+                <p>Început: {new Date(rental.startDate).toLocaleDateString()}</p>
+                {rental.endDate && <p>Final: {new Date(rental.endDate).toLocaleDateString()}</p>}
+              </div>
               <button
-                onClick={addTask}
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                onClick={endCollaboration}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
               >
-                Adaugă
+                Încheie colaborarea
               </button>
+            </section>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <DocumentsSection
+                documents={documents}
+                downloadDocument={downloadDocument}
+                uploadDocuments={uploadDocuments}
+                setFileInput={setFileInput}
+              />
+              <TasksSection
+                tasks={tasks}
+                toggleTask={toggleTask}
+                newTaskTitle={newTaskTitle}
+                setNewTaskTitle={setNewTaskTitle}
+                addTask={addTask}
+              />
             </div>
-          </section>
+            <NotesSection note={note} setNote={setNote} saveNote={saveNote} noteSaved={noteSaved} />
+          </div>
+
+          <div className="w-full md:w-1/3 bg-white dark:bg-gray-700 rounded-xl shadow p-4">
+            <h4 className="text-lg font-semibold mb-2">📅 Date importante</h4>
+            <RentalCalendarSection rentalId={rentalId!} />
+          </div>
         </div>
-
-        <section className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow">
-          <h3 className="text-xl font-semibold mb-2">🗒️ Notițe comune</h3>
-          <textarea
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            rows={6}
-            className="w-full p-2 border rounded"
-          />
-          <button
-            onClick={saveNote}
-            className="mt-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
-          >
-            Salvează notița
-          </button>
-        </section>
-
       </div>
 
       {rental?.conversationId && (

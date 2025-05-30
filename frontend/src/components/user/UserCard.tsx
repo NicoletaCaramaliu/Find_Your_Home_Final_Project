@@ -1,14 +1,8 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api";
+import { rolesMap } from "../../constants/roles";
 
-export const rolesMap: Record<number, string> = {
-  0: "Admin",
-  1: "Moderator",
-  2: "Proprietar",
-  3: "Agent",
-  4: "Utilizator",
-};
 
 export interface UserCardProps {
   username: string;

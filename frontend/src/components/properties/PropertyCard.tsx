@@ -77,7 +77,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         </h2>
         <p className="text-gray-600 dark:text-gray-300 text-sm">{property.address}</p>
         <p className="text-xl font-bold text-blue-600 dark:text-blue-400 mt-2">
-          ${property.price.toLocaleString()}
+          {property.price.toLocaleString()}€
         </p>
       </div>
     </div>

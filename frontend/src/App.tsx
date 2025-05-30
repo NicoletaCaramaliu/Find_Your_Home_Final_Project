@@ -16,6 +16,7 @@ import ConversationsPage from "./pages/conversations/ConversationsPage";
 import ChatPage from "./pages/conversations/ChatPage";
 import RentalCollaborationPage from "./pages/rental/RentalCollaborationPage";
 import MyRentalsPage from "./pages/rental/MyRentalsPage";
+import HomePage from "./pages/homePage/HomePage";
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
       <Route path="/chat/:id" element={<ChatPage />} />
       <Route path="/rental-collaboration/:rentalId" element={<RentalCollaborationPage />} />
       <Route path="/my-rentals" element={<MyRentalsPage />} />
+      <Route path="/home" element={<HomePage/>} />
     </Routes>
     </ThemeProvider>
   );

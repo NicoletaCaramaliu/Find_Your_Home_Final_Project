@@ -55,7 +55,8 @@ namespace Find_Your_Home.Helpers
                 .ForMember(dest => dest.PropertyName, opt => opt.MapFrom(src => src.Property.Name))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username))
                 .ForMember(dest => dest.isRented, opt => opt.MapFrom(src => src.Property.IsRented))
-                .ForMember(dest => dest.isForRent, opt => opt.MapFrom(src => src.Property.ForRent));
+                .ForMember(dest => dest.isForRent, opt => opt.MapFrom(src => src.Property.ForRent))
+                .ForMember(dest => dest.isSold,opt => opt.MapFrom(src => !src.Property.IsAvailable));
                 //.ForMember(dest => dest.AvailabilitySlot, opt => opt.MapFrom(src => src.AvailabilitySlot));
             CreateMap<BookingResponseDto, Booking>();
             
@@ -85,6 +86,9 @@ namespace Find_Your_Home.Helpers
                 .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.Owner.Username))
                 .ForMember(dest => dest.ConversationId, opt => opt.MapFrom(src => src.ConversationId));
             CreateMap<RentalResponse, Rental>();
+
+            CreateMap<RentalInfo, InfoDto>();
+            CreateMap<InfoDto, RentalInfo>();
         }
     }
 }

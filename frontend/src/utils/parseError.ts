@@ -10,6 +10,7 @@ const errorTranslations: Record<string, string> = {
   PASSWORD_CHANGED_SUCCESSFULLY: "Parola a fost schimbată cu succes.",
   USER_DELETED_SUCCESSFULLY: "Contul a fost șters.",
   LOGOUT_SUCCESS: "Ai fost delogat cu succes.",
+  OLD_PASSWORD_INVALID: "Parola veche este incorectă.",
 
   // Booking
   TIME_SLOT_ALREADY_BOOKED: "Intervalul de timp selectat este deja rezervat.",

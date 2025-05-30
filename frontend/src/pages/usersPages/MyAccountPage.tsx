@@ -18,7 +18,7 @@ interface LoggedUser {
   createdAt: string;
 }
 
-const isAllowedToManageProperties = (role: number) => [0, 2, 3].includes(role);
+const isAllowedToManageProperties = (role: number) => [0, 1].includes(role);
 const shouldSeeFavoritesInstead = (role: number) => !isAllowedToManageProperties(role);
 
 const MyAccountPage: React.FC = () => {
@@ -148,7 +148,7 @@ const MyAccountPage: React.FC = () => {
 
             )}
 
-            {user?.role === 4 && (
+            {user?.role === 2 && (
             <>
               <button
                 onClick={async () => {

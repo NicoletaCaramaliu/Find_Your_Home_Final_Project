@@ -2,6 +2,7 @@
 using Find_Your_Home.Models.Rentals;
 using Find_Your_Home.Models.Rentals.DTO;
 using Find_Your_Home.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +27,7 @@ namespace Find_Your_Home.Controllers
             return rental != null && (rental.OwnerId == userId || rental.RenterId == userId);
         }
 
-        [HttpGet("{rentalId}")]
+        [HttpGet("{rentalId}"), Authorize]
         public async Task<IActionResult> GetTasks(Guid rentalId)
         {
             var userId = _userService.GetMyId();
@@ -36,7 +37,7 @@ namespace Find_Your_Home.Controllers
             return Ok(tasks);
         }
 
-        [HttpPost("toggle/{taskId}")]
+        [HttpPost("toggle/{taskId}"), Authorize]
         public async Task<IActionResult> ToggleTask(Guid taskId)
         {
             var userId = _userService.GetMyId();
@@ -50,7 +51,7 @@ namespace Find_Your_Home.Controllers
             return Ok();
         }
         
-        [HttpPost("{rentalId}")]
+        [HttpPost("{rentalId}"), Authorize]
         public async Task<IActionResult> AddTask(Guid rentalId, [FromBody] TaskDto dto)
         {
             var userId = _userService.GetMyId();

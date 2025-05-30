@@ -308,8 +308,14 @@ namespace Find_Your_Home.Migrations
                     b.Property<bool>("IsRented")
                         .HasColumnType("bit");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
                     b.Property<int>("Level")
                         .HasColumnType("int");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -467,6 +473,88 @@ namespace Find_Your_Home.Migrations
                     b.HasIndex("RentalId");
 
                     b.ToTable("RentalDocuments");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ContractEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("ContractSigned")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ContractStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ElectricianPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ElectricityPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("ElectricityPaymentReminderSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("EmergencyContact")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("GasPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("GasPaymentReminderSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("GasServicePhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InternetPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("InternetPaymentReminderSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("InternetProviderPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LandlordPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlumberPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RentAmount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RentPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("RentPaymentReminderSent")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("RentalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("WaterPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("WaterPaymentReminderSent")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RentalId");
+
+                    b.ToTable("RentalInfos");
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalNote", b =>
@@ -775,6 +863,17 @@ namespace Find_Your_Home.Migrations
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalDocument", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Rentals.Rental", "Rental")
+                        .WithMany()
+                        .HasForeignKey("RentalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rental");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalInfo", b =>
                 {
                     b.HasOne("Find_Your_Home.Models.Rentals.Rental", "Rental")
                         .WithMany()

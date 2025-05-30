@@ -32,7 +32,7 @@ namespace Find_Your_Home.Controllers
             _userService = userService;
         }
 
-        [HttpPost("addSlot"), Authorize(Roles = "Admin, PropertyOwner, Agent")]
+        [HttpPost("addSlot"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<ActionResult<AvailabilitySlotResponseDto>> AddSlot([FromBody] AvailabilitySlotDto dto)
         {
             var userId = _userService.GetMyId();
@@ -78,7 +78,7 @@ namespace Find_Your_Home.Controllers
             return Ok(slotDto);
         }
 
-        [HttpDelete("deleteSlot/{slotId}"), Authorize(Roles = "Admin, PropertyOwner, Agent")]
+        [HttpDelete("deleteSlot/{slotId}"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<ActionResult> DeleteSlot(Guid slotId)
         {
             var userId = _userService.GetMyId();

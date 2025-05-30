@@ -13,7 +13,7 @@ export default function MainNavBar() {
         </Link>
 
         <div className="flex-1 flex justify-end space-x-6 items-center">
-          <Link to="/" className="text-gray-900 hover:text-blue-400 dark:text-gray-100 dark:hover:text-blue-400">
+          <Link to="/home" className="text-gray-900 hover:text-blue-400 dark:text-gray-100 dark:hover:text-blue-400">
             Acasă
           </Link>
           <Link to="/properties" className="text-gray-900 hover:text-blue-400 dark:text-gray-100 dark:hover:text-blue-400">

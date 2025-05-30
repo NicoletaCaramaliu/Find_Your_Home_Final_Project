@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import RegisterForm from "../../components/login/RegisterForm";
 import { Card, CardContent } from "../../components/ui/Card";
-import { register } from "../../services/authService"; // functia care face request la backend
+import { register } from "../../services/authService";
 import ThemeToggle from "../../components/ThemeToggle";
 import Navbar from "../../components/NavBar";
 import { motion } from "framer-motion";
@@ -38,12 +38,7 @@ export default function RegisterPage() {
           <div className="hidden dark:block w-full h-full" style={{ backgroundImage: "url('/images/register_background.jpg')", opacity: 0.4 }}></div>
         </motion.div>
 
-        <motion.div
-          drag
-          dragConstraints={{ left: -200, right: 200, top: -200, bottom: 200 }}
-          whileDrag={{ scale: 1.1 }}
-          dragElastic={0.2}
-        >
+   
           <Card className="w-96 p-8 shadow-lg rounded-lg bg-white dark:bg-gray-800 relative z-10">
             <ThemeToggle />
             <CardContent>
@@ -51,7 +46,6 @@ export default function RegisterPage() {
               <RegisterForm onRegister={handleRegister} errorMessage={registerError} />
             </CardContent>
           </Card>
-        </motion.div>
       </div>
     </div>
   );

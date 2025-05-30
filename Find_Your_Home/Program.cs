@@ -114,6 +114,8 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.AddScoped<IRentalService, RentalService>();
 builder.Services.AddScoped<IRentalRepository, RentalRepository>();
+builder.Services.AddHostedService<PaymentReminderJob>();
+
 
 
 
