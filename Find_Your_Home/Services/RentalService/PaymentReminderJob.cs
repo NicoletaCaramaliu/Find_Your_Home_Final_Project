@@ -25,6 +25,21 @@ namespace Find_Your_Home.Services.RentalService
                     var now = DateTime.UtcNow;
                     var targetTime = now.AddHours(12);
 
+                    if (now.Day == 1 && now.Hour == 0) 
+                    {
+                        var allPayments = await dbContext.RentalInfos.ToListAsync(stoppingToken);
+                        foreach (var payment in allPayments)
+                        {
+                            payment.RentPaymentReminderSent = false;
+                            payment.ElectricityPaymentReminderSent = false;
+                            payment.WaterPaymentReminderSent = false;
+                            payment.GasPaymentReminderSent = false;
+                            payment.InternetPaymentReminderSent = false;
+                        }
+
+                        await dbContext.SaveChangesAsync(stoppingToken);
+                    }
+
                     var upcomingPayments = await dbContext.RentalInfos
                         .Include(r => r.Rental)
                         .ThenInclude(r => r.Renter)
@@ -40,7 +55,7 @@ namespace Find_Your_Home.Services.RentalService
                     foreach (var payment in upcomingPayments)
                     {
                         var toEmail = payment.Rental?.Renter?.Email;
-                        if (string.IsNullOrEmpty(toEmail)) continue; 
+                        if (string.IsNullOrEmpty(toEmail)) continue;
 
                         if (payment.RentPaymentDate.HasValue && payment.RentPaymentDate.Value >= now && payment.RentPaymentDate.Value <= targetTime && !payment.RentPaymentReminderSent)
                         {

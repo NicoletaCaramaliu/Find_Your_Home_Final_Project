@@ -42,35 +42,33 @@ const RecommendedProperties: React.FC = () => {
   };
 
   return (
-    <section id="recommended" className="py-16 container mx-auto">
-      <h2 className="text-3xl font-bold text-center mb-10">🏡 Proprietăți recomandate</h2>
-      {properties.length > 0 ? (
-        <Slider {...sliderSettings}>
-          {properties.map((property) => (
-            <div key={property.id} className="p-4">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-1">
-                <img
-                  src={property.firstImageUrl || "https://source.unsplash.com/400x300/?house"}
-                  alt={property.name}
-                  className="h-56 w-full object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="font-bold text-lg mb-2">{property.name}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                    Preț: {property.price.toLocaleString()} €
-                  </p>
-                  <Link to={`/properties/${property.id}`} className="text-blue-600 hover:underline text-sm">
-                    Vezi detalii
-                  </Link>
+    <section id="recommended" className="py-16">
+        <h2 className="text-3xl font-bold text-center mb-10">🏡 Proprietăți recomandate</h2>
+        {properties.length > 0 ? (
+            <div className="relative w-full">
+            <Slider {...sliderSettings}>
+                {properties.map((property) => (
+                <div key={property.id} className="p-2 w-full">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col h-[400px]">
+                    <img src={property.firstImageUrl || "https://source.unsplash.com/400x300/?house"} alt={property.name} className="w-full h-48 object-cover" />
+                    <div className="p-4 flex flex-col justify-between flex-1">
+                        <div>
+                        <h3 className="font-bold text-lg">{property.name}</h3>
+                        <p className="text-sm">{property.city}, {property.address}</p>
+                        <p className="text-blue-600 dark:text-blue-400 font-semibold">{property.price.toLocaleString()} €</p>
+                        </div>
+                        <Link to={`/properties/${property.id}`} className="mt-2 text-blue-500 hover:underline text-sm">Vezi detalii</Link>
+                    </div>
+                    </div>
                 </div>
-              </div>
+                ))}
+            </Slider>
             </div>
-          ))}
-        </Slider>
-      ) : (
-        <p className="text-center text-gray-600 dark:text-gray-300">Nu există proprietăți recomandate momentan.</p>
-      )}
-    </section>
+        ) : (
+            <p className="text-center">Nu există proprietăți recomandate momentan.</p>
+        )}
+        </section>
+
   );
 };
 
