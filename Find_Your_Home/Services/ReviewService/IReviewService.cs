@@ -6,5 +6,7 @@ namespace Find_Your_Home.Services.ReviewService
     {
         Task<Review> AddReview(Guid reviewerId, Review review);
         Task<IEnumerable<Review>> GetReviewsByUserId(Guid targetedId);
+        Task<IEnumerable<Review>> GetAllReviews();
+        Task<bool> DeleteReview(Guid reviewId);
     }
 }

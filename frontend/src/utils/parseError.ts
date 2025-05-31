@@ -11,6 +11,7 @@ const errorTranslations: Record<string, string> = {
   USER_DELETED_SUCCESSFULLY: "Contul a fost șters.",
   LOGOUT_SUCCESS: "Ai fost delogat cu succes.",
   OLD_PASSWORD_INVALID: "Parola veche este incorectă.",
+  NO_USERS_FOUND: "Nu există utilizatori în baza de date.",
 
   // Booking
   TIME_SLOT_ALREADY_BOOKED: "Intervalul de timp selectat este deja rezervat.",
@@ -33,7 +34,8 @@ const errorTranslations: Record<string, string> = {
   // Testimonials
   CONTENT_EMPTY: "Conținutul nu poate fi gol.",
   ONE_TESTIMONIAL_PER_USER: "Poți adăuga doar un testimonial.",
-  TESTIMONIAL_NOT_FOUND: "Testimonialul nu a fost găsit."
+  TESTIMONIAL_NOT_FOUND: "Testimonialul nu a fost găsit.",
+  MAX_THREE_POSTED_TESTIMONIALS: "Poți adăuga doar 3 testimoniale.",
 };
 
 export const parseError = (error: any): string => {

@@ -90,8 +90,8 @@ namespace Find_Your_Home.Models.Notifications
             return new NotificationMessage
             {
                 Type = "new-review",
-                Title = "Ai primit un review!",
-                Message = $"{reviewerName} ți-a oferit un review de {rating} stele.",
+                Title = "Ai primit o recenzi!",
+                Message = $"{reviewerName} ți-a oferit o notă de {rating} stele.",
                 Timestamp = DateTime.UtcNow,
                 SenderId = reviewerId,
                 SenderName = reviewerName

@@ -115,7 +115,17 @@ namespace Find_Your_Home.Controllers
          public async Task<ActionResult<IEnumerable<PropertyResponse>>> GetAllProperties()
          {
              var properties = await _propertyService.GetAllProperties();
-             var propertiesDto = _mapper.Map<IEnumerable<PropertyResponse>>(properties);
+             var propertiesDto = new List<PropertyResponse>();
+             var propertyIds = properties.Select(p => p.Id).ToList();
+             var propertyImages = await _propertyImagesService.GetFirstPropertyImages(propertyIds);
+             
+             foreach (var property in properties)
+             {
+                 var propertyResponse = _mapper.Map<PropertyResponse>(property);
+                 var propertyImage = propertyImages.FirstOrDefault(pi => pi.PropertyId == property.Id);
+                 propertyResponse.FirstImageUrl = propertyImage?.ImageUrl;
+                 propertiesDto.Add(propertyResponse);
+             }
              return Ok(propertiesDto);
          }
 
@@ -358,7 +368,7 @@ namespace Find_Your_Home.Controllers
             var property = await _propertyService.GetPropertyByID(propertyId);
 
             var userId = _userService.GetMyId();
-            if (property.OwnerId != userId)
+            if (property.OwnerId != userId && !User.IsInRole("Admin"))
             {
                 return Unauthorized("You are not authorized to delete this property");
             }

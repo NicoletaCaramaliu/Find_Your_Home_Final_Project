@@ -3,6 +3,7 @@ using Find_Your_Home.Models.Questions;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Find_Your_Home.Controllers
 {
@@ -71,6 +72,54 @@ namespace Find_Your_Home.Controllers
             _context.Questions.Update(question);
             _context.SaveChanges();
             return Ok(new { message = "Question posted successfully." });
+        }
+        
+        [HttpPatch("unpostQuestion"), Authorize(Roles = "Admin")]
+        public IActionResult UnpostQuestion(Guid questionId)
+        {
+            var question = _context.Questions.Find(questionId);
+            if (question == null)
+            {
+                return NotFound(new { message = "Question not found." });
+            }
+            if (!question.Posted)
+            {
+                return BadRequest(new { message = "Question is not posted." });
+            }
+            
+            question.Posted = false;
+            _context.Questions.Update(question);
+            _context.SaveChanges();
+            return Ok(new { message = "Question unposted successfully." });
+        }
+
+        [HttpDelete("deleteQuestion/{questionId}"), Authorize(Roles = "Admin")]
+        public IActionResult DeleteQuestion(Guid questionId)
+        {
+            var question = _context.Questions.Find(questionId);
+            if (question == null)
+            {
+                return NotFound(new { message = "Question not found." });
+            }
+
+            _context.Questions.Remove(question);
+            _context.SaveChanges();
+            return Ok(new { message = "Question deleted successfully." });
+        }
+
+        [HttpGet("getPostedQuestions")]
+        public async Task<IActionResult> GetPostedQuestions()
+        {
+            var questions = await _context.Questions
+                .Where(q => q.Posted)
+                .ToListAsync();
+
+            if (questions == null || !questions.Any())
+            {
+                return NotFound(new { message = "No posted questions found." });
+            }
+
+            return Ok(questions);
         }
 
     }

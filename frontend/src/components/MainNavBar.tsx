@@ -23,9 +23,18 @@ export default function MainNavBar() {
           <Link to="/properties" className="text-gray-900 hover:text-blue-400 dark:text-gray-100 dark:hover:text-blue-400">
             Proprietăți
           </Link>
-          <Link to="/myAccount" className="text-gray-900 hover:text-blue-400 dark:text-gray-100 dark:hover:text-blue-400">
+          {user?.role !== "0" && (
+            <Link to="/myAccount" className="text-gray-900 hover:text-blue-400 dark:text-gray-100 dark:hover:text-blue-400">
             Contul Meu
           </Link>
+          )}
+
+          {user?.role == "0" && (
+            <Link to="/admin" className="text-gray-900 hover:text-blue-400 dark:text-gray-100 dark:hover:text-blue-400">
+            Contul Meu
+          </Link>
+          )}
+
 
           {user?.role !== "0" && (
             <>

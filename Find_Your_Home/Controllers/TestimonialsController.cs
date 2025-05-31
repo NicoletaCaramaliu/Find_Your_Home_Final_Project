@@ -52,6 +52,7 @@ namespace Find_Your_Home.Controllers
             {
                 throw new AppException("ONE_TESTIMONIAL_PER_USER");
             }
+            
 
             var testimonial = new Models.Testimonials.Testimonial
             {
@@ -74,6 +75,12 @@ namespace Find_Your_Home.Controllers
             if (testimonial == null)
             {
                 throw new AppException("TESTIMONIAL_NOT_FOUND");
+            }
+            
+            var postedTestimonialsCount = _context.Testimonials.Count(t => t.Posted == true);
+            if (postedTestimonialsCount >= 3)
+            {
+                throw new AppException("MAX_THREE_POSTED_TESTIMONIALS");
             }
 
             testimonial.Posted = true;

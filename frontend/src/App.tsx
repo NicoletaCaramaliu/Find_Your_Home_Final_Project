@@ -17,6 +17,7 @@ import ChatPage from "./pages/conversations/ChatPage";
 import RentalCollaborationPage from "./pages/rental/RentalCollaborationPage";
 import MyRentalsPage from "./pages/rental/MyRentalsPage";
 import HomePage from "./pages/homePage/HomePage";
+import AdminPage from "./pages/usersPages/admin/AdminPage";
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
       <Route path="/rental-collaboration/:rentalId" element={<RentalCollaborationPage />} />
       <Route path="/my-rentals" element={<MyRentalsPage />} />
       <Route path="/home" element={<HomePage/>} />
+      <Route path="/admin" element={<AdminPage />} />
     </Routes>
     </ThemeProvider>
   );
