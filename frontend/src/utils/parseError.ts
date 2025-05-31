@@ -28,7 +28,12 @@ const errorTranslations: Record<string, string> = {
   SLOT_DELETED_SUCCESSFULLY: "Slot șters cu succes!",
   CANNOT_DELETE_SLOT_WITH_BOOKINGS: "Nu poți șterge un slot care are rezervări existente.",
   NO_SLOTS_FOUND_FOR_PROPERTY: "Nu sunt adăugate perioade de vizită pentru această proprietate",
-  CANNOT_BOOK_SLOT_WITH_LESS_THAN_12_HOURS: "Nu poți rezerva un slot cu mai puțin de 12 ore înainte."
+  CANNOT_BOOK_SLOT_WITH_LESS_THAN_12_HOURS: "Nu poți rezerva un slot cu mai puțin de 12 ore înainte.",
+
+  // Testimonials
+  CONTENT_EMPTY: "Conținutul nu poate fi gol.",
+  ONE_TESTIMONIAL_PER_USER: "Poți adăuga doar un testimonial.",
+  TESTIMONIAL_NOT_FOUND: "Testimonialul nu a fost găsit."
 };
 
 export const parseError = (error: any): string => {

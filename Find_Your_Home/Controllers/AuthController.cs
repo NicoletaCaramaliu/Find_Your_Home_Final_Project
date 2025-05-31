@@ -74,7 +74,8 @@ namespace Find_Your_Home.Controllers
                 token,
                 user = new {
                     id = user.Id, 
-                    username = user.Username
+                    username = user.Username,
+                    role = user.Role
                 }
             });
         }
