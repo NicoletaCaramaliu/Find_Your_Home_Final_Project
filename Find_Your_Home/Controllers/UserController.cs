@@ -127,5 +127,26 @@ namespace Find_Your_Home.Controllers
 
             return Ok(new { message = "USER_DELETED_SUCCESSFULLY" });
         }
+
+        [HttpGet("getAllUsers"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+        {
+            var users = await _userService.GetAllUsers();
+            if (users == null || !users.Any())
+                throw new AppException("NO_USERS_FOUND");
+
+            var userDtos = _mapper.Map<IEnumerable<UserDto>>(users);
+            return Ok(userDtos);
+        }
+
+        [HttpDelete("deleteUser"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser([FromQuery] Guid userId)
+        {
+            var result = await _userService.DeleteUserAndDependencies(userId);
+            if (!result)
+                throw new AppException("USER_NOT_FOUND");
+
+            return Ok(new { message = "USER_DELETED_SUCCESSFULLY" });
+        }
     }
 }

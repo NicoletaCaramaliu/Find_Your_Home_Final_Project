@@ -3,8 +3,10 @@ using Find_Your_Home.Models.Chat;
 using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Properties;
+using Find_Your_Home.Models.Questions;
 using Find_Your_Home.Models.Rentals;
 using Find_Your_Home.Models.Reviews;
+using Find_Your_Home.Models.Testimonials;
 using Find_Your_Home.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +30,8 @@ namespace Find_Your_Home.Data
         public DbSet<RentalTask> RentalTasks { get; set; }
         public DbSet<RentalNote> RentalNotes { get; set; }
         public DbSet<RentalInfo> RentalInfos { get; set; }
+        public DbSet<Testimonial> Testimonials { get; set; }
+        public DbSet<Question> Questions { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
@@ -240,6 +244,13 @@ namespace Find_Your_Home.Data
                 .WithMany()
                 .HasForeignKey(ri => ri.RentalId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<Testimonial>()
+                .HasKey(t => t.Id);
+            
+            modelBuilder.Entity<Question>()
+                .HasKey(q => q.Id);
+            
 
             base.OnModelCreating(modelBuilder);
         }

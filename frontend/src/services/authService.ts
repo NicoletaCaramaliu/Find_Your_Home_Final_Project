@@ -23,6 +23,7 @@ export const login = async (email: string, password: string) => {
     const user = response.data.user;
     localStorage.setItem("token", token);
     localStorage.setItem("userId", user.id);
+    localStorage.setItem("userRole", user.role);
     return response.data;
   } catch (error: any) {
     if (import.meta.env.MODE === "development") {

@@ -57,7 +57,7 @@ public class EmailService : IEmailService
         var body = $@"
             Salut {ownerName},
 
-            Proprietatea ta „{propertyName}” a fost închiriată de utilizatorul {renterName} începând cu data de {startDate:dd MMMM yyyy}.
+            Proprietatea ta „{propertyName}” a fost închiriată de utilizatorul {renterName} începând cu data de {startDate:dd.mm.yyyy}.
 
             Poți vizualiza detaliile în platforma Find Your Home.
 
@@ -91,7 +91,7 @@ public class EmailService : IEmailService
         var body = $@"
         Salut,
 
-        Acesta este un memento pentru plata de tip '{paymentType}', care are termenul limită pe {paymentDate:dd MMMM yyyy}.
+        Acesta este un memento pentru plata de tip '{paymentType}', care are termenul limită pe {paymentDate:dd.MM.yyyy}.
 
         Vă rugăm să efectuați plata până la această dată.
 

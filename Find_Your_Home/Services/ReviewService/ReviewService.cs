@@ -84,5 +84,27 @@ namespace Find_Your_Home.Services.ReviewService
             return reviews;
                 
         }
+
+        public async Task<IEnumerable<Review>> GetAllReviews()
+        {
+            var reviews = await _reviewRepository
+                .GetAllQueryable()
+                .Include(r => r.Reviewer)
+                .ToListAsync();
+
+            return reviews;
+        }
+
+        public async Task<bool> DeleteReview(Guid reviewId)
+        {
+            var review = await _reviewRepository.FindByIdAsync(reviewId);
+            if (review == null)
+                throw new AppException("REVIEW_NOT_FOUND");
+
+            _reviewRepository.Delete(review);
+            await _reviewRepository.SaveAsync();
+
+            return true;
+        }
     }
 }

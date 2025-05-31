@@ -55,5 +55,25 @@ namespace Find_Your_Home.Controllers
             return Ok(hasBooking);
         }
 
+        [HttpGet("getAllReviews"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllReviews()
+        {
+            var reviews = await _reviewService.GetAllReviews();
+            var reviewResponse = _mapper.Map<List<ReviewResponse>>(reviews);
+            return Ok(reviewResponse);
+        }
+
+        [HttpDelete("deleteReview/{reviewId}"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteReview(Guid reviewId)
+        {
+            var deleted = await _reviewService.DeleteReview(reviewId);
+            if (deleted)
+            {
+                return Ok(new { message = "Review deleted successfully." });
+            }
+
+            return NotFound(new { message = "Review not found." });
+        }
+
     }
 }

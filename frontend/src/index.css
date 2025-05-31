@@ -22,13 +22,39 @@
 }
 
 .rbc-event {
-    font-size: 0.7rem !important; /* micșorează textul */
-    padding: 2px !important;       /* reduce spațiul */
-    white-space: normal !important; /* permite mai multe rânduri */
-    overflow: visible !important;  /* permite afișarea completă */
-    text-overflow: unset !important; /* elimină tăierea cu "..." */
-    line-height: 1.1 !important;   /* spațiu între rânduri */
-    max-height: 2.2em;             /* opțional, pentru a limita la 2 rânduri */
+    font-size: 0.7rem !important; 
+    padding: 2px !important;   
+    white-space: normal !important; 
+    overflow: visible !important; 
+    text-overflow: unset !important;
+    line-height: 1.1 !important;   
+    max-height: 2.2em;             
+}
+
+.slick-slider {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.slick-slide {
+  display: flex !important;
+  justify-content: center;
+}
+
+.slick-slide > div {
+  width: 100%;
+}
+
+.slick-list {
+  overflow: hidden;
+}
+
+.slick-track {
+  display: flex !important;
+  gap: 1rem; /* spacing între slide-uri */
 }
 
 

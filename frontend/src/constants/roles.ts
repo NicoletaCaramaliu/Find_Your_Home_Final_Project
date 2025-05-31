@@ -1,5 +1,5 @@
 export const rolesMap: Record<number, string> = {
     0: "Admin",
-    2: "PropertyOwner",
-    4: "User",
+    1: "PropertyOwner",
+    2: "User",
   };

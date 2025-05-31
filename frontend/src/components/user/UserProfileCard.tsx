@@ -1,46 +1,7 @@
 import React, { useState } from "react";
 import { LoggedUser } from "../../types/User";
 import api from "../../api";
-
-// Traducerile erorilor
-const errorTranslations: Record<string, string> = {
-  USER_ALREADY_EXISTS: "Utilizatorul există deja.",
-  INVALID_CREDENTIALS: "Email sau parolă incorecte.",
-  USER_NOT_FOUND: "Utilizatorul nu a fost găsit.",
-  REFRESH_TOKEN_NOT_FOUND: "Tokenul de reîmprospătare lipsește.",
-  INVALID_REFRESH_TOKEN: "Tokenul este invalid sau a expirat.",
-  EMAIL_NOT_FOUND: "Nu există niciun cont asociat acestui email.",
-  RESET_TOKEN_INVALID: "Linkul de resetare este invalid sau expirat.",
-  PASSWORD_RESET_SUCCESS: "Parola a fost resetată cu succes.",
-  PASSWORD_CHANGED_SUCCESSFULLY: "Parola a fost schimbată cu succes.",
-  USER_DELETED_SUCCESSFULLY: "Contul a fost șters.",
-  LOGOUT_SUCCESS: "Ai fost delogat cu succes.",
-  OLD_PASSWORD_INVALID: "Parola veche este incorectă.",
-  UNKNOWN_ERROR: "A apărut o eroare necunoscută.",
-
-  // Booking
-  TIME_SLOT_ALREADY_BOOKED: "Intervalul de timp selectat este deja rezervat.",
-  TIME_SLOT_NOT_AVAILABLE: "Intervalul de timp selectat nu mai este disponibil.",
-  PROPERTY_NOT_FOUND: "Proprietatea nu a fost găsită.",
-  CANNOT_BOOK_OWN_PROPERTY: "Nu poți rezerva propria ta proprietate.",
-  NO_REVIEW_PERMISSION: "Poți lăsa o recenzie doar dacă ai avut o rezervare cu acest utilizator.",
-
-  // Availability
-  SLOT_NOT_FOUND: "Perioada nu a fost găsită.",
-  NOT_OWNER_OF_PROPERTY: "Nu ești proprietarul acestei proprietăți.",
-  SLOT_OVERLAP_EXISTS: "Există deja o perioadă disponibilă care se suprapune.",
-  INVALID_TIME_RANGE: "Ora de început trebuie să fie înainte de ora de sfârșit.",
-  SLOT_DELETED_SUCCESSFULLY: "Slot șters cu succes!",
-  CANNOT_DELETE_SLOT_WITH_BOOKINGS: "Nu poți șterge un slot care are rezervări existente.",
-  NO_SLOTS_FOUND_FOR_PROPERTY: "Nu sunt adăugate perioade de vizită pentru această proprietate",
-  CANNOT_BOOK_SLOT_WITH_LESS_THAN_12_HOURS: "Nu poți rezerva un slot cu mai puțin de 12 ore înainte."
-};
-
-// Funcție de parsare eroare
-const parseError = (error: any): string => {
-  const errorCode = error?.response?.data?.errorCode || error?.response?.data?.message;
-  return errorTranslations[errorCode] || "A apărut o eroare necunoscută.";
-};
+import { parseError } from "../../utils/parseError";
 
 interface Props {
   user: LoggedUser;
@@ -62,6 +23,7 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
 
   const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
   const [passwordChangeSuccess, setPasswordChangeSuccess] = useState<string | null>(null);
+  const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -88,8 +50,7 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
       setIsEditing(false);
       refreshUser();
     } catch (error) {
-      console.error("Eroare la actualizare:", error);
-      alert("Eroare la salvare. Încearcă din nou.");
+      setDeleteMessage(parseError(error)); // Afișăm mesaj de eroare
     }
   };
 
@@ -113,17 +74,11 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
     }
 
     try {
-      const response = await api.put("/User/changePassword", {
-        oldPassword,
-        newPassword,
-      });
-
+      const response = await api.put("/User/changePassword", { oldPassword, newPassword });
       const message = response.data?.message;
-      setPasswordChangeSuccess(errorTranslations[message] || "Parola a fost schimbată cu succes.");
+      setPasswordChangeSuccess(parseError({ response: { data: { errorCode: message } } }));
       setShowPasswordForm(false);
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
+      setOldPassword(""); setNewPassword(""); setConfirmPassword("");
       refreshUser();
     } catch (error: any) {
       setPasswordChangeError(parseError(error));
@@ -133,11 +88,10 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
   const handleDeleteAccount = async () => {
     try {
       await api.delete("/User/deleteMe");
-      alert("Contul a fost șters. Ne pare rău că pleci ");
-      window.location.href = "/login";
+      setDeleteMessage(parseError({ response: { data: { errorCode: 'USER_DELETED_SUCCESSFULLY' } } }));
+      setTimeout(() => window.location.href = "/login", 2000);  // Redirecționează după 2 secunde
     } catch (error: any) {
-      console.error("Eroare la ștergere cont:", error);
-      alert(error.response?.data || "A apărut o eroare la ștergerea contului.");
+      setDeleteMessage(parseError(error));
     }
   };
 
@@ -155,145 +109,54 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
               <h2 className="text-xl font-semibold">{user.username}</h2>
               <p className="text-gray-600 dark:text-gray-300">{user.email}</p>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Înregistrat din:{" "}
-                {new Date(user.createdAt).toLocaleDateString("ro-RO", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                Înregistrat din: {new Date(user.createdAt).toLocaleDateString("ro-RO")}
               </p>
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <button
-              onClick={() => setIsEditing(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              Editează
-            </button>
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-            >
-              Șterge contul
-            </button>
+            <button onClick={() => setIsEditing(true)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Editează</button>
+            <button onClick={() => setShowDeleteConfirm(true)} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Șterge contul</button>
           </div>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Username"
-            value={editUsername}
-            onChange={(e) => setEditUsername(e.target.value)}
-            className="p-2 border rounded"
-          />
-
+          <input type="text" value={editUsername} onChange={(e) => setEditUsername(e.target.value)} className="p-2 border rounded" placeholder="Username" />
           <div>
             <label className="block text-sm mb-1">Poză de profil:</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  setSelectedFile(file);
-                  const preview = URL.createObjectURL(file);
-                  setEditProfilePicture(preview);
-                }
-              }}
-              className="p-2 border rounded w-full"
-            />
-            {editProfilePicture && (
-              <img
-                src={editProfilePicture}
-                alt="Preview"
-                className="w-24 h-24 mt-2 object-cover rounded border"
-              />
-            )}
+            <input type="file" accept="image/*" onChange={(e) => { const file = e.target.files?.[0]; if (file) { setSelectedFile(file); setEditProfilePicture(URL.createObjectURL(file)); }}} className="p-2 border rounded w-full" />
+            {editProfilePicture && <img src={editProfilePicture} alt="Preview" className="w-24 h-24 mt-2 object-cover rounded border" />}
           </div>
-
-          <div>
-            <span
-              onClick={() => setShowPasswordForm(!showPasswordForm)}
-              className="text-sm text-blue-600 hover:underline cursor-pointer"
-            >
-              {showPasswordForm ? "Anulează schimbarea parolei" : "Schimbă parola"}
-            </span>
-          </div>
-
+          <span onClick={() => setShowPasswordForm(!showPasswordForm)} className="text-sm text-blue-600 hover:underline cursor-pointer">{showPasswordForm ? "Anulează schimbarea parolei" : "Schimbă parola"}</span>
           {showPasswordForm && (
-            <div className="border border-gray-300 dark:border-gray-600 rounded p-4 mt-2 bg-gray-50 dark:bg-gray-700 flex flex-col gap-3">
-              <input
-                type="password"
-                placeholder="Parola veche"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-                className="p-2 border rounded"
-              />
-              <input
-                type="password"
-                placeholder="Parolă nouă"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="p-2 border rounded"
-              />
-              <input
-                type="password"
-                placeholder="Confirmă noua parolă"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="p-2 border rounded"
-              />
-              <button
-                onClick={handleChangePassword}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Salvează noua parolă
-              </button>
-              {passwordChangeError && <p className="text-red-600 mt-2">{passwordChangeError}</p>}
-              {passwordChangeSuccess && <p className="text-green-600 mt-2">{passwordChangeSuccess}</p>}
+            <div className="border rounded p-4 bg-gray-50 dark:bg-gray-700 flex flex-col gap-3">
+              <input type="password" placeholder="Parola veche" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} className="p-2 border rounded" />
+              <input type="password" placeholder="Parolă nouă" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="p-2 border rounded" />
+              <input type="password" placeholder="Confirmă noua parolă" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="p-2 border rounded" />
+              <button onClick={handleChangePassword} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Salvează noua parolă</button>
+              {passwordChangeError && <p className="text-red-600">{passwordChangeError}</p>}
+              {passwordChangeSuccess && <p className="text-green-600">{passwordChangeSuccess}</p>}
             </div>
           )}
-
           <div className="flex gap-4 mt-4">
-            <button
-              onClick={handleSave}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-            >
-              Salvează
-            </button>
-            <button
-              onClick={() => setIsEditing(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-            >
-              Anulează
-            </button>
+            <button onClick={handleSave} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Salvează</button>
+            <button onClick={() => setIsEditing(false)} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Anulează</button>
           </div>
         </div>
       )}
 
       {showDeleteConfirm && (
-        <div className="mt-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <div className="mt-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
           <p className="font-semibold">Ești sigur că vrei să ștergi contul?</p>
           <p className="text-sm">Această acțiune este ireversibilă.</p>
           <div className="flex gap-4 mt-3">
-            <button
-              onClick={handleDeleteAccount}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-            >
-              Da, șterge
-            </button>
-            <button
-              onClick={() => setShowDeleteConfirm(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-            >
-              Anulează
-            </button>
+            <button onClick={handleDeleteAccount} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Da, șterge</button>
+            <button onClick={() => setShowDeleteConfirm(false)} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Anulează</button>
           </div>
         </div>
       )}
+      
+      {deleteMessage && <p className={`mt-4 ${deleteMessage.includes('șters') ? 'text-green-600' : 'text-red-600'}`}>{deleteMessage}</p>}
     </div>
   );
 };

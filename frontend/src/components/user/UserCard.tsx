@@ -2,6 +2,9 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api";
 import { rolesMap } from "../../constants/roles";
+import { useAuth } from '../../hooks/useAuth';
+
+const { user } = useAuth();
 
 
 export interface UserCardProps {
@@ -75,7 +78,7 @@ const UserCard: React.FC<UserCardProps> = ({
         </div>
       </div>
 
-      {showContactButton && (
+      {showContactButton && user?.role !== "0" && (
         <button
           onClick={handleContact}
           className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"

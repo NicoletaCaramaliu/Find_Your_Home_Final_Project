@@ -7,6 +7,9 @@ import { Property } from '../../types/PropertyDetails';
 import { Heart } from 'lucide-react';
 import AvailableVisits from '../../components/bookings/AvailableVisits';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import { useAuth } from '../../hooks/useAuth';
+
+const { user } = useAuth();
 
 interface Owner {
   id: string;
@@ -138,9 +141,10 @@ const PropertyDetailsPage: React.FC = () => {
           </div>
         ) : property && (
           <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            {user?.role !== "0" && user?.role !== "1" && (
             <button onClick={handleToggleFavorite} className="absolute top-4 right-4 bg-white/80 dark:bg-gray-700/80 p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-200 z-10" title={isFavorited ? "Elimină din favorite" : "Adaugă la favorite"}>
               <Heart className="w-6 h-6" fill={isFavorited ? "red" : "none"} stroke="red" />
-            </button>
+            </button>)}
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{property.name}</h1>
             <p className="text-gray-600 dark:text-gray-300 mt-2">{property.description}</p>
             <p className="text-gray-500 dark:text-gray-400 mt-1">{property.address}</p>
@@ -205,7 +209,7 @@ const PropertyDetailsPage: React.FC = () => {
               createdAt={owner.createdAt}
             />
           )}
-          {property?.isAvailable && !property?.isRented && (
+          {property?.isAvailable && !property?.isRented && user?.role !== "0" && user?.role !== "1" && (
             <AvailableVisits propertyId={property.id} />
           )}
         </div>
