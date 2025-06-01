@@ -20,6 +20,7 @@ const UserManagement = () => {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);  
   const { user } = useAuth(); 
   const [loggedUserData, setLoggedUserData] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState(''); 
@@ -38,15 +39,15 @@ const UserManagement = () => {
   }, [user?.id]);
 
   const handleDelete = async (id: string) => {
-    const confirmDelete = window.confirm("Sigur vrei să ștergi acest utilizator?");
-    if (!confirmDelete) return;
-
     try {
       await api.delete(`/User/deleteUser`, { params: { userId: id } });
       setUsers(prev => prev.filter(u => u.id !== id));
       setSuccessMessage(parseError({ response: { data: { errorCode: 'USER_DELETED_SUCCESSFULLY' } } }));
+      setError(null);
+      setConfirmDeleteId(null);  
     } catch (err) {
       setError(parseError(err));
+      setSuccessMessage(null);
     }
   };
 
@@ -98,12 +99,34 @@ const UserManagement = () => {
                 role={user.role}
                 averageRating={user.averageRating}
               />
-              <button
-                onClick={() => handleDelete(user.id)}
-                className="absolute top-2 right-2 text-sm text-red-600 hover:text-red-800 bg-white rounded-full p-1"
-              >
-                ✕
-              </button>
+              <div onClick={(e) => e.stopPropagation()} className="absolute top-2 right-2">
+                {confirmDeleteId === user.id ? (
+                  <div className="bg-yellow-100 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200 p-2 rounded shadow">
+                    <p>Ești sigur că vrei să ștergi?</p>
+                    <div className="flex gap-2 mt-1">
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700"
+                      >
+                        Da
+                      </button>
+                      <button
+                        onClick={() => setConfirmDeleteId(null)}
+                        className="px-2 py-1 bg-gray-300 dark:bg-gray-600 text-black dark:text-white rounded text-xs hover:bg-gray-400"
+                      >
+                        Anulează
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setConfirmDeleteId(user.id)}
+                    className="text-sm text-red-600 hover:text-red-800 bg-white rounded-full p-1"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>

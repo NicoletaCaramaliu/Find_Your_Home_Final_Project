@@ -12,7 +12,8 @@ interface Property {
 const PropertyManagement = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(''); 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const PropertyManagement = () => {
     try {
       await api.delete(`/Properties/deleteProperty?propertyId=${id}`);
       setProperties(prev => prev.filter(p => p.id !== id));
+      setConfirmDeleteId(null); 
     } catch (err) {
       console.error('Error deleting property:', err);
     }
@@ -74,15 +76,34 @@ const PropertyManagement = () => {
                   {property.isAvailable ? 'Disponibil' : 'Indisponibil'}
                 </p>
               </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(property.id);
-                }}
-                className="absolute top-2 right-2 text-sm text-red-600 hover:text-red-800"
-              >
-                Șterge
-              </button>
+              <div onClick={(e) => e.stopPropagation()} className="relative">
+                {confirmDeleteId === property.id ? (
+                  <div className="absolute top-0 right-0 bg-yellow-100 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200 p-2 rounded shadow">
+                    <p>Ești sigur că vrei să ștergi?</p>
+                    <div className="flex gap-2 mt-1">
+                      <button
+                        onClick={() => handleDelete(property.id)}
+                        className="px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700"
+                      >
+                        Da
+                      </button>
+                      <button
+                        onClick={() => setConfirmDeleteId(null)}
+                        className="px-2 py-1 bg-gray-300 dark:bg-gray-600 text-black dark:text-white rounded text-xs hover:bg-gray-400"
+                      >
+                        Anulează
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setConfirmDeleteId(property.id)}
+                    className="text-sm text-red-600 hover:text-red-800"
+                  >
+                    Șterge
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
