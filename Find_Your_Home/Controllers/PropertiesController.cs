@@ -3,6 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
+using Find_Your_Home.Services.Files;
 using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
 using Find_Your_Home.Services.UserService;
@@ -33,7 +34,7 @@ namespace Find_Your_Home.Controllers
         public async Task<ActionResult<PropertyResponse>> CreateProperty(
             [FromForm] PropertyRequest propertyRequest,
             [FromForm] List<IFormFile> images,
-            [FromServices] ImageService imageService,
+            [FromServices] FileService imageService,
             [FromServices] ImageHashService hashService)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -63,7 +64,7 @@ namespace Find_Your_Home.Controllers
                     if (alreadyExists)
                         continue;
 
-                    var imageUrl = await imageService.SaveImageAsync(image);
+                    var imageUrl = await imageService.SaveFileAsync(image, true);
                     var propertyImage = new PropertyImage
                     {
                         ImageUrl = imageUrl,
@@ -294,7 +295,7 @@ namespace Find_Your_Home.Controllers
         public async Task<ActionResult<object>> UpdateProperty(
             [FromForm] PropertyRequest propertyRequest,
             [FromForm] List<IFormFile> images,
-            [FromServices] ImageService imageService,
+            [FromServices] FileService imageService,
             [FromServices] ImageHashService hashService)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -331,7 +332,7 @@ namespace Find_Your_Home.Controllers
                         continue;
                     }
 
-                    var imageUrl = await imageService.SaveImageAsync(image);
+                    var imageUrl = await imageService.SaveFileAsync(image, true);
                     var propertyImage = new PropertyImage
                     {
                         ImageUrl = imageUrl,

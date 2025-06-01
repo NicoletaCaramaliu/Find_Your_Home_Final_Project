@@ -1,5 +1,6 @@
 ﻿using Find_Your_Home.Data;
 using Find_Your_Home.Models.Rentals;
+using Find_Your_Home.Services.Files;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ namespace Find_Your_Home.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IUserService _userService;
+        private readonly FileService _fileService;  
 
-        public RentalDocumentsController(ApplicationDbContext context, IUserService userService)
+        public RentalDocumentsController(ApplicationDbContext context, IUserService userService, FileService fileService)
         {
             _context = context;
             _userService = userService;
+            _fileService = fileService;
         }
 
         private async Task<bool> IsUserInRental(Guid rentalId, Guid userId)
@@ -42,23 +45,16 @@ namespace Find_Your_Home.Controllers
             var userId = _userService.GetMyId();
             if (!await IsUserInRental(rentalId, userId)) return Forbid();
 
-            var uploadDir = Path.Combine("Uploads", "RentalDocuments");
-            Directory.CreateDirectory(uploadDir);
-
             foreach (var file in files)
             {
-                var fileName = $"{Guid.NewGuid()}_{file.FileName}";
-                var filePath = Path.Combine(uploadDir, fileName);
-
-                using var stream = new FileStream(filePath, FileMode.Create);
-                await file.CopyToAsync(stream);
+                var fileUrl = await _fileService.SaveFileAsync(file, isImage: false);
 
                 var doc = new RentalDocument
                 {
                     Id = Guid.NewGuid(),
                     RentalId = rentalId,
                     FileName = file.FileName,
-                    FilePath = filePath,
+                    FilePath = fileUrl, 
                     UploadedByUserId = userId,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -67,7 +63,7 @@ namespace Find_Your_Home.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Ok();
+            return Ok(new { message = "Documents saved successfully." });
         }
 
         [HttpGet("file/{id}"), Authorize]
@@ -79,19 +75,8 @@ namespace Find_Your_Home.Controllers
             var userId = _userService.GetMyId();
             if (!await IsUserInRental(doc.RentalId, userId)) return Forbid();
 
-            if (!System.IO.File.Exists(doc.FilePath))
-                return NotFound("Fișierul nu există pe disc.");
-
-            var stream = new FileStream(doc.FilePath, FileMode.Open, FileAccess.Read);
-
-            var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(doc.FileName, out var contentType))
-            {
-                contentType = "application/octet-stream";
-            }
-
-            return File(stream, contentType, doc.FileName);
+            return Redirect(doc.FilePath);
         }
-
     }
+    
 }
