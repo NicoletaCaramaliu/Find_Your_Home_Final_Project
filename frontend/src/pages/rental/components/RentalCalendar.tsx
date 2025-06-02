@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, momentLocalizer, Event, View } from "react-big-calendar";
+import { Calendar, momentLocalizer, Event } from "react-big-calendar";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { parseISO, addMonths, isAfter } from "date-fns";
+import { parseISO, addMonths, isAfter, subMonths, format } from "date-fns";
+import { ro } from "date-fns/locale"; 
 import api from "../../../api";
 import moment from "moment";
 
-moment.locale("ro"); 
+moment.locale("ro");
 const localizer = momentLocalizer(moment);
 
 interface RentalCalendarEvent extends Event {
@@ -46,7 +47,6 @@ const generateRecurringEvents = (
 const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId }) => {
   const [events, setEvents] = useState<RentalCalendarEvent[]>([]);
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const [currentView, setCurrentView] = useState<View>("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedEventType, setSelectedEventType] = useState<string>("RentPaymentDate");
 
@@ -87,49 +87,38 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
   const handleSaveEvent = async () => {
     if (!selectedDate) return;
 
-    const localDateISOString = selectedDate.getFullYear() + "-" +
-        String(selectedDate.getMonth() + 1).padStart(2, '0') + "-" +
-        String(selectedDate.getDate()).padStart(2, '0') + "T" +
-        String(selectedDate.getHours()).padStart(2, '0') + ":" +
-        String(selectedDate.getMinutes()).padStart(2, '0') + ":" +
-        String(selectedDate.getSeconds()).padStart(2, '0');
-
+    const localDateISOString = selectedDate.toISOString();
     const newEvent: RentalCalendarEvent = {
-        id: Math.random().toString(),
-        title: eventTypes[selectedEventType] || "Eveniment",
-        start: selectedDate,
-        end: selectedDate,
-        field: selectedEventType
+      id: Math.random().toString(),
+      title: eventTypes[selectedEventType] || "Eveniment",
+      start: selectedDate,
+      end: selectedDate,
+      field: selectedEventType
     };
 
     try {
-        await api.put(`/rentalsinfo/updateField/${rentalId}?fieldName=${newEvent.field}&value=${localDateISOString}`);
-        setEvents(prev => [...prev, newEvent]);
-        setSelectedDate(null);
+      await api.put(`/rentalsinfo/updateField/${rentalId}?fieldName=${newEvent.field}&value=${localDateISOString}`);
+      setEvents(prev => [...prev, newEvent]);
+      setSelectedDate(null);
     } catch (err) {
-        console.error("Eroare la salvare:", err);
+      console.error("Eroare la salvare:", err);
     }
-};
-
+  };
 
   return (
     <div>
       <div className="mb-2 flex items-center gap-2">
         <label htmlFor="eventType" className="block text-sm font-medium">Tip eveniment:</label>
         <select
-            id="eventType"
-            value={selectedEventType}
-            onChange={(e) => setSelectedEventType(e.target.value)}
-            className="border rounded p-1 bg-white dark:bg-gray-800 dark:text-white"
-            >
-            {Object.entries(eventTypes).map(([key, label]) => (
-                <option key={key} value={key} className="bg-white dark:bg-gray-800 dark:text-white">
-                {label}
-                </option>
-            ))}
-            </select>
-
-
+          id="eventType"
+          value={selectedEventType}
+          onChange={(e) => setSelectedEventType(e.target.value)}
+          className="border rounded p-1 bg-white dark:bg-gray-800 dark:text-white"
+        >
+          {Object.entries(eventTypes).map(([key, label]) => (
+            <option key={key} value={key}>{label}</option>
+          ))}
+        </select>
         {selectedDate && (
           <button
             onClick={handleSaveEvent}
@@ -140,6 +129,12 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
         )}
       </div>
 
+      <div className="flex items-center justify-between mb-2">
+        <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="text-2xl">←</button>
+       <h3 className="text-lg font-bold">{format(currentDate, "MMMM yyyy", { locale: ro })}</h3>
+        <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} className="text-2xl">→</button>
+      </div>
+
       <div style={{ height: 500, width: "100%" }} className="rounded-xl overflow-hidden">
         <Calendar
           localizer={localizer}
@@ -148,13 +143,12 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
           endAccessor="end"
           selectable
           date={currentDate}
-          view={currentView}
+          view="month"
           onNavigate={date => setCurrentDate(date)}
-          onView={(view: View) => setCurrentView(view)}
           onSelectSlot={handleSelectSlot}
-          defaultView="month"
-          views={['month', 'week', 'day']}
+          views={['month']}
           style={{ height: "100%", width: "100%" }}
+          toolbar={false}  // Hides default toolbar
         />
       </div>
     </div>
