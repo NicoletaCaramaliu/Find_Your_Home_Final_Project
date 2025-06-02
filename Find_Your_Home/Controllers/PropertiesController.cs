@@ -89,7 +89,8 @@ namespace Find_Your_Home.Controllers
             var result = propertyImages.Select(img => new
             {
                 id = img.Id,
-                imageUrl = img.ImageUrl
+                imageUrl = img.ImageUrl,
+                order = img.Order,
             });
 
             return Ok(result);
@@ -400,6 +401,15 @@ namespace Find_Your_Home.Controllers
             var propertyResponse = _mapper.Map<PropertyResponse>(property);
             return Ok(propertyResponse);
         }
+        
+        
+        [HttpPost("updateImageOrder")]
+        public async Task<IActionResult> UpdateImageOrder([FromBody] List<ImageOrderUpdate> updates)
+        {
+            await _propertyImagesService.UpdateImageOrderAsync(updates);
+            return Ok("Order updated successfully");
+        }
+
 
     }
 }

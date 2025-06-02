@@ -22,6 +22,8 @@ const MyReservationsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [hasActiveRental, setHasActiveRental] = useState(false);
+  const [rentalMessage, setRentalMessage] = useState<{ [key: string]: string }>({});
+  const [confirmingRental, setConfirmingRental] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,6 +83,28 @@ const MyReservationsPage: React.FC = () => {
     (b) => statusFilter === "all" || Number(b.status) === Number(statusFilter)
   );
 
+  const handleCreateRental = async (propertyId: string) => {
+    try {
+      await api.post("/rentals/createRental", {
+        propertyId,
+        startDate: new Date().toISOString(),
+      });
+      setRentalMessage((prev) => ({
+        ...prev,
+        [propertyId]: "Închiriat cu succes!",
+      }));
+      setHasActiveRental(true);
+    } catch (err) {
+      console.error("Eroare la închiriere:", err);
+      setRentalMessage((prev) => ({
+        ...prev,
+        [propertyId]: "Nu s-a putut crea închirierea.",
+      }));
+    } finally {
+      setConfirmingRental(null);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
       <MainNavBar />
@@ -125,39 +149,57 @@ const MyReservationsPage: React.FC = () => {
                       {booking.propertyName}
                     </h2>
                     <p className="mt-2">
-                      {format(new Date(booking.slotDate), "yyyy-MM-dd")} — {booking.startTime} - {booking.endTime}
+                      {format(new Date(booking.slotDate), "yyyy-MM-dd")} —{" "}
+                      {booking.startTime} - {booking.endTime}
                     </p>
                     <p>
-                      Status: <span className="font-semibold">{getStatusLabel(booking.status)}</span>
+                      Status:{" "}
+                      <span className="font-semibold">
+                        {getStatusLabel(booking.status)}
+                      </span>
                     </p>
 
                     {Number(booking.status) === 4 && booking.isForRent && (
-                    <>
-                      {booking.isRented ? (
-                        <p className="mt-2 text-red-600 font-semibold">Deja închiriată</p>
-                      ) : !hasActiveRental ? (
-                        <button
-                          onClick={async () => {
-                            try {
-                              await api.post("/rentals/createRental", {
-                                propertyId: booking.propertyId,
-                                startDate: new Date().toISOString(),
-                              });
-                              alert("Închirierea a fost creată cu succes!");
-                              setHasActiveRental(true);
-                            } catch (err) {
-                              console.error("Eroare la închiriere:", err);
-                              alert("Nu s-a putut crea închirierea.");
-                            }
-                          }}
-                          className="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                        >
-                          Închiriază
-                        </button>
-                      ) : null}
-                    </>
-                  )}
-
+                      <>
+                        {booking.isRented ? (
+                          <p className="mt-2 text-red-600 font-semibold">
+                            Deja închiriată
+                          </p>
+                        ) : !hasActiveRental ? (
+                          <>
+                            {confirmingRental === booking.propertyId ? (
+                              <div className="mt-2">
+                                <p>Vrei să închiriezi?</p>
+                                <button
+                                  onClick={() => handleCreateRental(booking.propertyId)}
+                                  className="mt-1 mr-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                                >
+                                  Da
+                                </button>
+                                <button
+                                  onClick={() => setConfirmingRental(null)}
+                                  className="mt-1 px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
+                                >
+                                  Nu
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setConfirmingRental(booking.propertyId)}
+                                className="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                              >
+                                Închiriază
+                              </button>
+                            )}
+                            {rentalMessage[booking.propertyId] && (
+                              <p className="mt-2 text-green-600 font-semibold">
+                                {rentalMessage[booking.propertyId]}
+                              </p>
+                            )}
+                          </>
+                        ) : null}
+                      </>
+                    )}
                   </div>
 
                   {Number(booking.status) === 1 && (

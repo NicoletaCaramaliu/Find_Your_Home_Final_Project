@@ -50,10 +50,11 @@ const AddPropertyForm: React.FC<Props> = ({
 
   const [form, setForm] = useState({ ...defaultForm });
   const [images, setImages] = useState<File[]>([]);
-  const [existingImages, setExistingImages] = useState<{ id: string; imageUrl: string }[]>([]);
+  const [existingImages, setExistingImages] = useState<{ id: string; imageUrl: string; order: number }[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
 
   const [location, setLocation] = useState<{ lat: number; lng: number }>({
     lat: form.latitude,
@@ -71,11 +72,16 @@ const AddPropertyForm: React.FC<Props> = ({
   const fetchExistingImages = async (propertyId: string) => {
     try {
       const res = await api.get(`/Properties/getAllPropertyImages?propertyId=${propertyId}`);
-      setExistingImages(res.data);
+      const withOrder = res.data.map((img: any, index: number) => ({
+        ...img,
+        order: img.order ?? index + 1, 
+      }));
+      setExistingImages(withOrder);
     } catch (err) {
       console.error("Error fetching property images", err);
     }
   };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = e.target;
@@ -168,9 +174,39 @@ const AddPropertyForm: React.FC<Props> = ({
     }
   };
 
+  const moveImage = (index: number, direction: number) => {
+    setExistingImages((prev) => {
+      const updated = [...prev];
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= updated.length) return updated;
+
+      const temp = updated[index];
+      updated[index] = updated[targetIndex];
+      updated[targetIndex] = temp;
+
+      return updated.map((img, i) => ({ ...img, order: i + 1 }));
+    });
+  };
+
+  const saveImageOrder = async () => {
+    try {
+      const updates = existingImages.map((img) => ({
+        id: img.id,
+        order: img.order,
+      }));
+      await api.post("/Properties/updateImageOrder", updates);
+      setMessage("✅ Ordinea imaginilor a fost salvată!");
+    } catch (err) {
+      console.error("Eroare la salvarea ordinii imaginilor", err);
+      setMessage("❌ Eroare la salvarea ordinii imaginilor");
+    }
+  };
+
+
+
   const textFields = [
     { name: "name", label: "Nume", type: "text" },
-    { name: "category", label: "Categorie", type: "text" },
+    { name: "category", label: "Categorie(apartament, casă...)", type: "text" },
     { name: "description", label: "Descriere", type: "text" },
     { name: "address", label: "Adresă", type: "text" },
     { name: "city", label: "Oraș", type: "text" },
@@ -287,14 +323,25 @@ const AddPropertyForm: React.FC<Props> = ({
 
         {isEdit && existingImages.length > 0 && (
           <div className="col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-            {existingImages.map((img) => (
-              <div key={img.id} className="relative border rounded overflow-hidden shadow dark:border-gray-700">
-                <img src={img.imageUrl} alt="property" className="w-full h-40 object-cover" />
-                <button type="button" onClick={() => handleDeleteImage(img.id)} className="absolute top-1 right-1 bg-red-600 text-white px-2 py-1 text-xs rounded hover:bg-red-700">Șterge</button>
-              </div>
-            ))}
+            {existingImages
+              .sort((a, b) => a.order - b.order)  // sortare după order real
+              .map((img, index) => (
+                <div key={img.id} className="relative border rounded overflow-hidden shadow dark:border-gray-700">
+                  <img src={img.imageUrl} alt="property" className="w-full h-40 object-cover" />
+                  <div className="absolute top-1 right-1 flex flex-col">
+                    <button type="button" onClick={() => moveImage(index, -1)} className="bg-blue-600 text-white text-xs px-1 rounded hover:bg-blue-700">↑</button>
+                    <button type="button" onClick={() => moveImage(index, 1)} className="bg-blue-600 text-white text-xs px-1 rounded hover:bg-blue-700">↓</button>
+                    <button type="button" onClick={() => handleDeleteImage(img.id)} className="bg-red-600 text-white text-xs px-1 rounded hover:bg-red-700">Șterge</button>
+                    </div>
+                </div>
+              ))}
           </div>
         )}
+        <button onClick={saveImageOrder} className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+          Salvează ordinea imaginilor
+        </button>
+
+
 
         <div className="col-span-2 flex gap-4 mt-6">
           <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-60">

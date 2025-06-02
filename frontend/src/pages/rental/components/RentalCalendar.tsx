@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, momentLocalizer, Event } from "react-big-calendar";
+import { Calendar, momentLocalizer, Event, View } from "react-big-calendar";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { parseISO, addMonths, isAfter, subMonths, format } from "date-fns";
-import { ro } from "date-fns/locale"; 
+import { parseISO, addMonths, isAfter } from "date-fns";
 import api from "../../../api";
 import moment from "moment";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 moment.locale("ro");
 const localizer = momentLocalizer(moment);
@@ -14,7 +14,7 @@ interface RentalCalendarEvent extends Event {
   title: string;
   start: Date;
   end: Date;
-  field: string; 
+  field: string;
 }
 
 interface RentalCalendarSectionProps {
@@ -22,14 +22,16 @@ interface RentalCalendarSectionProps {
 }
 
 const generateRecurringEvents = (
-  baseDate: string, title: string, field: string, contractEnd: string
+  baseDate: string | null, title: string, field: string, contractEnd: string | null
 ): RentalCalendarEvent[] => {
-  if (!baseDate || !contractEnd) return [];
+  if (!baseDate) return [];
+
   const events: RentalCalendarEvent[] = [];
   let startDate = parseISO(baseDate);
-  const endDate = parseISO(contractEnd);
+  const endDate = contractEnd ? parseISO(contractEnd) : addMonths(startDate, 12);
   let current = startDate;
   let i = 0;
+
   while (!isAfter(current, endDate)) {
     events.push({
       id: `${field}-${i}`,
@@ -41,12 +43,14 @@ const generateRecurringEvents = (
     current = addMonths(current, 1);
     i++;
   }
+
   return events;
 };
 
 const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId }) => {
   const [events, setEvents] = useState<RentalCalendarEvent[]>([]);
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const [currentView, setCurrentView] = useState<View>("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedEventType, setSelectedEventType] = useState<string>("RentPaymentDate");
 
@@ -58,36 +62,60 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
     InternetPaymentDate: "Zi plată internet",
   };
 
-  useEffect(() => {
-    const fetchInfo = async () => {
-      try {
-        const res = await api.get(`/rentalsinfo/getRentalInfo/${rentalId}`);
-        const info = res.data;
-        const loadedEvents: RentalCalendarEvent[] = [
-          ...generateRecurringEvents(info.rentPaymentDate, eventTypes.RentPaymentDate, "RentPaymentDate", info.contractEndDate),
-          ...generateRecurringEvents(info.electricityPaymentDate, eventTypes.ElectricityPaymentDate, "ElectricityPaymentDate", info.contractEndDate),
-          ...generateRecurringEvents(info.waterPaymentDate, eventTypes.WaterPaymentDate, "WaterPaymentDate", info.contractEndDate),
-          ...generateRecurringEvents(info.gasPaymentDate, eventTypes.GasPaymentDate, "GasPaymentDate", info.contractEndDate),
-          ...generateRecurringEvents(info.internetPaymentDate, eventTypes.InternetPaymentDate, "InternetPaymentDate", info.contractEndDate),
-          { id: "contractStart", title: "Contract început", start: parseISO(info.contractStartDate), end: parseISO(info.contractStartDate), field: "ContractStartDate" },
-          { id: "contractEnd", title: "Contract sfârșit", start: parseISO(info.contractEndDate), end: parseISO(info.contractEndDate), field: "ContractEndDate" }
-        ].filter(e => e.start);
-        setEvents(loadedEvents);
-      } catch (err) {
-        console.error("Eroare la încărcarea calendarului:", err);
+  const fetchInfo = async () => {
+    try {
+      const res = await api.get(`/rentalsinfo/getRentalInfo/${rentalId}`);
+      const info = res.data;
+      console.log("Date primite din API:", info);
+
+      const loadedEvents: RentalCalendarEvent[] = [
+        ...generateRecurringEvents(info?.rentPaymentDate, eventTypes.RentPaymentDate, "RentPaymentDate", info?.contractEndDate),
+        ...generateRecurringEvents(info?.electricityPaymentDate, eventTypes.ElectricityPaymentDate, "ElectricityPaymentDate", info?.contractEndDate),
+        ...generateRecurringEvents(info?.waterPaymentDate, eventTypes.WaterPaymentDate, "WaterPaymentDate", info?.contractEndDate),
+        ...generateRecurringEvents(info?.gasPaymentDate, eventTypes.GasPaymentDate, "GasPaymentDate", info?.contractEndDate),
+        ...generateRecurringEvents(info?.internetPaymentDate, eventTypes.InternetPaymentDate, "InternetPaymentDate", info?.contractEndDate),
+      ];
+
+      if (info?.contractStartDate) {
+        loadedEvents.push({
+          id: "contractStart",
+          title: "Contract început",
+          start: parseISO(info.contractStartDate),
+          end: parseISO(info.contractStartDate),
+          field: "ContractStartDate"
+        });
       }
-    };
+
+      if (info?.contractEndDate) {
+        loadedEvents.push({
+          id: "contractEnd",
+          title: "Contract sfârșit",
+          start: parseISO(info.contractEndDate),
+          end: parseISO(info.contractEndDate),
+          field: "ContractEndDate"
+        });
+      }
+
+      setEvents(loadedEvents);
+    } catch (err) {
+      console.error("Eroare la încărcarea calendarului:", err);
+    }
+  };
+
+  useEffect(() => {
     fetchInfo();
   }, [rentalId]);
 
-  const handleSelectSlot = (slotInfo: any) => {
-    setSelectedDate(slotInfo.start);
-  };
+  const handleSelectSlot = (slotInfo: any) => setSelectedDate(slotInfo.start);
 
   const handleSaveEvent = async () => {
     if (!selectedDate) return;
 
-    const localDateISOString = selectedDate.toISOString();
+    // 🔥 Convertim data la format local (YYYY-MM-DD)
+    const localDateString = moment(selectedDate).format("YYYY-MM-DD");
+
+    console.log("Data selectată pentru backend:", localDateString);
+
     const newEvent: RentalCalendarEvent = {
       id: Math.random().toString(),
       title: eventTypes[selectedEventType] || "Eveniment",
@@ -97,12 +125,25 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
     };
 
     try {
-      await api.put(`/rentalsinfo/updateField/${rentalId}?fieldName=${newEvent.field}&value=${localDateISOString}`);
-      setEvents(prev => [...prev, newEvent]);
+      // 🔥 Trimitere cu data locală (fără conversie UTC)
+      await api.put(`/rentalsinfo/updateField/${rentalId}?fieldName=${newEvent.field}&value=${localDateString}`);
+      await fetchInfo();
       setSelectedDate(null);
     } catch (err) {
       console.error("Eroare la salvare:", err);
     }
+  };
+
+  const dayPropGetter = (date: Date) => {
+    if (selectedDate && date.toDateString() === selectedDate.toDateString()) {
+      return {
+        style: {
+          border: '2px solid blue',
+          backgroundColor: '#e6f7ff',
+        }
+      };
+    }
+    return {};
   };
 
   return (
@@ -119,20 +160,35 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
             <option key={key} value={key}>{label}</option>
           ))}
         </select>
+
         {selectedDate && (
           <button
             onClick={handleSaveEvent}
             className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition"
           >
-            Salvează {selectedDate.toLocaleDateString()} ({eventTypes[selectedEventType]})
+            Salvează {moment(selectedDate).format("DD MMMM YYYY")} ({eventTypes[selectedEventType]})
           </button>
         )}
       </div>
 
       <div className="flex items-center justify-between mb-2">
-        <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="text-2xl">←</button>
-       <h3 className="text-lg font-bold">{format(currentDate, "MMMM yyyy", { locale: ro })}</h3>
-        <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} className="text-2xl">→</button>
+        <button
+          onClick={() => setCurrentDate(moment(currentDate).subtract(1, 'month').toDate())}
+          className="px-2 py-1 rounded 
+            bg-gray-200 text-black hover:bg-gray-300
+            dark:bg-black dark:text-white dark:hover:bg-gray-800"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <span className="text-lg font-semibold">{moment(currentDate).format("MMMM YYYY")}</span>
+        <button
+          onClick={() => setCurrentDate(moment(currentDate).add(1, 'month').toDate())}
+          className="px-2 py-1 rounded 
+            bg-gray-200 text-black hover:bg-gray-300
+            dark:bg-black dark:text-white dark:hover:bg-gray-800"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
       </div>
 
       <div style={{ height: 500, width: "100%" }} className="rounded-xl overflow-hidden">
@@ -143,12 +199,15 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
           endAccessor="end"
           selectable
           date={currentDate}
-          view="month"
+          view={currentView}
           onNavigate={date => setCurrentDate(date)}
+          onView={(view: View) => setCurrentView(view)}
           onSelectSlot={handleSelectSlot}
-          views={['month']}
+          defaultView="month"
+          views={['month', 'week', 'day']}
           style={{ height: "100%", width: "100%" }}
-          toolbar={false}  // Hides default toolbar
+          toolbar={false}
+          dayPropGetter={dayPropGetter}
         />
       </div>
     </div>

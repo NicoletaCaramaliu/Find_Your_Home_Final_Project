@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Find_Your_Home.Data;
 using Find_Your_Home.Models.Rentals;
 using Find_Your_Home.Models.Rentals.DTO;
 using Find_Your_Home.Services.RentalService;
@@ -15,24 +16,60 @@ namespace Find_Your_Home.Controllers
         private readonly IRentalService _rentalService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly ApplicationDbContext _context;
         
-        public RentalsController(IRentalService rentalService, IUserService userService, IMapper mapper)
+        public RentalsController(IRentalService rentalService, IUserService userService, IMapper mapper, ApplicationDbContext context)
         {
+            _context = context;
             _rentalService = rentalService;
             _userService = userService;
             _mapper = mapper;
         }
         
         [HttpPost("createRental"), Authorize]
-        public async Task<ActionResult<RentalResponse>>  CreateRental([FromBody] RentalRequest rentalRequest)
+        public async Task<ActionResult<RentalResponse>> CreateRental([FromBody] RentalRequest rentalRequest)
         {
             var renterId = _userService.GetMyId();
             var rental = _mapper.Map<Rental>(rentalRequest);
             rental.RenterId = renterId;
+
             var newRental = await _rentalService.CreateRental(rental);
+
+            var rentalInfo = new RentalInfo
+            {
+                Id = Guid.NewGuid(),
+                RentalId = newRental.Id,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            _context.RentalInfos.Add(rentalInfo);
+
+            var rentalNote = new RentalNote
+            {
+                Id = Guid.NewGuid(),
+                RentalId = newRental.Id,
+                Content = "", 
+                UpdatedAt = DateTime.UtcNow
+            };
+            _context.RentalNotes.Add(rentalNote);
+
+            var initialTask = new RentalTask
+            {
+                Id = Guid.NewGuid(),
+                RentalId = newRental.Id,
+                Title = "Primul task - completează detaliile",
+                Completed = false,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            _context.RentalTasks.Add(initialTask);
+
+            await _context.SaveChangesAsync();
+
             var newRentalResponse = _mapper.Map<RentalResponse>(newRental);
             return Ok(newRentalResponse);
         }
+
         
         [HttpGet("getUserRentals/{userId}")]
         public async Task<ActionResult<List<RentalResponse>>> GetUserRentals()

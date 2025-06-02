@@ -108,7 +108,7 @@ const RentalCollaborationPage: React.FC = () => {
     try {
       await api.post(`/rentals/endRental/${rentalId}`);
       alert("Colaborarea a fost încheiată cu succes.");
-      navigate("/rentals"); // Redirecționează spre lista de închirieri
+      navigate("/myAccount"); 
     } catch (err) {
       console.error("Eroare la încheierea colaborării:", err);
       alert("A apărut o eroare. Încearcă din nou.");

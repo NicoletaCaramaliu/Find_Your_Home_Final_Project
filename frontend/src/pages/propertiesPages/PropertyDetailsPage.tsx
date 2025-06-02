@@ -22,6 +22,7 @@ interface Owner {
 interface PropertyImage {
   id: string;
   imageUrl: string;
+  order: number;
 }
 
 const PropertyDetailsPage: React.FC = () => {
@@ -36,9 +37,25 @@ const PropertyDetailsPage: React.FC = () => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [showMap, setShowMap] = useState(false);
 
+  const [sliderIndex, setSliderIndex] = useState(0);
+  const imagesPerRow = 3;
+
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyBG-_7FJZ_xOMG3zfjE50XbHFz_7SCfh8Y"
   });
+
+  const handleNextSlider = () => {
+    if (sliderIndex + imagesPerRow < images.length) {
+      setSliderIndex(sliderIndex + imagesPerRow);
+    }
+  };
+
+  const handlePrevSlider = () => {
+    if (sliderIndex - imagesPerRow >= 0) {
+      setSliderIndex(sliderIndex - imagesPerRow);
+    }
+  };
+
 
   useEffect(() => {
     if (!id) {
@@ -61,6 +78,8 @@ const PropertyDetailsPage: React.FC = () => {
           api.get(`/Properties/getAllPropertyImages`, { params: { propertyId: data.id } }),
           api.get(`/Favorites/isAlreadyFavorited`, { params: { propertyId: data.id } }),
         ]);
+        const sortedImages = imagesRes.data.sort((a: PropertyImage, b: PropertyImage) => a.order - b.order);
+        setImages(sortedImages);
         setImages(imagesRes.data);
         setIsFavorited(favoriteRes.data === true);
 
@@ -185,15 +204,49 @@ const PropertyDetailsPage: React.FC = () => {
               <p className="text-gray-700 dark:text-gray-300">An construcție: {property.yearOfConstruction}</p>
               <p className="text-gray-700 dark:text-gray-300">Mobilat: {property.furnished ? "Da" : "Nu"}</p>
             </div>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {images.length > 0 ? (
-                images.map((img, index) => (
-                  <img key={img.id} src={img.imageUrl} alt={`Property ${index + 1}`} className="w-full h-64 object-cover rounded-lg mb-4 cursor-pointer transition-transform transform hover:scale-105" onClick={() => setCurrentIndex(index)} />
-                ))
-              ) : (
-                <p className="text-gray-500 dark:text-gray-400">Nu există imagini disponibile</p>
-              )}
-            </div>
+            {images.length > 0 ? (
+              <div className="mt-6 relative">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 relative">
+                  {images
+                    .slice(sliderIndex, sliderIndex + imagesPerRow)
+                    .map((img, index) => (
+                      <img
+                        key={img.id}
+                        src={img.imageUrl}
+                        alt={`Property ${index + 1}`}
+                        className="w-full h-64 object-cover rounded-lg cursor-pointer transition-transform transform hover:scale-105"
+                        onClick={() => setCurrentIndex(sliderIndex + index)}
+                      />
+                    ))}
+                </div>
+
+                <div className="flex justify-between items-center mt-2">
+                  <button
+                    onClick={handlePrevSlider}
+                    disabled={sliderIndex === 0}
+                    className="rounded-full p-3 shadow disabled:opacity-50
+                      bg-gray-200 text-black hover:bg-gray-300
+                      dark:bg-black dark:text-white dark:hover:bg-gray-800"
+                  >
+                    ←
+                  </button>
+                  <button
+                    onClick={handleNextSlider}
+                    disabled={sliderIndex + imagesPerRow >= images.length}
+                    className="rounded-full p-3 shadow disabled:opacity-50
+                      bg-gray-200 text-black hover:bg-gray-300
+                      dark:bg-black dark:text-white dark:hover:bg-gray-800"
+                  >
+                    →
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400">Nu există imagini disponibile</p>
+            )}
+
+
+
             <p className="text-gray-700 dark:text-gray-300 mt-4">Publicat: {new Date(property.createdAt).toLocaleDateString()}</p>
             <p className="text-gray-700 dark:text-gray-300">Actualizat: {new Date(property.updatedAt).toLocaleDateString()}</p>
             <p className="text-right text-gray-700 dark:text-gray-300">Vizualizări: {property.views}</p>
