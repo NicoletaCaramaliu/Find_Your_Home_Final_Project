@@ -50,7 +50,7 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
       setIsEditing(false);
       refreshUser();
     } catch (error) {
-      setDeleteMessage(parseError(error)); // Afișăm mesaj de eroare
+      setDeleteMessage(parseError(error));
     }
   };
 
@@ -89,7 +89,7 @@ const UserProfileCard: React.FC<Props> = ({ user, refreshUser }) => {
     try {
       await api.delete("/User/deleteMe");
       setDeleteMessage(parseError({ response: { data: { errorCode: 'USER_DELETED_SUCCESSFULLY' } } }));
-      setTimeout(() => window.location.href = "/login", 2000);  // Redirecționează după 2 secunde
+      setTimeout(() => window.location.href = "/login", 2000);  
     } catch (error: any) {
       setDeleteMessage(parseError(error));
     }

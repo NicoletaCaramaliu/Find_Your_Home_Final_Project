@@ -165,8 +165,11 @@ namespace Find_Your_Home.Services.UserService
             await _context.SaveChangesAsync();
             return true;
         }
-        
 
-        
+        public async Task<User?> GetUserByUsername(string username)
+        {
+            return await _userRepository.GetUserByUsernameAsync(username);
+        }
+
     }
 }

@@ -12,6 +12,7 @@ const errorTranslations: Record<string, string> = {
   LOGOUT_SUCCESS: "Ai fost delogat cu succes.",
   OLD_PASSWORD_INVALID: "Parola veche este incorectă.",
   NO_USERS_FOUND: "Nu există utilizatori în baza de date.",
+  USERNAME_ALREADY_EXISTS: "Numele de utilizator există deja.",
 
   // Booking
   TIME_SLOT_ALREADY_BOOKED: "Intervalul de timp selectat este deja rezervat.",

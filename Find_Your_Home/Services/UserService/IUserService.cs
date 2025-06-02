@@ -20,6 +20,7 @@ namespace Find_Your_Home.Services.UserService
         Task<User?> GetUserByResetToken(string token);
         
         Task<bool> DeleteUserAndDependencies(Guid userId);
+        Task<User?> GetUserByUsername(string username);
         
     }
 }

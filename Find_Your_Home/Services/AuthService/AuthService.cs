@@ -34,6 +34,12 @@ namespace Find_Your_Home.Services.AuthService
             {
                 throw new AppException("USER_ALREADY_EXISTS");
             }
+            
+            //verify if the username is already taken
+            if (await _userService.GetUserByUsername(request.Username) != null)
+            {
+                throw new AppException("USERNAME_ALREADY_EXISTS");
+            }
 
             var user = _mapper.Map<User>(request);
             user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);

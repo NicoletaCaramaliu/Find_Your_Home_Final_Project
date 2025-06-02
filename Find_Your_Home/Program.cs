@@ -30,6 +30,7 @@ using Find_Your_Home.Services.AvailabilitySlotService;
 using Find_Your_Home.Services.BookingService;
 using Find_Your_Home.Services.ConversationService;
 using Find_Your_Home.Services.FavoriteService;
+using Find_Your_Home.Services.Files;
 using Find_Your_Home.Services.MessageService;
 using Find_Your_Home.Services.NotificationsService;
 using Find_Your_Home.Services.PropertyImagesService;
@@ -116,7 +117,7 @@ builder.Services.AddScoped<IRentalService, RentalService>();
 builder.Services.AddScoped<IRentalRepository, RentalRepository>();
 builder.Services.AddHostedService<PaymentReminderJob>();
 
-
+builder.Services.AddScoped<FileService>();
 
 
 builder.Services.AddSwaggerGen(options =>

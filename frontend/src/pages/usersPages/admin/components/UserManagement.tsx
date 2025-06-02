@@ -4,6 +4,8 @@ import UserCard from '../../../../components/user/UserCard';
 import UserProfileCard from '../../../../components/user/UserProfileCard'; 
 import { parseError } from '../../../../utils/parseError';
 import { useAuth } from '../../../../hooks/useAuth';
+import { logout } from "../../../../services/authService";
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: string;
@@ -24,6 +26,8 @@ const UserManagement = () => {
   const { user } = useAuth(); 
   const [loggedUserData, setLoggedUserData] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState(''); 
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     api.get('/User/getAllUsers')
@@ -51,6 +55,11 @@ const UserManagement = () => {
     }
   };
 
+  const handleLogout = async () => {
+      await logout();
+      navigate("/login");
+    };
+
   const filteredUsers = users.filter(u =>
     u.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -70,8 +79,36 @@ const UserManagement = () => {
           />
         </div>
       )}
+      <div className="mt-1 space-y-4">
+              {!showLogoutConfirm ? (
+                <button
+                  onClick={() => setShowLogoutConfirm(true)}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                >
+                  Deconectează-te
+                </button>
+              ) : (
+                <div className="flex gap-2 items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">
+                    Ești sigur că vrei să te deconectezi?
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                  >
+                    Da
+                  </button>
+                  <button
+                    onClick={() => setShowLogoutConfirm(false)}
+                    className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600"
+                  >
+                    Nu
+                  </button>
+                </div>
+              )}
+            </div>
 
-      <h2 className="text-2xl font-bold mb-4">Utilizatori</h2>
+      <h2 className="mt-8 text-2xl font-bold mb-4">Utilizatori</h2>
 
       <div className="mb-6">
         <input
