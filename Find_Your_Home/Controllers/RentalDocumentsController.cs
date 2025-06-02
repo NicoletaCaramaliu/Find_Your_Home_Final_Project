@@ -1,4 +1,5 @@
-﻿using Find_Your_Home.Data;
+﻿using Azure.Storage.Blobs;
+using Find_Your_Home.Data;
 using Find_Your_Home.Models.Rentals;
 using Find_Your_Home.Services.Files;
 using Find_Your_Home.Services.UserService;
@@ -15,9 +16,11 @@ namespace Find_Your_Home.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IUserService _userService;
         private readonly FileService _fileService;  
+        private readonly IConfiguration _configuration;
 
-        public RentalDocumentsController(ApplicationDbContext context, IUserService userService, FileService fileService)
+        public RentalDocumentsController(ApplicationDbContext context, IUserService userService, FileService fileService, IConfiguration configuration)
         {
+            _configuration = configuration;
             _context = context;
             _userService = userService;
             _fileService = fileService;
@@ -75,8 +78,15 @@ namespace Find_Your_Home.Controllers
             var userId = _userService.GetMyId();
             if (!await IsUserInRental(doc.RentalId, userId)) return Forbid();
 
-            return Redirect(doc.FilePath);
+            var blobServiceClient = new BlobServiceClient(_configuration["AzureStorage:ConnectionString"]);
+            var containerClient = blobServiceClient.GetBlobContainerClient(_configuration["AzureStorage:DocumentContainer"]);
+            var blobClient = containerClient.GetBlobClient(Path.GetFileName(new Uri(doc.FilePath).LocalPath));
+
+            var sasUri = blobClient.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read, DateTimeOffset.UtcNow.AddMinutes(10));
+
+            return Ok(new { downloadUrl = sasUri.ToString() });
         }
+
     }
     
 }
