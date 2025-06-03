@@ -89,9 +89,15 @@ export default function ChatPage() {
             ...data,
             createdAt: data.createdAt || fallbackCreatedAt,
           };
-          setMessages(prev => [...prev, completeMessage]);
+          setMessages(prev => {
+            if (prev.some(m => m.id === completeMessage.id)) {
+              return prev;  // evită duplicatele
+            }
+            return [...prev, completeMessage];
+          });
         }
       };
+
 
       onChatEvent("ReceiveMessage", messageHandler);
 

@@ -18,6 +18,8 @@ export interface UserCardProps {
   averageRating?: number;
 }
 
+
+
 const UserCard: React.FC<UserCardProps> = ({
   username,
   profileImageUrl,

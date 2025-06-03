@@ -6,6 +6,7 @@ using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Find_Your_Home.Exceptions;
+using Find_Your_Home.Services.Files;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -81,9 +82,9 @@ namespace Find_Your_Home.Controllers
         [HttpPut("updateProfilePicture"), Authorize]
         public async Task<ActionResult<string>> UpdateProfilePicture(
             [FromForm] IFormFile file,
-            [FromServices] ImageService imageService)
+            [FromServices] FileService fileService)
         {
-            if (file.Length == 0)
+            if (file == null || file.Length == 0)
                 throw new AppException("INVALID_FILE");
 
             var userId = _userService.GetMyId();
@@ -91,13 +92,14 @@ namespace Find_Your_Home.Controllers
             if (user == null)
                 throw new AppException("USER_NOT_FOUND");
 
-            var imageUrl = await imageService.SaveImageAsync(file);
+            var imageUrl = await fileService.SaveFileAsync(file, true);
 
             user.ProfilePicture = imageUrl;
             await _userService.UpdateUser(user);
 
             return Ok(imageUrl);
         }
+
 
         [HttpPut("changePassword"), Authorize]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)

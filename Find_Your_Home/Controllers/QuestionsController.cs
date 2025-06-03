@@ -121,6 +121,35 @@ namespace Find_Your_Home.Controllers
 
             return Ok(questions);
         }
+        
+        //edit question
+        [HttpPost("editQuestion"), Authorize(Roles = "Admin")]
+        public IActionResult EditQuestion(QuestionRequest questionRequest)
+        {
+            if (questionRequest.Id == Guid.Empty)
+            {
+                return BadRequest(new { message = "Question ID is required." });
+            }
+
+            var question = _context.Questions.Find(questionRequest.Id);
+            if (question == null)
+            {
+                return NotFound(new { message = "Question not found." });
+            }
+
+            if (string.IsNullOrWhiteSpace(questionRequest.QuestionText))
+            {
+                return BadRequest(new { message = "Question text cannot be empty." });
+            }
+
+            question.QuestionText = questionRequest.QuestionText;
+            question.AnswerText = questionRequest.AnswerText;
+
+            _context.Questions.Update(question);
+            _context.SaveChanges();
+
+            return Ok(new { message = "Question updated successfully.", questionId = question.Id });
+        }
 
     }
 }

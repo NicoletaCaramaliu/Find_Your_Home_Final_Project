@@ -2,6 +2,7 @@
 {
     public class QuestionRequest
     {
+        public Guid Id { get; set; }
         public string QuestionText { get; set; } = string.Empty;
         public string AnswerText { get; set; } = string.Empty;
     }
