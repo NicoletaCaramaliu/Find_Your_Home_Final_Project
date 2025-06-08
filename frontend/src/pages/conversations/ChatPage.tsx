@@ -91,7 +91,7 @@ export default function ChatPage() {
           };
           setMessages(prev => {
             if (prev.some(m => m.id === completeMessage.id)) {
-              return prev;  // evită duplicatele
+              return prev;  
             }
             return [...prev, completeMessage];
           });

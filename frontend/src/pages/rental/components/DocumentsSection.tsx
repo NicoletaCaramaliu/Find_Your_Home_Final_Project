@@ -19,14 +19,31 @@ const DocumentsSection: React.FC<Props> = ({ documents, downloadDocument, upload
           <button
             onClick={() => downloadDocument(doc.id, doc.fileName)}
             className="text-blue-500 underline hover:text-blue-700"
+            aria-label={`Descarcă documentul ${doc.fileName}`}
           >
             {doc.fileName}
           </button>
         </li>
       ))}
     </ul>
-    <input type="file" multiple onChange={(e) => setFileInput(e.target.files)} className="mb-2" />
-    <button onClick={uploadDocuments} className="px-4 py-2 bg-blue-600 text-white rounded">Încarcă</button>
+
+    <label htmlFor="upload-files" className="block mb-1 font-medium text-gray-800 dark:text-white">
+      Încarcă documente
+    </label>
+    <input
+      id="upload-files"
+      type="file"
+      multiple
+      onChange={(e) => setFileInput(e.target.files)}
+      className="mb-2"
+    />
+
+    <button
+      onClick={uploadDocuments}
+      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+      Încarcă
+    </button>
   </section>
 );
 

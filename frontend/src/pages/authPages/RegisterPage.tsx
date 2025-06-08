@@ -1,3 +1,5 @@
+/** @jsxImportSource react */
+
 import { useNavigate } from "react-router-dom";
 import RegisterForm from "../../components/login/RegisterForm";
 import { Card, CardContent } from "../../components/ui/Card";

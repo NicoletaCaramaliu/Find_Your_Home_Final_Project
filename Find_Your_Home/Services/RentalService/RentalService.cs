@@ -22,6 +22,7 @@ namespace Find_Your_Home.Services.RentalService
         private readonly IEmailService _emailService;
         private readonly IConversationService _conversationService;
         
+        
         public RentalService(IRentalRepository rentalRepository, INotificationService notificationService, IBookingService bookingService, 
             IPropertyService propertyService, IUserService userService, IEmailService emailService, IConversationService conversationService)
         {
@@ -35,50 +36,43 @@ namespace Find_Your_Home.Services.RentalService
         }
         public async Task<Rental> CreateRental(Rental rental)
         {
-            //verify if there is an booking completed for this rental
             var existingBooking = await _bookingService.GetBookingByPropertyAndUserId(rental.PropertyId, rental.RenterId);
-
             if (existingBooking == null)
-            {
                 throw new AppException("NO_COMPLETED_BOOKING_FOUND_FOR_RENT");
-            }
-            
-            //verify if the property is already rented
-            var existingProperty = await _propertyService.GetPropertyByID(rental.PropertyId);
-            if (existingProperty == null)
-            {
+
+            var property = await _propertyService.GetPropertyByID(rental.PropertyId);
+            if (property == null)
                 throw new AppException("PROPERTY_NOT_FOUND");
-            }
-            if (existingProperty.IsRented)
-            {
+            if (property.IsRented)
                 throw new AppException("PROPERTY_ALREADY_RENTED");
-            }
-            
-            //verify if the user has already rented any property
+
             var activeRental = await _rentalRepository.GetActiveRentalByUserId(rental.RenterId);
             if (activeRental != null)
-            {
                 throw new AppException("USER_ALREADY_HAS_ACTIVE_RENTAL");
-            }
-            var property = await _propertyService.GetPropertyByID(rental.PropertyId);
+
             property.IsRented = true;
-            
+
+            if (property.Owner == null)
+            {
+                property.Owner = await _userService.GetUserById(property.OwnerId);
+            }
+
             rental.OwnerId = property.OwnerId;
-            
+
             var conversationId = await _conversationService.StartOrGetConversation(rental.OwnerId, rental.RenterId);
             rental.ConversationId = conversationId;
-            
+
             var createdRental = await _rentalRepository.CreateRentalAsync(rental);
-            
             await _propertyService.UpdateProperty(property);
-            
+
             var renter = await _userService.GetUserById(rental.RenterId);
-            
+            rental.Renter = renter;
+
             await _notificationService.SendNotificationAsync(
-                existingProperty.OwnerId.ToString(),
+                property.OwnerId.ToString(),
                 NotificationMessage.CreateRentalInfo(createdRental.Id, renter.Username)
             );
-            
+
             await _emailService.SendRentalConfirmationEmailAsync(
                 property.Owner.Email,
                 property.Owner.Username,
@@ -87,9 +81,9 @@ namespace Find_Your_Home.Services.RentalService
                 rental.StartDate
             );
 
-            
             return createdRental;
         }
+
 
         public async Task<List<Rental>> GetRentalsByUserId(Guid userId)
         {

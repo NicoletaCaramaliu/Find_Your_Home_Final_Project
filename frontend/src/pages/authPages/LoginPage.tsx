@@ -1,3 +1,5 @@
+/** @jsxImportSource react */
+
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import LoginForm from "../../components/login/LoginForm";

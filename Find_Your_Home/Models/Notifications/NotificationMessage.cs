@@ -1,4 +1,5 @@
-﻿using Find_Your_Home.Models.Bookings;
+﻿using Find_Your_Home.Helpers;
+using Find_Your_Home.Models.Bookings;
 
 namespace Find_Your_Home.Models.Notifications
 {
@@ -107,6 +108,7 @@ namespace Find_Your_Home.Models.Notifications
                 Message = $"{renterName} a închiriat una dintre proprietățile tale.",
                 Timestamp = DateTime.UtcNow,
                 Data = new { RentalId = rentalId },
+                SenderId = SystemConstants.SystemUserId,
                 SenderName = renterName
             };
         }
