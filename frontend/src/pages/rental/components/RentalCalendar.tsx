@@ -111,7 +111,6 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
   const handleSaveEvent = async () => {
     if (!selectedDate) return;
 
-    // 🔥 Convertim data la format local (YYYY-MM-DD)
     const localDateString = moment(selectedDate).format("YYYY-MM-DD");
 
     console.log("Data selectată pentru backend:", localDateString);
@@ -125,7 +124,6 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
     };
 
     try {
-      // 🔥 Trimitere cu data locală (fără conversie UTC)
       await api.put(`/rentalsinfo/updateField/${rentalId}?fieldName=${newEvent.field}&value=${localDateString}`);
       await fetchInfo();
       setSelectedDate(null);
@@ -176,7 +174,7 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
           onClick={() => setCurrentDate(moment(currentDate).subtract(1, 'month').toDate())}
           className="px-2 py-1 rounded 
             bg-gray-200 text-black hover:bg-gray-300
-            dark:bg-black dark:text-white dark:hover:bg-gray-800"
+            dark:bg-black dark:text-white dark:hover:bg-gray-800" aria-label="Stânga"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -185,7 +183,7 @@ const RentalCalendarSection: React.FC<RentalCalendarSectionProps> = ({ rentalId 
           onClick={() => setCurrentDate(moment(currentDate).add(1, 'month').toDate())}
           className="px-2 py-1 rounded 
             bg-gray-200 text-black hover:bg-gray-300
-            dark:bg-black dark:text-white dark:hover:bg-gray-800"
+            dark:bg-black dark:text-white dark:hover:bg-gray-800" aria-label="Dreapta"
         >
           <ChevronRight className="w-5 h-5" />
         </button>

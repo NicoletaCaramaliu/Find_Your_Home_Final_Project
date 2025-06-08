@@ -126,7 +126,7 @@ export default function NotificationDropdown() {
     <div className="relative" ref={dropdownRef}>
       <button
         className="relative text-gray-900 dark:text-gray-100 focus:outline-none"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(!isOpen)} aria-label="Notificări"
       >
         <Bell className="w-6 h-6" />
         {unreadNotifications.length > 0 && (

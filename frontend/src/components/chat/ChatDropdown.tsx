@@ -34,7 +34,7 @@ export default function ChatDropdown() {
 
   return (
     <div className="relative">
-      <button onClick={() => setOpen(!open)} className="text-gray-900 dark:text-gray-100 hover:text-blue-400 dark:hover:text-blue-400">
+      <button onClick={() => setOpen(!open)} className="text-gray-900 dark:text-gray-100 hover:text-blue-400 dark:hover:text-blue-400" aria-label="Mesaje">
         <MessageSquare size={24} />
       </button>
 
