@@ -41,7 +41,6 @@ namespace Find_Your_Home.Exceptions
             string? fullMessage = ex?.Message;
             string? innerMessage = ex?.InnerException?.Message;
 
-            // Concatenează toate inner exception messages (recursiv)
             Exception? currentEx = ex?.InnerException;
             while (currentEx?.InnerException != null)
             {

@@ -34,6 +34,12 @@ namespace Find_Your_Home.Services.AuthService
             {
                 throw new AppException("USER_ALREADY_EXISTS");
             }
+            
+            //verify if the username is already taken
+            if (await _userService.GetUserByUsername(request.Username) != null)
+            {
+                throw new AppException("USERNAME_ALREADY_EXISTS");
+            }
 
             var user = _mapper.Map<User>(request);
             user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -153,12 +159,25 @@ namespace Find_Your_Home.Services.AuthService
             {
                 HttpOnly = true,
                 Expires = refreshToken.Expires,
-                Secure = !isDev, 
+                Secure = !isDev,
                 SameSite = isDev ? SameSiteMode.Lax : SameSiteMode.None,
                 Path = "/"
             };
 
             _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
         }
+
+        
+        public async Task<(string token, User user)> LoginWithUser(UserLoginDto request)
+        {
+            var token = await Login(request);
+            var user = await _userService.GetUserByEmail(request.Email);
+    
+            if (user == null)
+                throw new AppException("INVALID_CREDENTIALS");
+
+            return (token, user);
+        }
+
     }
 }

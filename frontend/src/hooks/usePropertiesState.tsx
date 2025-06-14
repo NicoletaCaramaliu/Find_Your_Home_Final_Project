@@ -27,7 +27,7 @@ export function usePropertiesState() {
 
     const [pagination, setPagination] = useState({
         pageNumber: 1,
-        pageSize: 10,
+        pageSize: 6,
     });
 
     const [searchText, setSearchText] = useState("");

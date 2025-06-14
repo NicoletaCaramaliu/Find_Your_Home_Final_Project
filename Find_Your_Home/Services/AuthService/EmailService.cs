@@ -38,5 +38,75 @@ public class EmailService : IEmailService
 
         await smtpClient.SendMailAsync(mailMessage);
     }
+    
+    public async Task SendRentalConfirmationEmailAsync(string toEmail, string ownerName, string propertyName, string renterName, DateTime startDate)
+    {
+        var fromEmail = _config["EmailSettings:From"];
+
+        var smtpClient = new SmtpClient(_config["EmailSettings:Smtp"])
+        {
+            Port = int.Parse(_config["EmailSettings:Port"]!),
+            Credentials = new NetworkCredential(
+                _config["EmailSettings:Username"],
+                _config["EmailSettings:Password"]
+            ),
+            EnableSsl = true,
+        };
+
+        var subject = "Proprietatea ta a fost închiriată!";
+        var body = $@"
+            Salut {ownerName},
+
+            Proprietatea ta „{propertyName}” a fost închiriată de utilizatorul {renterName} începând cu data de {startDate:dd.mm.yyyy}.
+
+            Poți vizualiza detaliile în platforma Find Your Home.
+
+            Toate cele bune,
+            Echipa Find Your Home";
+
+        var mailMessage = new MailMessage(fromEmail, toEmail)
+        {
+            Subject = subject,
+            Body = body,
+            IsBodyHtml = false,
+        };
+
+        await smtpClient.SendMailAsync(mailMessage);
+    }
+
+    public async Task SendPaymentReminderEmailAsync(string toEmail, string paymentType, DateTime paymentDate)
+    {
+        var fromEmail = _config["EmailSettings:From"];
+        var smtpClient = new SmtpClient(_config["EmailSettings:Smtp"])
+        {
+            Port = int.Parse(_config["EmailSettings:Port"]!),
+            Credentials = new NetworkCredential(
+                _config["EmailSettings:Username"],
+                _config["EmailSettings:Password"]
+            ),
+            EnableSsl = true,
+        };
+
+        var subject = $"Reminder: Plată {paymentType}";
+        var body = $@"
+        Salut,
+
+        Acesta este un memento pentru plata de tip '{paymentType}', care are termenul limită pe {paymentDate:dd.MM.yyyy}.
+
+        Vă rugăm să efectuați plata până la această dată.
+
+        Mulțumim,
+        Echipa Find Your Home
+    ";
+
+        var mailMessage = new MailMessage(fromEmail, toEmail)
+        {
+            Subject = subject,
+            Body = body,
+            IsBodyHtml = false,
+        };
+
+        await smtpClient.SendMailAsync(mailMessage);
+    }
 
 }

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
 import api from '../../api';
+import { useAuth } from '../../hooks/useAuth';
+
+const user = useAuth().user;
 
 interface PropertyCardProps {
   property: {
@@ -59,17 +62,20 @@ export function PropertyCard({ property }: PropertyCardProps) {
       />
 
       {/* Buton inima */}
-      <button
-        onClick={handleToggleFavorite}
-        className="absolute top-2 right-2 bg-white/80 dark:bg-gray-700/80 p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-200"
-        title={isFavorited ? "Elimină din favorite" : "Adaugă la favorite"}
-      >
-        <Heart
-          className="w-5 h-5"
-          fill={isFavorited ? "red" : "none"}
-          stroke="red"
-        />
-      </button>
+      {user?.role !== "0" && user?.role !== "1" && (
+            <button
+              onClick={handleToggleFavorite}
+              className="absolute top-2 right-2 bg-white/80 dark:bg-gray-700/80 p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-200"
+              title={isFavorited ? "Elimină din favorite" : "Adaugă la favorite"}
+            >
+              <Heart
+                className="w-5 h-5"
+                fill={isFavorited ? "red" : "none"}
+                stroke="red"
+              />
+            </button>
+          )}
+      
 
       <div className="p-4">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
@@ -77,7 +83,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         </h2>
         <p className="text-gray-600 dark:text-gray-300 text-sm">{property.address}</p>
         <p className="text-xl font-bold text-blue-600 dark:text-blue-400 mt-2">
-          ${property.price.toLocaleString()}
+          {property.price.toLocaleString()}€
         </p>
       </div>
     </div>

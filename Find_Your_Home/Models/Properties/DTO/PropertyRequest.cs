@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 
 namespace Find_Your_Home.Models.Properties.DTO
 {
@@ -68,6 +69,10 @@ namespace Find_Your_Home.Models.Properties.DTO
         public bool furnished { get; set; }
         [Required]
         public bool petFriendly { get; set; }
+        [Required]
+        public double Latitude { get; set; }
+        [Required]
+        public double Longitude { get; set; }
         
         // ????? eliminat
         public List<string> ImageUrls { get; set; } = new List<string>();

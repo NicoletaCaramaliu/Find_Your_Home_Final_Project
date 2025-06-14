@@ -37,6 +37,11 @@ namespace Find_Your_Home.Repositories.UserRepository
                 .Include(u => u.Favorites)
                 .FirstOrDefaultAsync();
         }
+        
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {
+            return await FindSingleOrDefaultAsync(u => u.Username == username);
+        }
 
 
 

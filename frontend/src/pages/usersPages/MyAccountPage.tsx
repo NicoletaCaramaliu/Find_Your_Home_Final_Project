@@ -4,7 +4,7 @@ import api from "../../api";
 import { Property } from "../../types/Property";
 import MainNavBar from "../../components/MainNavBar";
 import AddPropertyForm from "../../components/properties/AddPropertyForm";
-import UserProfileCard from "../../components/UserProfileCard";
+import UserProfileCard from "../../components/user/UserProfileCard";
 import MyPropertiesCard from "../../components/properties/MyPropertiesCard";
 import FavoritePropertiesCard from "../../components/properties/FavoritePropertiesCard";
 import { logout } from "../../services/authService";
@@ -18,7 +18,7 @@ interface LoggedUser {
   createdAt: string;
 }
 
-const isAllowedToManageProperties = (role: number) => [0, 2, 3].includes(role);
+const isAllowedToManageProperties = (role: number) => [0, 1].includes(role);
 const shouldSeeFavoritesInstead = (role: number) => !isAllowedToManageProperties(role);
 
 const MyAccountPage: React.FC = () => {
@@ -84,8 +84,10 @@ const MyAccountPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (user && shouldSeeFavoritesInstead(user.role)) {
-      fetchFavorites();
+    if (user) {
+      if (shouldSeeFavoritesInstead(user.role)) {
+        fetchFavorites();
+      }
     }
   }, [user]);
 
@@ -99,7 +101,6 @@ const MyAccountPage: React.FC = () => {
           <>
             <UserProfileCard user={user} refreshUser={fetchLoggedUser} />
 
-            {/* Confirmare logout */}
             <div className="mt-4 space-y-2">
               {!showLogoutConfirm ? (
                 <button
@@ -130,25 +131,59 @@ const MyAccountPage: React.FC = () => {
             </div>
 
             {isAllowedToManageProperties(user.role) && (
-              <button
-                onClick={() => navigate("/my-bookings")}
-                className="mb-4 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-              >
-                Vezi rezervările primite
-              </button>
+              <>
+                <button
+                  onClick={() => navigate("/my-bookings")}
+                  className="mb-4 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+                >
+                  Vezi rezervările primite
+                </button>
+                <button
+                  onClick={() => navigate("/my-rentals")}
+                  className="mb-4 mt-2 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700"
+                >
+                  Vezi închirierile active
+                </button>
+              </>
+
             )}
 
+            {user?.role === 2 && (
+            <>
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await api.get("/rentals/active/renter");
+                    const rentalId = res.data.id;
+                    navigate(`/rental-collaboration/${rentalId}`);
+                  } catch (err) {
+                    alert("Nu ai o închiriere activă.");
+                  }
+                }}
+                className="mb-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Mergi către închirierea activă
+              </button>
 
-            {user?.role === 4 && (
-            <button
-              onClick={() => navigate("/my-reservations")}
-              className="mb-4 mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-            >
-              Vezi rezervările făcute
-            </button>
+              <button
+                onClick={() => navigate("/my-reservations")}
+                className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              >
+                Vezi rezervările făcute
+              </button>
+            </>
           )}
 
 
+
+            {user && (
+              <button
+                onClick={() => navigate(`/user/${user.id}`)}
+                className="mb-4 mt-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700"
+              >
+                Vezi recenziile primite
+              </button>
+            )}
 
             {isAllowedToManageProperties(user.role) && (
               <>
@@ -171,12 +206,14 @@ const MyAccountPage: React.FC = () => {
                   />
                 )}
 
-                <MyPropertiesCard
-                  properties={properties}
-                  loading={loading}
-                  onEdit={(id) => navigate(`/edit-property/${id}`)}
-                  onNavigate={(id) => navigate(`/properties/${id}`)}
-                />
+                <div className="bg-white dark:bg-gray-700 rounded shadow p-4 max-h-[500px] overflow-y-auto">
+                  <MyPropertiesCard
+                    properties={properties}
+                    loading={loading}
+                    onEdit={(id) => navigate(`/edit-property/${id}`)}
+                    onNavigate={(id) => navigate(`/properties/${id}`)}
+                  />
+                </div>
               </>
             )}
 

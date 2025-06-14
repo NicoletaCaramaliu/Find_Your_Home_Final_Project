@@ -31,6 +31,11 @@ namespace Find_Your_Home.Repositories.GenericRepository
         {
             return _table.AsNoTracking();
         }
+        
+        public IQueryable<TEntity> GetAllQueryable()
+        {
+            return _table.AsNoTracking();
+        }
 
         // Create
         public void Create(TEntity entity)

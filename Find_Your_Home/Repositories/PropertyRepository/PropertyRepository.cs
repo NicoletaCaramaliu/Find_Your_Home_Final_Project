@@ -2,6 +2,7 @@
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
 using Find_Your_Home.Repositories.GenericRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace Find_Your_Home.Repositories.PropertyRepository
 {
@@ -143,5 +144,18 @@ namespace Find_Your_Home.Repositories.PropertyRepository
             
             return filteredProperties;
         }
+
+        public async Task<Property?> GetPropertyByIDAsync(Guid propertyId)
+        {
+            return await _context.Properties
+                .Include(p => p.Images)
+                .Include(p => p.Owner)
+                .Include(p => p.FavoritedBy)
+                .Include(p => p.Bookings)
+                .Include(p => p.Rentals)
+                .FirstOrDefaultAsync(p => p.Id == propertyId);
+        }
+        
+
     }
 }

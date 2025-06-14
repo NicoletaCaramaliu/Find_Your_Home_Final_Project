@@ -1,3 +1,5 @@
+/** @jsxImportSource react */
+
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import LoginForm from "../../components/login/LoginForm";
@@ -18,7 +20,8 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      navigate("/properties?pageNumber=1&pageSize=10");
+      //navigate("/properties?pageNumber=1&pageSize=10");
+      navigate("/home");
     } catch (error: any) {
       if (import.meta.env.MODE === "development") {
         console.error("Eroare la login:", error);

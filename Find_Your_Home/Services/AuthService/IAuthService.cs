@@ -11,4 +11,6 @@ public interface IAuthService
     //public Task<string> Logout(string email);
     public Task<string> Logout();
     Task<object> RefreshToken(); 
+    Task<(string token, User user)> LoginWithUser(UserLoginDto request);
+
 }

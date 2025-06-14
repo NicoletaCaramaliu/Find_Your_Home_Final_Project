@@ -2,12 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import { Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import { formatUtcToLocal } from "../utils/formatDate";
 import {
   startNotificationConnection,
   onNotification,
   offNotification,
   getNotificationConnectionState
-} from "../services/signalrManager";
+} from "../services/notificationHubManager";
 
 interface Notification {
   id: string;
@@ -101,11 +102,21 @@ export default function NotificationDropdown() {
         prev.map(n => n.id === notificationId ? { ...n, isRead: true } : n)
       );
 
-      if (notification.type === "booking-request") {
-        navigate("/my-bookings");
-      } else if (["booking-accepted", "booking-rejected"].includes(notification.type)) {
-        navigate("/my-reservations");
+      const type = notification.type;
+
+    if (type === "booking-request") {
+      navigate("/my-bookings");
+    } else if (["booking-accepted", "booking-rejected", "booking-cancelled"].includes(type)) {
+      navigate("/my-reservations");
+    } else if (type === "new-review") {
+      const userId = localStorage.getItem("userId");
+      if (userId) {
+        navigate(`/user/${userId}`);
       }
+    }else if (type === "rental-created") {
+      navigate("/my-rentals"); 
+    }
+
     } catch (error) {
       console.error('Failed to mark notification as read:', error);
     }
@@ -115,7 +126,7 @@ export default function NotificationDropdown() {
     <div className="relative" ref={dropdownRef}>
       <button
         className="relative text-gray-900 dark:text-gray-100 focus:outline-none"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(!isOpen)} aria-label="Notificări"
       >
         <Bell className="w-6 h-6" />
         {unreadNotifications.length > 0 && (
@@ -124,7 +135,7 @@ export default function NotificationDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-md shadow-lg overflow-hidden z-50">
+        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
           {connectionStatus === "connecting" && (
             <div className="p-4 text-yellow-600 text-center">Connecting...</div>
           )}
@@ -149,7 +160,7 @@ export default function NotificationDropdown() {
                     <div className="text-gray-800 dark:text-gray-100">{notification.title}</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">{notification.message}</div>
                     <div className="text-xs text-gray-400 dark:text-gray-500">
-                      {new Date(notification.timestamp).toLocaleString()}
+                      {formatUtcToLocal(notification.timestamp)}
                     </div>
                   </div>
                 ))

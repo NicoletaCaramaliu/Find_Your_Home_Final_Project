@@ -26,5 +26,8 @@ export interface Property {
     updatedAt: string;
     ownerId: string;
     views: number; 
+    latitude: number;
+    longitude: number;
+    isRented: boolean;
   }
   

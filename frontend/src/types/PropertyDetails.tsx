@@ -25,4 +25,7 @@ export interface Property {
     isAvailable: boolean;
     ownerId: string;
     imageUrls: string[];
+    latitude: number;
+    longitude: number;
+    isRented: boolean;
 }

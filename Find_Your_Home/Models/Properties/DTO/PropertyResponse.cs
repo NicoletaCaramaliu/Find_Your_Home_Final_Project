@@ -25,12 +25,16 @@
         public int yearOfConstruction { get; set; }
         public bool furnished { get; set; }
         public bool petFriendly { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         
         public string FirstImageUrl { get; set; }
         
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsAvailable { get; set; } = true;
+        public bool IsRented { get; set; } = false;
         public Guid OwnerId { get; set; }
+        public string OwnerName { get; set; }
     }
 }
