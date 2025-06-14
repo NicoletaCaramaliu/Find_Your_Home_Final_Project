@@ -247,6 +247,11 @@ namespace Find_Your_Home.Data
             
             modelBuilder.Entity<Testimonial>()
                 .HasKey(t => t.Id);
+            modelBuilder.Entity<Testimonial>()
+                .HasOne(t => t.User)
+                .WithOne() 
+                .HasForeignKey<Testimonial>(t => t.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
             
             modelBuilder.Entity<Question>()
                 .HasKey(q => q.Id);

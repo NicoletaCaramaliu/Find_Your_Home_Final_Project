@@ -63,7 +63,7 @@ const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
           ×
         </button>
 
-        <h2 className="text-xl font-semibold mb-4 text-center">Sloturi disponibile</h2>
+        <h2 className="text-xl font-semibold mb-4 text-center text-gray-800 dark:text-blue-500">Calendar disponibilități</h2>
 
         <SlotCalendar propertyId={propertyId} />
 
@@ -80,7 +80,7 @@ const SlotManagerModal: React.FC<Props> = ({ propertyId, onClose }) => {
         )}
 
         <div className="mt-8">
-          <h3 className="text-lg font-semibold mb-2">Lista perioadelor existente</h3>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-blue-500 mb-3">Lista perioadelor existente</h3>
 
           {loading ? (
             <div className="text-center text-gray-600 dark:text-gray-300">Se încarcă...</div>

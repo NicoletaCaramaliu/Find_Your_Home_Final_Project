@@ -9,5 +9,6 @@ namespace Find_Your_Home.Models.Testimonials
         public Guid UserId { get; set; }
         public string AuthorName { get; set; } = string.Empty;
         public bool Posted { get; set; } = false;
+        public User User { get; set; } 
     }
 }

@@ -1,4 +1,4 @@
-// src/hooks/useAuth.ts
+
 export function useAuth() {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
