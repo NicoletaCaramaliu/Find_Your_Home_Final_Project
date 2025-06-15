@@ -5,7 +5,7 @@ interface InputProps {
   placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  className?: string; // 👈 permite className extern
+  className?: string; 
 }
 
 export function Input({
@@ -21,7 +21,7 @@ export function Input({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 ${className}`}
+      className={"w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 ${className}"}
     />
   );
 }

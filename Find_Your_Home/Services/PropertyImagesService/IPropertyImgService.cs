@@ -1,4 +1,5 @@
 ﻿using Find_Your_Home.Models.Properties;
+using Find_Your_Home.Models.Properties.DTO;
 
 namespace Find_Your_Home.Services.PropertyImagesService
 {
@@ -12,6 +13,7 @@ namespace Find_Your_Home.Services.PropertyImagesService
         Task<PropertyImage> GetImageById(Guid id);
         Task DeleteImage(Guid id);
         Task<bool> ImageHashExistsAsync(Guid propertyId, string hash);
+        Task UpdateImageOrderAsync(List<ImageOrderUpdate> updates);
 
     }
 }

@@ -1,13 +1,24 @@
-﻿
+﻿using Find_Your_Home.Repositories.AvailabilitySlotRepository;
+using Find_Your_Home.Repositories.BookingRepository;
+using Find_Your_Home.Repositories.ConversationRepository;
 using Find_Your_Home.Repositories.FavoriteRepository;
+using Find_Your_Home.Repositories.MessageRepository;
 using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
+using Find_Your_Home.Repositories.RentalRepository;
+using Find_Your_Home.Repositories.ReviewRepository;
 using Find_Your_Home.Repositories.UnitOfWork;
 using Find_Your_Home.Repositories.UserRepository;
 using Find_Your_Home.Services.AuthService;
+using Find_Your_Home.Services.AvailabilitySlotService;
+using Find_Your_Home.Services.BookingService;
+using Find_Your_Home.Services.ConversationService;
 using Find_Your_Home.Services.FavoriteService;
+using Find_Your_Home.Services.MessageService;
 using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
+using Find_Your_Home.Services.RentalService;
+using Find_Your_Home.Services.ReviewService;
 using Find_Your_Home.Services.UserService;
 
 namespace Find_Your_Home.Helpers.Extensions
@@ -22,6 +33,12 @@ namespace Find_Your_Home.Helpers.Extensions
             services.AddTransient<IPropertyImgRepository, PropertyImgRepository>();
             services.AddTransient<IFavoriteRepository, Find_Your_Home.Repositories.FavoriteRepository.FavoriteRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IAvailabilitySlotRepository, AvailabilitySlotRepository>();
+            services.AddTransient<IBookingRepository, BookingRepository>();
+            services.AddTransient<IConversationRepository, ConversationRepository>();
+            services.AddTransient<IMessageRepository, MessageRepository>();
+            services.AddTransient<IReviewRepository, ReviewRepository>();
+            services.AddTransient<IRentalRepository, RentalRepository>();
             return services;
         }
 
@@ -34,11 +51,14 @@ namespace Find_Your_Home.Helpers.Extensions
             services.AddTransient<IPropertyService, PropertyService>();
             services.AddTransient<IFavoriteService, FavoriteService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IAvailabilitySlotService, AvailabilitySlotService>();
+            services.AddTransient<IBookingService, BookingService>();
+            services.AddTransient<IConversationService, ConversationService>();
+            services.AddTransient<IMessageService, MessageService>();
+            services.AddTransient<IReviewService, ReviewService>();
+            services.AddTransient<IRentalService, RentalService>();
             return services;
         }
     }
-
-    public class FavoriteRepository
-    {
-    }
+    
 }

@@ -1,8 +1,11 @@
 ﻿using Find_Your_Home.Services.UserService;
 using System.Security.Claims;
 using Find_Your_Home.Data;
+using Find_Your_Home.Exceptions;
+using Find_Your_Home.Models.Reviews;
 using Find_Your_Home.Models.Users;
 using Find_Your_Home.Repositories.UserRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace Find_Your_Home.Services.UserService
 {
@@ -63,8 +66,9 @@ namespace Find_Your_Home.Services.UserService
         
         public async Task<User> GetUserByEmail(string email)
         {
-            return await _userRepository.GetByEmail(email);
+            return await _userRepository.GetByEmail(email); 
         }
+
         
         public async Task CreateUser(User user)
         {
@@ -100,24 +104,72 @@ namespace Find_Your_Home.Services.UserService
             if (user == null)
                 return false;
 
-            var allImages = user.Properties
-                .SelectMany(p => p.Images)
-                .ToList();
+            // rentals
+            var rentals = await _context.Rentals
+                .Where(r => r.OwnerId == userId || r.RenterId == userId)
+                .ToListAsync();
+            rentals.ForEach(r =>
+            {
+                r.Property.IsRented = false;
+                _context.Properties.Update(r.Property);
+            });
+            _context.Rentals.RemoveRange(rentals);
 
-            _context.PropertyImages.RemoveRange(allImages);
+            // bookings
+            var bookings = await _context.Bookings
+                .Where(b => b.UserId == userId)
+                .ToListAsync();
+            _context.Bookings.RemoveRange(bookings);
 
-            _context.Properties.RemoveRange(user.Properties);
+            // availability slots
+            var slots = await _context.AvailabilitySlots
+                .Where(s => user.Properties.Select(p => p.Id).Contains(s.PropertyId))
+                .ToListAsync();
+            _context.AvailabilitySlots.RemoveRange(slots);
 
+            // reviews
+            var reviewsGiven = await _context.Reviews.Where(r => r.ReviewerId == userId).ToListAsync();
+            var reviewsReceived = await _context.Reviews.Where(r => r.TargetUserId == userId).ToListAsync();
+            _context.Reviews.RemoveRange(reviewsGiven);
+            _context.Reviews.RemoveRange(reviewsReceived);
+
+            // conversations
+            var conversations = await _context.Conversations
+                .Where(c => c.User1Id == userId || c.User2Id == userId)
+                .ToListAsync();
+            var conversationIds = conversations.Select(c => c.Id).ToList();
+
+            var messages = await _context.ChatMessages
+                .Where(m => conversationIds.Contains(m.ConversationId))
+                .ToListAsync();
+            _context.ChatMessages.RemoveRange(messages);
+            _context.Conversations.RemoveRange(conversations);
+
+            // notifications
+            var notifications = await _context.Notifications
+                .Where(n => n.UserId == userId || n.SenderId == userId)
+                .ToListAsync();
+            _context.Notifications.RemoveRange(notifications);
+
+            // favorites
             _context.Favorites.RemoveRange(user.Favorites);
 
+            // properties
+            var allImages = user.Properties.SelectMany(p => p.Images).ToList();
+            _context.PropertyImages.RemoveRange(allImages);
+            _context.Properties.RemoveRange(user.Properties);
+
+            //user
             _userRepository.Delete(user);
 
             await _context.SaveChangesAsync();
-
             return true;
         }
 
+        public async Task<User?> GetUserByUsername(string username)
+        {
+            return await _userRepository.GetUserByUsernameAsync(username);
+        }
 
-        
     }
 }

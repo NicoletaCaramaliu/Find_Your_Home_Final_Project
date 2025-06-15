@@ -107,19 +107,19 @@ const FiltersForm: React.FC<FiltersFormProps> = ({
                     Sortează Proprietățile:
                 </label>
                 <select
-  id="sort"
-  value={sortBy ? `${sortBy}-${sortOrder}` : ""}
-  onChange={handleSortChange}
-  className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white"
->
-  <option value="" disabled>
-    -Selectează criteriul-
-  </option>
-  <option value="price-asc">Preț (Crescător)</option>
-  <option value="price-desc">Preț (Descrescător)</option>
-  <option value="createdAt-asc">Data Publicării (Crescător)</option>
-  <option value="createdAt-desc">Data Publicării (Descrescător)</option>
-</select>
+                id="sort"
+                value={sortBy ? `${sortBy}-${sortOrder}` : ""}
+                onChange={handleSortChange}
+                className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white"
+                >
+                <option value="" disabled>
+                    -Selectează criteriul-
+                </option>
+                <option value="price-asc">Preț (Crescător)</option>
+                <option value="price-desc">Preț (Descrescător)</option>
+                <option value="createdAt-asc">Data Publicării (Crescător)</option>
+                <option value="createdAt-desc">Data Publicării (Descrescător)</option>
+                </select>
             </div>
 
             <button

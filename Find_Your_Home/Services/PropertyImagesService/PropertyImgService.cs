@@ -1,4 +1,5 @@
 ﻿using Find_Your_Home.Models.Properties;
+using Find_Your_Home.Models.Properties.DTO;
 using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.UnitOfWork;
 
@@ -49,7 +50,11 @@ namespace Find_Your_Home.Services.PropertyImagesService
             return await _propertyImgRepository
                 .AnyAsync(img => img.PropertyId == propertyId && img.Hash == hash);
         }
-
+        
+        public async Task UpdateImageOrderAsync(List<ImageOrderUpdate> updates)
+        {
+            await _propertyImgRepository.UpdateImageOrderAsync(updates);
+        }
         
     }
 }

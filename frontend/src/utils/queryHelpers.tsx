@@ -23,7 +23,7 @@ export function getQueryStateFromSearchParams(search: string) {
 
     const pagination = {
         pageNumber: parseInt(searchParams.get("pageNumber") || "1", 10),
-        pageSize: parseInt(searchParams.get("pageSize") || "10", 10),
+        pageSize: parseInt(searchParams.get("pageSize") || "6", 10),
     };
 
     const searchText = searchParams.get("searchText") || "";

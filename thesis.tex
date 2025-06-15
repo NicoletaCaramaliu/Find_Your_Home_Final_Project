@@ -1,0 +1,291 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[romanian]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\geometry{a4paper, margin=2.5cm}
+
+\title{Find Your Home - Platformă Web pentru Găsirea și Administrarea Proprietăților Imobiliare}
+\author{Student: [Numele tău]}
+\date{\today}
+
+\begin{document}
+
+% I. Coperta
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+% II. Rezumat
+\chapter*{Rezumat}
+Această lucrare prezintă dezvoltarea platformei web "Find Your Home", o soluție modernă pentru găsirea și administrarea proprietăților imobiliare. Platforma oferă utilizatorilor o interfață intuitivă pentru căutarea proprietăților, gestionarea anunțurilor și administrarea conturilor. Lucrarea detaliază arhitectura sistemului, tehnologiile utilizate și implementarea funcționalităților principale.
+
+\chapter*{Abstract}
+This paper presents the development of the "Find Your Home" web platform, a modern solution for finding and managing real estate properties. The platform provides users with an intuitive interface for property search, listing management, and account administration. The paper details the system architecture, technologies used, and implementation of main functionalities.
+
+% III. Cuprins
+\tableofcontents
+\newpage
+
+% IV. Introducere
+\chapter{Introducere}
+\section{Tipul lucrării și subdomeniul}
+Această lucrare se încadrează în domeniul dezvoltării aplicațiilor web moderne, cu accent pe implementarea unei platforme de administrare a proprietăților imobiliare. Subdomeniul specific este dezvoltarea de aplicații web full-stack, utilizând tehnologii moderne precum React, TypeScript și .NET.
+
+\section{Prezentarea temei}
+Find Your Home este o platformă web care oferă utilizatorilor posibilitatea de a găsi, posta și administra anunțuri imobiliare. Platforma integrează funcționalități avansate de căutare, filtrare și administrare a proprietăților, oferind o experiență completă atât pentru persoanele fizice, cât și pentru agențiile imobiliare.
+
+\section{Scopul și motivația}
+Scopul principal al acestei lucrări este dezvoltarea unei platforme web moderne și eficiente pentru administrarea proprietăților imobiliare. Motivația alegerii acestei teme constă în necesitatea creării unei soluții care să răspundă la cerințele actuale ale pieței imobiliare, oferind o experiență de utilizare îmbunătățită și funcționalități avansate.
+
+\section{Contribuția proprie}
+În cadrul acestei lucrări, am dezvoltat integral platforma Find Your Home, inclusiv:
+\begin{itemize}
+    \item Designul și implementarea interfeței utilizator
+    \item Dezvoltarea backend-ului și a API-urilor necesare
+    \item Implementarea sistemului de autentificare și autorizare
+    \item Integrarea funcționalităților de căutare și filtrare
+    \item Implementarea sistemului de administrare a anunțurilor
+\end{itemize}
+
+\section{Structura lucrării}
+Lucrarea este structurată în următoarele capitole principale:
+\begin{itemize}
+    \item Capitolul 1 (Introducere) - prezintă contextul și motivația lucrării
+    \item Capitolul 2 (Preliminarii) - detaliază tehnologiile și conceptele utilizate
+    \item Capitolul 3 (Arhitectura sistemului) - prezintă structura și organizarea aplicației
+    \item Capitolul 4 (Implementare) - descrie implementarea funcționalităților principale
+    \item Capitolul 5 (Testare și validare) - prezintă rezultatele testării aplicației
+    \item Capitolul 6 (Concluzii) - conține concluziile și perspectivele de dezvoltare
+\end{itemize}
+
+% V. Preliminarii
+\chapter{Preliminarii}
+\section{Tehnologii și concepte fundamentale}
+\subsection{Frontend Development}
+\begin{itemize}
+    \item React.js - bibliotecă JavaScript pentru construirea interfețelor utilizator
+    \item TypeScript - superset tipizat al JavaScript-ului
+    \item Tailwind CSS - framework CSS pentru design modern și responsiv
+    \item React Router - gestionarea rutelor în aplicație
+\end{itemize}
+
+\subsection{Backend Development}
+\begin{itemize}
+    \item .NET Core - framework pentru dezvoltarea aplicațiilor web
+    \item Entity Framework Core - ORM pentru gestionarea bazei de date
+    \item SQL Server - sistem de management al bazelor de date relaționale
+    \item JWT Authentication - sistem de autentificare securizat
+\end{itemize}
+
+\section{Stadiul actual al domeniului}
+Platformele imobiliare online au cunoscut o evoluție semnificativă în ultimii ani, cu tendința de a oferi funcționalități tot mai avansate și o experiență de utilizare îmbunătățită. Principalele direcții de dezvoltare includ:
+\begin{itemize}
+    \item Interfețe utilizator intuitive și responsive
+    \item Sisteme avansate de căutare și filtrare
+    \item Integrarea tehnologiilor de realitate virtuală
+    \item Sistemul de rating și review pentru agenți
+    \item Funcționalități de chat în timp real
+\end{itemize}
+
+\section{Obiectivele lucrării}
+Principalele obiective ale acestei lucrări sunt:
+\begin{itemize}
+    \item Dezvoltarea unei platforme web moderne pentru administrarea proprietăților imobiliare
+    \item Implementarea unui sistem eficient de căutare și filtrare
+    \item Crearea unui sistem robust de administrare a anunțurilor
+    \item Asigurarea securității și scalabilității aplicației
+    \item Oferirea unei experiențe de utilizare optimă pe toate dispozitivele
+\end{itemize}
+
+% VI. Contribuția proprie
+\chapter{Contribuția proprie}
+\section{Fundamentarea teoretică și dezvoltarea aplicativă}
+\subsection{Arhitectura aplicației}
+Platforma Find Your Home a fost dezvoltată folosind o arhitectură modernă bazată pe microservicii, cu separarea clară a responsabilităților între frontend și backend. Arhitectura a fost proiectată pentru a asigura scalabilitatea și mentenanța ușoară a aplicației.
+
+\subsection{Tehnologii utilizate}
+\subsubsection{Frontend}
+\begin{itemize}
+    \item React.js cu TypeScript pentru dezvoltarea interfeței utilizator
+    \item Tailwind CSS pentru stilizare și design responsiv
+    \item React Router pentru gestionarea rutelor
+    \item Context API pentru managementul stării aplicației
+    \item Google Maps API pentru integrarea hărților
+\end{itemize}
+
+\subsubsection{Backend}
+\begin{itemize}
+    \item .NET Core pentru dezvoltarea API-urilor RESTful
+    \item Entity Framework Core pentru ORM
+    \item SQL Server pentru baza de date
+    \item JWT pentru autentificare și autorizare
+    \item Repository Pattern pentru abstractizarea accesului la date
+\end{itemize}
+
+\section{Descompunerea problemei și soluționarea}
+\subsection{Gestionarea proprietăților}
+Sistemul de gestionare a proprietăților a fost implementat cu următoarele caracteristici:
+\begin{itemize}
+    \item Model de date complex pentru proprietăți, inclusiv:
+    \begin{itemize}
+        \item Informații de bază (nume, descriere, adresă)
+        \item Caracteristici fizice (camere, băi, suprafață)
+        \item Facilități (garaj, grădină, mobilare)
+        \item Informații de localizare (coordonate GPS)
+    \end{itemize}
+    \item Sistem de încărcare și gestionare a imaginilor
+    \item Funcționalități de căutare și filtrare avansată
+    \item Sistem de vizualizări și statistici
+\end{itemize}
+
+\subsection{Sistemul de căutare și filtrare}
+Implementarea sistemului de căutare include:
+\begin{itemize}
+    \item Căutare text în timp real
+    \item Filtrare după multiple criterii:
+    \begin{itemize}
+        \item Preț
+        \item Suprafață
+        \item Număr de camere
+        \item Facilități
+        \item Localizare
+    \end{itemize}
+    \item Sortare după diverse criterii (preț, data adăugării)
+    \item Paginare eficientă a rezultatelor
+\end{itemize}
+
+\subsection{Sistemul de autentificare și autorizare}
+\begin{itemize}
+    \item Implementare JWT pentru securitate
+    \item Roluri multiple (utilizator, agent, administrator)
+    \item Gestionarea sesiunilor
+    \item Protecție a rutelor
+\end{itemize}
+
+\section{Analiza critică și comparații}
+\subsection{Avantaje ale implementării}
+\begin{itemize}
+    \item Arhitectură scalabilă și ușor de întreținut
+    \item Interfață utilizator intuitivă și responsivă
+    \item Performanță optimizată prin:
+    \begin{itemize}
+        \item Caching eficient
+        \item Lazy loading pentru imagini
+        \item Optimizarea query-urilor
+    \end{itemize}
+    \item Securitate îmbunătățită prin:
+    \begin{itemize}
+        \item Validare strictă a datelor
+        \item Protecție împotriva atacurilor CSRF
+        \item Gestionarea secură a autentificării
+    \end{itemize}
+\end{itemize}
+
+\subsection{Dezavantaje și limitări}
+\begin{itemize}
+    \item Necesitatea optimizării pentru volume mari de date
+    \item Complexitatea gestionării stării în aplicație
+    \item Dependența de servicii externe (Google Maps)
+\end{itemize}
+
+% VII. Concluzii
+\chapter{Concluzii}
+\section{Realizări și contribuții}
+În cadrul acestei lucrări, am dezvoltat cu succes platforma Find Your Home, implementând toate funcționalitățile planificate și asigurând o experiență de utilizare optimă. Principalele realizări includ:
+
+\subsection{Arhitectură și Design}
+\begin{itemize}
+    \item Implementarea unei arhitecturi moderne bazate pe microservicii
+    \item Design responsiv și adaptabil la toate dispozitivele
+    \item Interfață utilizator intuitivă și plăcută vizual
+    \item Sistem de navigare eficient și ușor de utilizat
+\end{itemize}
+
+\subsection{Funcționalități implementate}
+\begin{itemize}
+    \item Sistem complet de gestionare a proprietăților
+    \item Căutare și filtrare avansată
+    \item Sistem de favorite și vizualizări
+    \item Gestionarea utilizatorilor și rolurilor
+    \item Integrare cu Google Maps pentru localizare
+\end{itemize}
+
+\subsection{Performanță și securitate}
+\begin{itemize}
+    \item Optimizarea timpului de răspuns
+    \item Implementarea măsurilor de securitate
+    \item Gestionarea eficientă a resurselor
+    \item Validarea și sanitizarea datelor
+\end{itemize}
+
+\section{Perspective de dezvoltare}
+Platforma poate fi îmbunătățită în viitor prin:
+
+\subsection{Îmbunătățiri tehnice}
+\begin{itemize}
+    \item Implementarea unui sistem de cache distribuit
+    \item Optimizarea performanței pentru volume mari de date
+    \item Adăugarea de teste automate
+    \item Implementarea unui sistem de monitorizare
+\end{itemize}
+
+\subsection{Funcționalități noi}
+\begin{itemize}
+    \item Integrarea tehnologiilor de realitate virtuală
+    \item Sistem de chat în timp real
+    \item Funcționalități de plată online
+    \item Aplicație mobile nativă
+    \item Sistem de analiză a pieței imobiliare
+\end{itemize}
+
+\section{Aprecieri personale}
+Dezvoltarea platformei Find Your Home a reprezentat o oportunitate valoroasă de a aplica cunoștințele teoretice într-un proiect practic complex. Proiectul a oferit ocazia de a lucra cu tehnologii moderne și de a dezvolta abilități importante în dezvoltarea aplicațiilor web.
+
+\subsection{Învățăminte și experiență}
+\begin{itemize}
+    \item Îmbunătățirea abilităților de programare
+    \item Experiență în dezvoltarea aplicațiilor full-stack
+    \item Învățarea noilor tehnologii și framework-uri
+    \item Dezvoltarea abilităților de rezolvare a problemelor
+\end{itemize}
+
+\section{Aplicații practice}
+Platforma dezvoltată poate fi utilizată în practică de:
+
+\subsection{Utilizatori finali}
+\begin{itemize}
+    \item Persoane fizice căutând locuințe
+    \item Agenții imobiliari pentru gestionarea portofoliului
+    \item Investitorii imobiliari pentru analiza pieței
+    \item Dezvoltatorii imobiliari pentru promovarea proiectelor
+\end{itemize}
+
+\subsection{Beneficii pentru piața imobiliară}
+\begin{itemize}
+    \item Transparență în procesul de cumpărare/închiriere
+    \item Eficiență în gestionarea proprietăților
+    \item Acces la informații actualizate
+    \item Reducerea timpului necesar pentru tranzacții
+\end{itemize}
+
+% VIII. Bibliografie
+\begin{thebibliography}{9}
+\bibitem{react} React Documentation, \url{https://reactjs.org/docs/getting-started.html}
+\bibitem{typescript} TypeScript Documentation, \url{https://www.typescriptlang.org/docs/}
+\bibitem{tailwind} Tailwind CSS Documentation, \url{https://tailwindcss.com/docs}
+\bibitem{dotnet} .NET Documentation, \url{https://docs.microsoft.com/en-us/dotnet/}
+\bibitem{efcore} Entity Framework Core Documentation, \url{https://docs.microsoft.com/en-us/ef/core/}
+\bibitem{jwt} JWT Documentation, \url{https://jwt.io/introduction}
+\bibitem{rest} REST API Design Best Practices, \url{https://restfulapi.net/}
+\bibitem{security} Web Security Best Practices, \url{https://owasp.org/www-project-top-ten/}
+\bibitem{ux} UX Design Principles, \url{https://www.nngroup.com/articles/ten-usability-heuristics/}
+\end{thebibliography}
+
+\end{document} 

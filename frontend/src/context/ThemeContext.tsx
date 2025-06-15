@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
-// tipuri pentru TypeScript
 interface ThemeContextType {
   theme: string;
   toggleTheme: () => void;
@@ -8,7 +7,6 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// provider pentru gestionarea temei
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<string>(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -38,7 +36,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// hook personalizat pentru a folosi tema
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {

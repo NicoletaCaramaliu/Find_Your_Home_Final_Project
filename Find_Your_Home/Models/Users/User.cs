@@ -8,8 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Find_Your_Home.Models.Bookings;
 using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Models.Properties;
+using Find_Your_Home.Models.Reviews;
+using Find_Your_Home.Models.Testimonials;
 
 namespace Find_Your_Home.Models.Users
 {
@@ -34,5 +37,11 @@ namespace Find_Your_Home.Models.Users
         public DateTime? ResetTokenExpires { get; set; }
         
         public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
+        
+        //for bookings
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        
+        public ICollection<Review> ReviewsGiven { get; set; } = new List<Review>();   // scrise de user
+        public ICollection<Review> ReviewsReceived { get; set; } = new List<Review>();
     }
 }

@@ -1,21 +1,25 @@
 import { Routes, Route } from "react-router-dom"; 
-import LoginPage from "./pages/LoginPage"; 
-import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/authPages/LoginPage"; 
+import RegisterPage from "./pages/authPages/RegisterPage";
 import AboutUsPage from "./pages/AboutUsPage";
-import PropertiesPage from "./pages/PropertiesPage";
+import PropertiesPage from "./pages/propertiesPages/PropertiesPage";
 import { ThemeProvider } from "./context/ThemeContext"; 
-import PropertyDetailsPage from './pages/PropertyDetailsPage';
-import OwnerPageDetails from './pages/OwnerPageDetails';
-import MyAccountPage from './pages/MyAccountPage';
-import EditPropertyPage from "./pages/EditPropertyPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
-import { useEffect } from "react";
+import PropertyDetailsPage from './pages/propertiesPages/PropertyDetailsPage';
+import UserDetailsPage from './pages/usersPages/UserDetailsPage';
+import MyAccountPage from './pages/usersPages/MyAccountPage';
+import EditPropertyPage from "./pages/propertiesPages/EditPropertyPage";
+import ForgotPasswordPage from "./pages/authPages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/authPages/ResetPasswordPage";
+import MyBookingsPage from "./pages/usersPages/MyBookingsPage";
+import MyReservationsPage from "./pages/usersPages/MyReservationsPage";
+import ConversationsPage from "./pages/conversations/ConversationsPage";
+import ChatPage from "./pages/conversations/ChatPage";
+import RentalCollaborationPage from "./pages/rental/RentalCollaborationPage";
+import MyRentalsPage from "./pages/rental/MyRentalsPage";
+import HomePage from "./pages/homePage/HomePage";
+import AdminPage from "./pages/usersPages/admin/AdminPage";
 
 function App() {
-  useEffect(() => {
-    console.log("🧪 ENV URL din Vercel:", process.env.REACT_APP_API_URL);
-  }, []);
 
   return (
     <ThemeProvider>
@@ -26,11 +30,19 @@ function App() {
       <Route path="/aboutUs" element={<AboutUsPage />} />  
       <Route path="/properties" element={<PropertiesPage />} />
       <Route path="/properties/:id" element={<PropertyDetailsPage />} />
-      <Route path="/ownerPage/:ownerId" element={<OwnerPageDetails />} />
+      <Route path="/user/:userId" element={<UserDetailsPage />} />
       <Route path="/myAccount" element={<MyAccountPage />} />
       <Route path="/edit-property/:id" element={<EditPropertyPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/my-bookings" element={<MyBookingsPage />} />
+      <Route path="/my-reservations" element={<MyReservationsPage />} />
+      <Route path="/conversations" element={<ConversationsPage />} />
+      <Route path="/chat/:id" element={<ChatPage />} />
+      <Route path="/rental-collaboration/:rentalId" element={<RentalCollaborationPage />} />
+      <Route path="/my-rentals" element={<MyRentalsPage />} />
+      <Route path="/home" element={<HomePage/>} />
+      <Route path="/admin" element={<AdminPage />} />
     </Routes>
     </ThemeProvider>
   );

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://find-your-home-final-project.vercel.app/</loc>
+  </url>
+  <url>
+    <loc>https://find-your-home-final-project.vercel.app/login</loc>
+  </url>
+  <url>
+    <loc>https://find-your-home-final-project.vercel.app/register</loc>
+  </url>
+  <url>
+    <loc>https://find-your-home-final-project.vercel.app/properties</loc>
+  </url>
+  <url>
+    <loc>https://find-your-home-final-project.vercel.app/aboutUs</loc>
+  </url>
+  <url>
+    <loc>https://find-your-home-final-project.vercel.app/rental-collaboration</loc>
+</url>
+
+</urlset>

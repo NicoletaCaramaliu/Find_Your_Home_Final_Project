@@ -6,9 +6,10 @@ import { Eye, EyeOff } from "lucide-react";
 interface LoginFormProps {
   onLogin: (email: string, password: string) => void;
   errorMessage?: string;
+  isLoading?: boolean;
 }
 
-export default function LoginForm({ onLogin, errorMessage }: LoginFormProps) {
+export default function LoginForm({ onLogin, errorMessage, isLoading }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -62,8 +63,8 @@ export default function LoginForm({ onLogin, errorMessage }: LoginFormProps) {
         </button>
       </div>
 
-      <Button type="submit" className="w-full">
-        Autentificare
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading ? "Se autentifică..." : "Autentificare"}
       </Button>
     </form>
   );
