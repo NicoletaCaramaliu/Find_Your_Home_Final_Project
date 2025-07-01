@@ -57,7 +57,6 @@ namespace Find_Your_Home.Controllers
         public async Task<ActionResult<FavoriteResponse>> AddToMyFavorites(Guid propertyId)
         {
             var userId = _userService.GetMyId();
-            var property = await _propertyService.GetPropertyByID(propertyId);
     
             var favoritedProperty = await _favoriteService.AddToFavorites(userId, propertyId);
 

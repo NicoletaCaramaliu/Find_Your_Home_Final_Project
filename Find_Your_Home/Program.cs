@@ -11,7 +11,6 @@ using Find_Your_Home.Exceptions;
 using Swashbuckle.AspNetCore.Filters;
 using Find_Your_Home.Helpers;
 using Find_Your_Home.Hubs;
-using Find_Your_Home.Models.Notifications;
 using Find_Your_Home.Models.Users;
 using Find_Your_Home.Repositories.AvailabilitySlotRepository;
 using Find_Your_Home.Repositories.BookingRepository;
@@ -23,7 +22,7 @@ using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
 using Find_Your_Home.Repositories.RentalRepository;
 using Find_Your_Home.Repositories.ReviewRepository;
-using Find_Your_Home.Repositories.UnitOfWork;
+using Find_Your_Home.Data.UnitOfWork;
 using Find_Your_Home.Repositories.UserRepository;
 using Find_Your_Home.Services.AuthService;
 using Find_Your_Home.Services.AvailabilitySlotService;
@@ -38,8 +37,6 @@ using Find_Your_Home.Services.PropertyService;
 using Find_Your_Home.Services.RentalService;
 using Find_Your_Home.Services.ReviewService;
 using Find_Your_Home.Services.UserService;
-using Find_Your_Home.Services.UserService;
-using Microsoft.AspNetCore.Diagnostics;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -165,7 +162,7 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         ValidateAudience = false,

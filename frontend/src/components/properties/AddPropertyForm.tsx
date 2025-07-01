@@ -324,7 +324,7 @@ const AddPropertyForm: React.FC<Props> = ({
         {isEdit && existingImages.length > 0 && (
           <div className="col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             {existingImages
-              .sort((a, b) => a.order - b.order)  // sortare după order real
+              .sort((a, b) => a.order - b.order)  
               .map((img, index) => (
                 <div key={img.id} className="relative border rounded overflow-hidden shadow dark:border-gray-700">
                   <img src={img.imageUrl} alt="property" className="w-full h-40 object-cover" />

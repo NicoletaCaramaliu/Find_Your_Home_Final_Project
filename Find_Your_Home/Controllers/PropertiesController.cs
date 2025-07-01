@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
@@ -64,7 +63,7 @@ namespace Find_Your_Home.Controllers
                     if (alreadyExists)
                         continue;
 
-                    var imageUrl = await imageService.SaveFileAsync(image, true);
+                    var imageUrl = await imageService.SaveFileAsync(image);
                     var propertyImage = new PropertyImage
                     {
                         ImageUrl = imageUrl,
@@ -302,7 +301,6 @@ namespace Find_Your_Home.Controllers
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(userEmail)) return Unauthorized("User not authenticated");
 
-            var user = await _userService.GetUserByEmail(userEmail);
             var property = await _propertyService.GetPropertyByID(propertyRequest.Id);
             var userId = _userService.GetMyId();
 

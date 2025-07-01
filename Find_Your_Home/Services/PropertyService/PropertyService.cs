@@ -5,7 +5,7 @@ using Find_Your_Home.Helpers;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
 using Find_Your_Home.Repositories.PropertyRepository;
-using Find_Your_Home.Repositories.UnitOfWork;
+using Find_Your_Home.Data.UnitOfWork;
 using Find_Your_Home.Services.PropertyImagesService;
 using Microsoft.EntityFrameworkCore;
 

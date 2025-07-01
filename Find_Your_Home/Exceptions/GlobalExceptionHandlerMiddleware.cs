@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Text.Json;
-using Microsoft.AspNetCore.Hosting;
 
 namespace Find_Your_Home.Exceptions
 {

@@ -19,6 +19,10 @@ const UserDetailsPage: React.FC = () => {
   const [reviewRefreshKey, setReviewRefreshKey] = useState(0);
   const [canReview, setCanReview] = useState(false);
   const [canCheckDone, setCanCheckDone] = useState(false);
+  const [hasReported, setHasReported] = useState(false);
+  const [showConfirmReport, setShowConfirmReport] = useState(false);
+  const [reportMessage, setReportMessage] = useState<string | null>(null);
+
 
   const currentUserId = localStorage.getItem("userId");
 
@@ -97,6 +101,43 @@ const UserDetailsPage: React.FC = () => {
     checkCanReview();
   }, [userId, currentUserId]);
 
+  useEffect(() => {
+    const checkHasReported = async () => {
+      if (!userId || !currentUserId || userId === currentUserId) return;
+
+      try {
+        const res = await api.get(`/UserReports/hasReported`, {
+          params: { reporterId: currentUserId, reportedId: userId },
+        });
+        setHasReported(res.data);
+      } catch (err) {
+        console.error("Eroare la verificarea raportării:", err);
+      }
+    };
+
+    checkHasReported();
+  }, [userId, currentUserId]);
+
+  const handleReport = async () => {
+    if (!userId || !currentUserId) return;
+
+    try {
+      await api.post(`/UserReports/reportUser`, {
+        reporterUserId: currentUserId,
+        reportedUserId: userId,
+        reason: "Comportament de agent",
+      });
+      setHasReported(true);
+      setReportMessage("Utilizator raportat cu succes.");
+      setShowConfirmReport(false);
+    } catch (err) {
+      console.error("Eroare la raportare:", err);
+      setReportMessage("A apărut o eroare la raportare.");
+      setShowConfirmReport(false);
+    }
+  };
+
+
   const averageRating = reviews.length
     ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
     : undefined;
@@ -120,6 +161,46 @@ const UserDetailsPage: React.FC = () => {
           </div>
         )}
 
+        {userId && currentUserId && userId !== currentUserId && [1].includes(role ?? -1) && (
+          <div className="mb-6 flex justify-end flex-col items-end space-y-2">
+            {!hasReported ? (
+              <>
+                {!showConfirmReport ? (
+                  <button
+                    onClick={() => setShowConfirmReport(true)}
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded shadow transition"
+                  >
+                    🚩 Raportează ca agent
+                  </button>
+                ) : (
+                  <div className="space-x-2">
+                    <span className="text-sm text-gray-800 dark:text-gray-200">Ești sigur că vrei să raportezi acest utilizator?</span>
+                    <button
+                      onClick={handleReport}
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow transition"
+                    >
+                      Da
+                    </button>
+                    <button
+                      onClick={() => setShowConfirmReport(false)}
+                      className="bg-gray-400 hover:bg-gray-500 text-white px-3 py-1 rounded shadow transition"
+                    >
+                      Anulează
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="text-sm text-green-500">Ai raportat deja acest utilizator.</p>
+            )}
+
+            {reportMessage && (
+              <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">{reportMessage}</p>
+            )}
+          </div>
+        )}
+
+
         <div className="mb-10">
           <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-2">Review-uri primite</h2>
           <div className="bg-white dark:bg-gray-800 rounded shadow p-4 space-y-4">
@@ -138,7 +219,7 @@ const UserDetailsPage: React.FC = () => {
               />
             ) : (
               <p className="mt-4 text-sm text-gray-500 italic">
-                Poți lăsa o recenzie doar dacă ai avut contact(rezervări comune) cu acest utilizator.
+                Poți lăsa o recenzie doar dacă ai avut contact (rezervări comune) cu acest utilizator.
               </p>
             )
           )}
@@ -148,11 +229,11 @@ const UserDetailsPage: React.FC = () => {
           <div className="mb-6">
             <h3 className="text-xl font-semibold mb-4">Proprietățile utilizatorului:</h3>
             <div className="bg-white dark:bg-gray-700 rounded shadow p-4 max-h-[500px] overflow-y-auto">
-            {properties.length === 0 ? (
-              <p>Nu a adăugat nicio proprietate încă.</p>
-            ) : (
-              <PropertiesList properties={properties} noResults={false} />
-            )}
+              {properties.length === 0 ? (
+                <p>Nu a adăugat nicio proprietate încă.</p>
+              ) : (
+                <PropertiesList properties={properties} noResults={false} />
+              )}
             </div>
           </div>
         )}

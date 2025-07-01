@@ -2,7 +2,6 @@
 using Find_Your_Home.Data;
 using Find_Your_Home.Models.Rentals;
 using Find_Your_Home.Models.Rentals.DTO;
-using Find_Your_Home.Services.RentalService;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

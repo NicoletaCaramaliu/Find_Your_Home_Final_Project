@@ -7,7 +7,7 @@ using Find_Your_Home.Repositories.PropertyImgRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
 using Find_Your_Home.Repositories.RentalRepository;
 using Find_Your_Home.Repositories.ReviewRepository;
-using Find_Your_Home.Repositories.UnitOfWork;
+using Find_Your_Home.Data.UnitOfWork;
 using Find_Your_Home.Repositories.UserRepository;
 using Find_Your_Home.Services.AuthService;
 using Find_Your_Home.Services.AvailabilitySlotService;
@@ -31,7 +31,7 @@ namespace Find_Your_Home.Helpers.Extensions
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IPropertyRepository, PropertyRepository>();
             services.AddTransient<IPropertyImgRepository, PropertyImgRepository>();
-            services.AddTransient<IFavoriteRepository, Find_Your_Home.Repositories.FavoriteRepository.FavoriteRepository>();
+            services.AddTransient<IFavoriteRepository, FavoriteRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IAvailabilitySlotRepository, AvailabilitySlotRepository>();
             services.AddTransient<IBookingRepository, BookingRepository>();

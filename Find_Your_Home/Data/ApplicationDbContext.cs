@@ -32,6 +32,7 @@ namespace Find_Your_Home.Data
         public DbSet<RentalInfo> RentalInfos { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
         public DbSet<Question> Questions { get; set; }
+        public DbSet<UserReport> UserReports { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }

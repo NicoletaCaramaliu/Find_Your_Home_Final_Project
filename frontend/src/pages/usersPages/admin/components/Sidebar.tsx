@@ -9,7 +9,7 @@ const Sidebar = ({ onSelect }: { onSelect: (section: string) => void }) => {
 
   return (
     <aside className="w-60 bg-blue-600 dark:bg-gray-800 text-white dark:text-gray-200 flex flex-col p-4">
-      <h3 className="text-lg font-bold mb-4">Admin Panel</h3>
+      <h3 className="text-lg font-bold mb-4">Panou de administrare</h3>
       {sections.map((section) => (
         <button
           key={section.key}

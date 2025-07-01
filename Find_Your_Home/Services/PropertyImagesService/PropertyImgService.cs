@@ -1,7 +1,7 @@
-﻿using Find_Your_Home.Models.Properties;
+﻿using Find_Your_Home.Data.UnitOfWork;
+using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
 using Find_Your_Home.Repositories.PropertyImgRepository;
-using Find_Your_Home.Repositories.UnitOfWork;
 
 namespace Find_Your_Home.Services.PropertyImagesService
 {

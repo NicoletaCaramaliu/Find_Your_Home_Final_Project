@@ -2,7 +2,6 @@
 using Find_Your_Home.Exceptions;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Find_Your_Home.Controllers
@@ -30,7 +29,6 @@ namespace Find_Your_Home.Controllers
         [HttpGet("getPostedTestimonials"), Authorize]
         public IActionResult GetPostedTestimonials()
         {
-            var userId = _userService.GetMyId();
             var testimonials = _context.Testimonials.Where(t => t.Posted == true).ToList();
             return Ok(testimonials);
         }

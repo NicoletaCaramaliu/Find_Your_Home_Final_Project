@@ -27,6 +27,7 @@ const UserManagement = () => {
   const [loggedUserData, setLoggedUserData] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState(''); 
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [reportCounts, setReportCounts] = useState<Record<string, number>>({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +41,17 @@ const UserManagement = () => {
       })
       .catch(err => setError(parseError(err)))
       .finally(() => setLoading(false));
+
+    api.get('/UserReports/reportsCount')
+        .then(res => {
+            const counts: Record<string, number> = {};
+            res.data.forEach((item: { userId: string, count: number }) => {
+            counts[item.userId] = item.count;
+            });
+            setReportCounts(counts);
+        })
+        .catch(err => console.error("Eroare la încărcarea raportărilor:", err));
+
   }, [user?.id]);
 
   const handleDelete = async (id: string) => {
@@ -60,9 +72,17 @@ const UserManagement = () => {
       navigate("/login");
     };
 
-  const filteredUsers = users.filter(u =>
-    u.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = users
+    .filter(u => u.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+        const aReports = reportCounts[a.id] || 0;
+        const bReports = reportCounts[b.id] || 0;
+
+        if (aReports >= 3 && bReports < 3) return -1;
+        if (aReports < 3 && bReports >= 3) return 1;
+        return 0;
+  });
+
 
   return (
     <div className="p-4">
@@ -127,15 +147,21 @@ const UserManagement = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredUsers.map(user => (
-            <div key={user.id} className="relative">
-              <UserCard
-                username={user.username}
-                profileImageUrl={user.profilePicture}
-                userId={user.id}
-                createdAt={user.createdAt}
-                role={user.role}
-                averageRating={user.averageRating}
-              />
+            <div key={user.id} className={`relative ${reportCounts[user.id] >= 3 ? 'border-2 border-red-600 rounded-md' : ''}`}>
+                <UserCard
+                    username={user.username}
+                    profileImageUrl={user.profilePicture}
+                    userId={user.id}
+                    createdAt={user.createdAt}
+                    role={user.role}
+                    averageRating={user.averageRating}
+                />
+                {reportCounts[user.id] >= 3 && (
+                    <div className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
+                    ⚠️ {reportCounts[user.id]} raportări
+                    </div>
+                )}
+
               <div onClick={(e) => e.stopPropagation()} className="absolute top-2 right-2">
                 {confirmDeleteId === user.id ? (
                   <div className="bg-yellow-100 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200 p-2 rounded shadow">

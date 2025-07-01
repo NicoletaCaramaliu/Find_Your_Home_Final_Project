@@ -92,7 +92,7 @@ namespace Find_Your_Home.Controllers
             if (user == null)
                 throw new AppException("USER_NOT_FOUND");
 
-            var imageUrl = await fileService.SaveFileAsync(file, true);
+            var imageUrl = await fileService.SaveFileAsync(file);
 
             user.ProfilePicture = imageUrl;
             await _userService.UpdateUser(user);
