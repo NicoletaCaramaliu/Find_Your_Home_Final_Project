@@ -5,7 +5,6 @@ import { BrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/authPages/LoginPage";
 import * as authService from "../services/authService";
 
-// ✅ Mock LoginForm component
 vi.mock("../components/login/LoginForm", () => {
   return {
     default: ({ onLogin, errorMessage, isLoading }: any) => {
@@ -22,7 +21,6 @@ vi.mock("../components/login/LoginForm", () => {
   };
 });
 
-// ✅ Mock Navbar și ThemeToggle
 vi.mock("../components/NavBar", () => ({
   default: () => <div>MockNavBar</div>
 }));

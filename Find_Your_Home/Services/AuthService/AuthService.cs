@@ -133,7 +133,7 @@ namespace Find_Your_Home.Services.AuthService
             var token = new JwtSecurityToken(
                 claims: claims,
                 notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddMinutes(240),
+                expires: DateTime.UtcNow.AddDays(2),
                 signingCredentials: creds
             );
 
