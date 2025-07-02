@@ -11,10 +11,8 @@ namespace Find_Your_Home.Models.Notifications
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
         public object Data { get; set; }
         public Guid? SenderId { get; set; }
-        public string SenderName { get; set; } // Numele expeditorului
-
-        // Factory Methods
-
+        public string SenderName { get; set; } 
+   
         public static NotificationMessage CreateBookingRequest(Booking booking, Guid senderId, string senderName)
         {
             return new NotificationMessage

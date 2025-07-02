@@ -116,11 +116,7 @@ const AvailableVisits: React.FC<Props> = ({ propertyId }) => {
             "react-datepicker__day--highlighted-custom-1": highlightDates,
           },
         ]}
-        dayClassName={(date) =>
-          availableDays.includes(date.toISOString().split("T")[0])
-            ? "bg-green-200 text-green-800 font-bold rounded"
-            : ""
-        }
+
         className="mb-4 p-2 rounded border dark:bg-gray-700 dark:text-white"
         dateFormat="yyyy-MM-dd"
         minDate={new Date()} 
