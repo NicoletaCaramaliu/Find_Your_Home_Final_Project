@@ -6,7 +6,6 @@ const API_URL =
     ? `${import.meta.env.VITE_API_URL}/api`
     : "http://localhost:5266/api";
 
-
 interface RetryAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
@@ -32,9 +31,9 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config as RetryAxiosRequestConfig;
     const status = error.response?.status;
-
-    
-    const shouldSkipRetry = error.config.url?.includes("/Auth/login");
+    const shouldSkipRetry =
+      error.config.url?.includes("/Auth/login") ||
+      error.config.url?.includes("/Auth/refresh-token");
 
     if (status === 401 && !originalRequest._retry && !shouldSkipRetry) {
       originalRequest._retry = true;
@@ -48,6 +47,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch {
         localStorage.removeItem("token");
+        window.location.href = "/login";  
       }
     }
 

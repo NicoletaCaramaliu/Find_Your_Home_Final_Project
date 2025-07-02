@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Find_Your_Home.Data;
+using Find_Your_Home.Exceptions;
 using Find_Your_Home.Helpers;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
 using Find_Your_Home.Repositories.PropertyRepository;
-using Find_Your_Home.Repositories.UnitOfWork;
+using Find_Your_Home.Data.UnitOfWork;
 using Find_Your_Home.Services.PropertyImagesService;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +17,11 @@ namespace Find_Your_Home.Services.PropertyService
         private readonly IPropertyImgService _propertyImagesService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ApplicationDbContext _context;
 
-        public PropertyService(IPropertyRepository propertyRepository, IUnitOfWork unitOfWork, IPropertyImgService propertyImagesService, IMapper mapper)
+        public PropertyService(IPropertyRepository propertyRepository, IUnitOfWork unitOfWork, IPropertyImgService propertyImagesService, IMapper mapper, ApplicationDbContext context)
         {
+            _context = context;
             _mapper = mapper;
             _propertyRepository = propertyRepository;
             _unitOfWork = unitOfWork;
@@ -66,20 +70,23 @@ namespace Find_Your_Home.Services.PropertyService
     
             
             var paginatedProperties = PaginationHelper.ApplyPagination(filteredProperties, pageNumber, pageSize);
-    
+            
+            //get only properties that have isRented = false
+            var availableProperties = paginatedProperties.Where(p => p.IsRented == false);
+            
             /*var paginatedProperties = filteredProperties
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
             return (await paginatedProperties.ToListAsync(), totalCount);*/
             
             
-            return (await paginatedProperties.ToListAsync(), totalCount);
+            return (await availableProperties.ToListAsync(), totalCount);
         }
 
 
         public async Task<Property> GetPropertyByID(Guid id)
         {
-            return await _propertyRepository.FindByIdAsync(id);
+            return await _propertyRepository.GetPropertyByIDAsync(id);
         }
 
         public async Task<IQueryable<Property>> SortProperties(SortCriteria sortCriteria)
@@ -146,6 +153,62 @@ namespace Find_Your_Home.Services.PropertyService
 
             return propertyDtos;
         }
+        
+        public async Task<Property> DeletePropertyAndDependencies(Guid propertyId)
+        {
+            var property = await _propertyRepository
+                .GetAllQueryable()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == propertyId);
+
+            if (property == null)
+                throw new AppException("PROPERTY_NOT_FOUND");
+
+            var images = await _context.PropertyImages
+                .Where(img => img.PropertyId == propertyId)
+                .ToListAsync();
+
+            var favorites = await _context.Favorites
+                .Where(f => f.PropertyId == propertyId)
+                .ToListAsync();
+
+            var bookings = await _context.Bookings
+                .Where(b => b.PropertyId == propertyId)
+                .ToListAsync();
+
+            var slots = await _context.AvailabilitySlots
+                .Where(s => s.PropertyId == propertyId)
+                .ToListAsync();
+
+            var rentals = await _context.Rentals
+                .Where(r => r.PropertyId == propertyId)
+                .ToListAsync();
+
+            _context.PropertyImages.RemoveRange(images);
+            _context.Favorites.RemoveRange(favorites);
+            _context.Bookings.RemoveRange(bookings);
+            _context.AvailabilitySlots.RemoveRange(slots);
+            _context.Rentals.RemoveRange(rentals);
+
+
+            var tracked = _context.ChangeTracker
+                .Entries<Property>()
+                .FirstOrDefault(e => e.Entity.Id == propertyId);
+
+            if (tracked != null)
+            {
+                tracked.State = EntityState.Detached;
+            }
+
+            _propertyRepository.Delete(new Property { Id = propertyId });
+
+            await _context.SaveChangesAsync();
+
+            return property;
+        }
+
+
+
 
     }
 }

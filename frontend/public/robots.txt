@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://find-your-home-final-project.vercel.app/sitemap.xml

@@ -23,17 +23,22 @@ namespace Find_Your_Home.Services.MessageService
             {
                 ConversationId = request.ConversationId,
                 SenderId = senderId,
-                Message = request.Message
+                Message = request.Message,
+                CreatedAt = DateTime.UtcNow
             };
 
             await _messageRepository.CreateAsync(message);
             await _messageRepository.SaveAsync();
+            
+            Console.WriteLine($" Message sent to group {request.ConversationId}: {request.Message}");
 
             await _hubContext.Clients.Group(request.ConversationId.ToString())
                 .SendAsync("ReceiveMessage", new
                 {
+                    Id = message.Id,
                     SenderId = senderId,
                     Message = request.Message,
+                    ConversationId = request.ConversationId,
                     Timestamp = message.CreatedAt
                 });
         }

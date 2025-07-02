@@ -1,4 +1,5 @@
-﻿using Find_Your_Home.Models.Bookings;
+﻿using Find_Your_Home.Helpers;
+using Find_Your_Home.Models.Bookings;
 
 namespace Find_Your_Home.Models.Notifications
 {
@@ -10,10 +11,8 @@ namespace Find_Your_Home.Models.Notifications
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
         public object Data { get; set; }
         public Guid? SenderId { get; set; }
-        public string SenderName { get; set; } // Numele expeditorului
-
-        // Factory Methods
-
+        public string SenderName { get; set; } 
+   
         public static NotificationMessage CreateBookingRequest(Booking booking, Guid senderId, string senderName)
         {
             return new NotificationMessage
@@ -67,5 +66,51 @@ namespace Find_Your_Home.Models.Notifications
                 }
             };
         }
+        
+        public static NotificationMessage CreateBookingCancelled(Booking booking, Guid senderId, string senderName)
+        {
+            return new NotificationMessage
+            {
+                Type = "booking-cancelled",
+                Title = "Rezervare Anulată",
+                Message = $"Rezervarea ta a fost anulată de {senderName}.",
+                Timestamp = DateTime.UtcNow,
+                SenderId = senderId,
+                SenderName = senderName,
+                Data = new
+                {
+                    BookingId = booking.Id
+                }
+            };
+        }
+        
+        public static NotificationMessage CreateReviewNotification(Guid reviewerId, string reviewerName, int rating)
+        {
+            return new NotificationMessage
+            {
+                Type = "new-review",
+                Title = "Ai primit o recenzi!",
+                Message = $"{reviewerName} ți-a oferit o notă de {rating} stele.",
+                Timestamp = DateTime.UtcNow,
+                SenderId = reviewerId,
+                SenderName = reviewerName
+            };
+        }
+        
+        public static NotificationMessage CreateRentalInfo(Guid rentalId, string renterName)
+        {
+            return new NotificationMessage
+            {
+                Type = "rental-created",
+                Title = "Proprietatea ta a fost închiriată",
+                Message = $"{renterName} a închiriat una dintre proprietățile tale.",
+                Timestamp = DateTime.UtcNow,
+                Data = new { RentalId = rentalId },
+                SenderId = SystemConstants.SystemUserId,
+                SenderName = renterName
+            };
+        }
+
+
     }
 }

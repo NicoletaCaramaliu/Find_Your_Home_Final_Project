@@ -10,6 +10,7 @@ namespace Find_Your_Home.Repositories.UserRepository
         
         Task<User?> GetUserByResetTokenAsync(string token);
         Task<User?> GetUserWithDependencies(Guid userId);
+        Task<User?> GetUserByUsernameAsync(string username);
 
     }
 }

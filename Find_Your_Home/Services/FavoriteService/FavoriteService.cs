@@ -1,8 +1,9 @@
 ﻿
+using Find_Your_Home.Data.UnitOfWork;
 using Find_Your_Home.Models.Favorites;
 using Find_Your_Home.Repositories.FavoriteRepository;
 using Find_Your_Home.Repositories.PropertyRepository;
-using Find_Your_Home.Repositories.UnitOfWork;
+using Find_Your_Home.Data.UnitOfWork;
 
 namespace Find_Your_Home.Services.FavoriteService
 {

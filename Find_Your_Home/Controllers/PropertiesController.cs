@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using Find_Your_Home.Models.Properties;
 using Find_Your_Home.Models.Properties.DTO;
+using Find_Your_Home.Services.Files;
 using Find_Your_Home.Services.PropertyImagesService;
 using Find_Your_Home.Services.PropertyService;
 using Find_Your_Home.Services.UserService;
@@ -29,11 +29,11 @@ namespace Find_Your_Home.Controllers
             _mapper = mapper;
         }   
         
-        [HttpPost("createProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner")]
+        [HttpPost("createProperty"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<ActionResult<PropertyResponse>> CreateProperty(
             [FromForm] PropertyRequest propertyRequest,
             [FromForm] List<IFormFile> images,
-            [FromServices] ImageService imageService,
+            [FromServices] FileService imageService,
             [FromServices] ImageHashService hashService)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -63,7 +63,7 @@ namespace Find_Your_Home.Controllers
                     if (alreadyExists)
                         continue;
 
-                    var imageUrl = await imageService.SaveImageAsync(image);
+                    var imageUrl = await imageService.SaveFileAsync(image);
                     var propertyImage = new PropertyImage
                     {
                         ImageUrl = imageUrl,
@@ -88,13 +88,14 @@ namespace Find_Your_Home.Controllers
             var result = propertyImages.Select(img => new
             {
                 id = img.Id,
-                imageUrl = img.ImageUrl
+                imageUrl = img.ImageUrl,
+                order = img.Order,
             });
 
             return Ok(result);
         }
          
-        [HttpDelete("deletePropertyImage"), Authorize(Roles = "Admin, Agent, PropertyOwner")]
+        [HttpDelete("deletePropertyImage"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<IActionResult> DeletePropertyImage(Guid imageId)
         {
             var userId = _userService.GetMyId();
@@ -115,7 +116,17 @@ namespace Find_Your_Home.Controllers
          public async Task<ActionResult<IEnumerable<PropertyResponse>>> GetAllProperties()
          {
              var properties = await _propertyService.GetAllProperties();
-             var propertiesDto = _mapper.Map<IEnumerable<PropertyResponse>>(properties);
+             var propertiesDto = new List<PropertyResponse>();
+             var propertyIds = properties.Select(p => p.Id).ToList();
+             var propertyImages = await _propertyImagesService.GetFirstPropertyImages(propertyIds);
+             
+             foreach (var property in properties)
+             {
+                 var propertyResponse = _mapper.Map<PropertyResponse>(property);
+                 var propertyImage = propertyImages.FirstOrDefault(pi => pi.PropertyId == property.Id);
+                 propertyResponse.FirstImageUrl = propertyImage?.ImageUrl;
+                 propertiesDto.Add(propertyResponse);
+             }
              return Ok(propertiesDto);
          }
 
@@ -238,6 +249,9 @@ namespace Find_Your_Home.Controllers
                propertiesQuery = await _propertyService.SearchProperties(propertiesQuery, searchText);
            }
 
+           propertiesQuery = propertiesQuery
+               .Where(p => p.IsRented == false);
+           
            propertiesQuery = await _propertyService.FilterProperties(propertiesQuery, filterRequest);
            propertiesQuery = await _propertyService.SortFilteredProperties(propertiesQuery, sortCriteria);
 
@@ -277,17 +291,16 @@ namespace Find_Your_Home.Controllers
             return Ok(propertyResponse);
         }
 
-        [HttpPut("updateProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner")]
+        [HttpPut("updateProperty"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<ActionResult<object>> UpdateProperty(
             [FromForm] PropertyRequest propertyRequest,
             [FromForm] List<IFormFile> images,
-            [FromServices] ImageService imageService,
+            [FromServices] FileService imageService,
             [FromServices] ImageHashService hashService)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(userEmail)) return Unauthorized("User not authenticated");
 
-            var user = await _userService.GetUserByEmail(userEmail);
             var property = await _propertyService.GetPropertyByID(propertyRequest.Id);
             var userId = _userService.GetMyId();
 
@@ -318,7 +331,7 @@ namespace Find_Your_Home.Controllers
                         continue;
                     }
 
-                    var imageUrl = await imageService.SaveImageAsync(image);
+                    var imageUrl = await imageService.SaveFileAsync(image, true);
                     var propertyImage = new PropertyImage
                     {
                         ImageUrl = imageUrl,
@@ -341,7 +354,7 @@ namespace Find_Your_Home.Controllers
         }
 
         
-        [HttpDelete("deleteProperty"), Authorize(Roles = "Admin, Agent, PropertyOwner, Moderator")]
+        [HttpDelete("deleteProperty"), Authorize(Roles = "Admin, PropertyOwner")]
         public async Task<ActionResult> DeleteProperty(Guid propertyId)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -355,14 +368,46 @@ namespace Find_Your_Home.Controllers
             var property = await _propertyService.GetPropertyByID(propertyId);
 
             var userId = _userService.GetMyId();
-            if (property.OwnerId != userId)
+            if (property.OwnerId != userId && !User.IsInRole("Admin"))
             {
                 return Unauthorized("You are not authorized to delete this property");
             }
 
-            await _propertyService.DeleteProperty(property.Id);
+            await _propertyService.DeletePropertyAndDependencies(property.Id);
             return NoContent();
         }
+
+        [HttpPatch("sellProperty"), Authorize(Roles = "PropertyOwner")]
+        public async Task<ActionResult<PropertyResponse>> SellProperty(Guid propertyId)
+        {
+            var userId = _userService.GetMyId();
+            var property = await _propertyService.GetPropertyByID(propertyId);
+
+            if (property.OwnerId != userId)
+            {
+                return Unauthorized("You are not authorized to sell this property");
+            }
+
+            if (property.IsRented)
+            {
+                return BadRequest("Cannot sell a rented property");
+            }
+
+            property.IsAvailable = false;
+            await _propertyService.UpdateProperty(property);
+
+            var propertyResponse = _mapper.Map<PropertyResponse>(property);
+            return Ok(propertyResponse);
+        }
+        
+        
+        [HttpPost("updateImageOrder")]
+        public async Task<IActionResult> UpdateImageOrder([FromBody] List<ImageOrderUpdate> updates)
+        {
+            await _propertyImagesService.UpdateImageOrderAsync(updates);
+            return Ok("Order updated successfully");
+        }
+
 
     }
 }

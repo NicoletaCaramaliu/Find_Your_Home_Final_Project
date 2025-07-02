@@ -305,8 +305,17 @@ namespace Find_Your_Home.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsRented")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
                     b.Property<int>("Level")
                         .HasColumnType("int");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -389,6 +398,316 @@ namespace Find_Your_Home.Migrations
                     b.ToTable("PropertyImages");
                 });
 
+            modelBuilder.Entity("Find_Your_Home.Models.Questions.Question", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AnswerText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Posted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.Rental", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RenterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("RenterId");
+
+                    b.ToTable("Rentals");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RentalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UploadedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RentalId");
+
+                    b.ToTable("RentalDocuments");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ContractEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("ContractSigned")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ContractStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ElectricianPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ElectricityPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("ElectricityPaymentReminderSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("EmergencyContact")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("GasPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("GasPaymentReminderSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("GasServicePhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("InternetPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("InternetPaymentReminderSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("InternetProviderPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LandlordPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlumberPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RentAmount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RentPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("RentPaymentReminderSent")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("RentalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("WaterPaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("WaterPaymentReminderSent")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RentalId");
+
+                    b.ToTable("RentalInfos");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalNote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("RentalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RentalId");
+
+                    b.ToTable("RentalNotes");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalTask", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("RentalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RentalId");
+
+                    b.ToTable("RentalTasks");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Reviews.Review", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ReviewerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TargetUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewerId");
+
+                    b.HasIndex("TargetUserId");
+
+                    b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Testimonials.Testimonial", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Posted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Testimonials");
+                });
+
             modelBuilder.Entity("Find_Your_Home.Models.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -442,6 +761,33 @@ namespace Find_Your_Home.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Users.UserReport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ReportedUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ReporterUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserReports");
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Bookings.AvailabilitySlot", b =>
@@ -578,6 +924,107 @@ namespace Find_Your_Home.Migrations
                     b.Navigation("Property");
                 });
 
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.Rental", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Users.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Find_Your_Home.Models.Properties.Property", "Property")
+                        .WithMany("Rentals")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Find_Your_Home.Models.Users.User", "Renter")
+                        .WithMany()
+                        .HasForeignKey("RenterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Property");
+
+                    b.Navigation("Renter");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalDocument", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Rentals.Rental", "Rental")
+                        .WithMany()
+                        .HasForeignKey("RentalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rental");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalInfo", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Rentals.Rental", "Rental")
+                        .WithMany()
+                        .HasForeignKey("RentalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rental");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalNote", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Rentals.Rental", "Rental")
+                        .WithMany()
+                        .HasForeignKey("RentalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rental");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Rentals.RentalTask", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Rentals.Rental", "Rental")
+                        .WithMany()
+                        .HasForeignKey("RentalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rental");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Reviews.Review", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Users.User", "Reviewer")
+                        .WithMany("ReviewsGiven")
+                        .HasForeignKey("ReviewerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Find_Your_Home.Models.Users.User", "TargetUser")
+                        .WithMany("ReviewsReceived")
+                        .HasForeignKey("TargetUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Reviewer");
+
+                    b.Navigation("TargetUser");
+                });
+
+            modelBuilder.Entity("Find_Your_Home.Models.Testimonials.Testimonial", b =>
+                {
+                    b.HasOne("Find_Your_Home.Models.Users.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Find_Your_Home.Models.Testimonials.Testimonial", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Find_Your_Home.Models.Bookings.AvailabilitySlot", b =>
                 {
                     b.Navigation("BlockedIntervals");
@@ -599,6 +1046,8 @@ namespace Find_Your_Home.Migrations
                     b.Navigation("FavoritedBy");
 
                     b.Navigation("Images");
+
+                    b.Navigation("Rentals");
                 });
 
             modelBuilder.Entity("Find_Your_Home.Models.Users.User", b =>
@@ -608,6 +1057,10 @@ namespace Find_Your_Home.Migrations
                     b.Navigation("Favorites");
 
                     b.Navigation("Properties");
+
+                    b.Navigation("ReviewsGiven");
+
+                    b.Navigation("ReviewsReceived");
                 });
 #pragma warning restore 612, 618
         }

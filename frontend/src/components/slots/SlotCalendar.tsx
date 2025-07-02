@@ -4,6 +4,7 @@ import "react-calendar/dist/Calendar.css";
 import { format } from "date-fns";
 import api from "../../api";
 import AddSlotForm from "./AddSlotForm";
+import { parseError } from "../../utils/parseError";
 
 interface Props {
   propertyId: string;
@@ -19,7 +20,7 @@ const SlotCalendar: React.FC<Props> = ({ propertyId }) => {
       const res = await api.get(`/availability/getSlots/${propertyId}`);
       setSlots(res.data);
     } catch (err: any) {
-      console.error("Eroare la preluarea sloturilor:", err.response?.data || err.message);
+      console.error("Eroare la preluarea intervalelor:", err.response?.data || err.message);
     }
   };
 
@@ -33,6 +34,7 @@ const SlotCalendar: React.FC<Props> = ({ propertyId }) => {
 
   return (
     <div>
+
       <Calendar
         onChange={(value: any) => {
           if (value instanceof Date) {
@@ -46,18 +48,20 @@ const SlotCalendar: React.FC<Props> = ({ propertyId }) => {
       />
 
       <div className="mt-4">
-        <h3 className="font-semibold">
-          Sloturi pentru {format(selectedDate, "dd MMM yyyy")}:
+        <h3 className="font-semibold text-gray-800 dark:text-blue-300">
+          Intervalele pentru {format(selectedDate, "dd MMM yyyy")}:
         </h3>
 
         {filtered.length > 0 ? (
-          filtered.map((slot) => (
-            <div key={slot.id} className="border p-2 rounded mt-2">
-              {slot.startTime} - {slot.endTime} ({slot.visitDurationInMinutes} min)
+          filtered.map((interval) => (
+            <div key={interval.id} className="border p-2 rounded mt-2 text-gray-800 dark:text-blue-300">
+              {interval.startTime} - {interval.endTime} ({interval.visitDurationInMinutes} min)
             </div>
           ))
         ) : (
-          <p className="text-gray-600 dark:text-gray-300">Nu există sloturi adăugate pentru această zi.</p>
+          <p className="text-gray-600 dark:text-blue-300">
+            Nu există intervale adăugate pentru această zi.
+          </p>
         )}
 
         {!showAddForm && (
@@ -65,13 +69,13 @@ const SlotCalendar: React.FC<Props> = ({ propertyId }) => {
             onClick={() => setShowAddForm(true)}
             className="mt-3 text-blue-600 hover:underline"
           >
-            ➕ Adaugă un slot nou
+            ➕ Adaugă un interval nou
           </button>
         )}
 
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          Un slot reprezintă perioada în care sunteți disponibili pentru vizite, alături de durata
-          unei vizite. Exemplu: Pentru un slot de la <strong>14:00 - 16:00</strong> și durata
+        <p className="mt-2 text-sm text-gray-700 dark:text-blue-200">
+          Un interval reprezintă perioada în care sunteți disponibili pentru vizite, alături de
+          durata unei vizite. Exemplu: Pentru un interval de la <strong>14:00 - 16:00</strong> și durata
           vizitei de <strong>30 de minute</strong> vor exista 4 vizite posibile pe care utilizatorii
           le pot rezerva (14:00-14:30, 14:30-15:00, etc).
         </p>
@@ -82,7 +86,7 @@ const SlotCalendar: React.FC<Props> = ({ propertyId }) => {
             selectedDate={selectedDate}
             onSuccess={() => {
               setShowAddForm(false);
-              loadSlots(); 
+              loadSlots();
             }}
             onCancel={() => setShowAddForm(false)}
           />

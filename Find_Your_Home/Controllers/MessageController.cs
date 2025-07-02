@@ -1,5 +1,4 @@
 ﻿using Find_Your_Home.Models.Chat.DTO;
-using Find_Your_Home.Services.ConversationService;
 using Find_Your_Home.Services.MessageService;
 using Find_Your_Home.Services.UserService;
 using Microsoft.AspNetCore.Authorization;

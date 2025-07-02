@@ -1,5 +1,4 @@
-﻿using Find_Your_Home.Models.Notifications;
-using Find_Your_Home.Models.Notifications.DTO;
+﻿using Find_Your_Home.Models.Notifications.DTO;
 using Find_Your_Home.Repositories.NotificationsRepository;
 using Find_Your_Home.Services.NotificationsService;
 using Find_Your_Home.Services.UserService;
@@ -56,7 +55,6 @@ namespace Find_Your_Home.Controllers
         [HttpPatch("mark-as-read/{notificationId}", Name = "MarkNotificationAsRead")]
         public async Task<IActionResult> MarkAsReadSingle(Guid notificationId)
         {
-            var userId = _userService.GetMyId();
             await _notificationService.MarkNotificationAsReadByNotifId(notificationId);
             return NoContent();
         }
